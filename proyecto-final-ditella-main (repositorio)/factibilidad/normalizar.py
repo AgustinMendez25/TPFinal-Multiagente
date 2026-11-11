@@ -150,7 +150,8 @@ def parsear_linea(linea: str) -> dict:
         if m and (mejor is None or m.start() < mejor[0]):
             mejor = (m.start(), canonico)
     cantidad, unidad = None, None
-    m = CANTIDAD.match(texto)
+    # la cantidad se lee sin NFKD: NFKD convierte "½" en "1⁄2" y se leería como 1
+    m = CANTIDAD.match(re.sub(r"\s+", " ", linea.casefold()))
     if m:
         cantidad = _numero(m.group(1))
         palabra = (m.group(2) or "").rstrip(".")

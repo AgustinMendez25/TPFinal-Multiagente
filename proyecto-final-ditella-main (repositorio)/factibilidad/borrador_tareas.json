@@ -80,7 +80,7 @@
     },
     {
       "id": "rec-003",
-      "pregunta": "¿La receta 3811 es apta para veganos? Respondé sí o no.",
+      "pregunta": "¿La receta 3814 es apta para veganos? Respondé sí o no.",
       "respuesta": "sí",
       "tipo": "texto",
       "tolerancia": 0,
@@ -89,12 +89,12 @@
       "cadena_esperada": [
         "es_apta"
       ],
-      "nota": "arroz a la mexicana; caldo: 2 tazas de Caldo de verduras o pollo / 2 cucharaditas de Caldo de pollo o verduras en polvo"
+      "nota": "arroz con lentejas arabe"
     },
     {
       "id": "rec-004",
-      "pregunta": "¿Cuántos gramos de arroz lleva la receta 9041 si la hago para 6 personas?",
-      "respuesta": 6.0,
+      "pregunta": "¿Cuántos gramos de arroz lleva la receta 3628 si la hago para 6 personas?",
+      "respuesta": 300.0,
       "tipo": "numero",
       "tolerancia": 0,
       "dificultad": "facil",
@@ -102,7 +102,7 @@
       "cadena_esperada": [
         "detalle_receta"
       ],
-      "nota": "lentejas con arroz y tomate, 4 comensales, línea: 4 vasos pequeños de Arroz"
+      "nota": "arroz thai con verduras y pollo, 2 comensales, línea: 100 gramos de Arroz blanco cocido"
     },
     {
       "id": "rec-005",
@@ -148,7 +148,7 @@
     },
     {
       "id": "rec-008",
-      "pregunta": "Para la receta más rápida que lleva pollo y zanahoria, ¿cuántos gramos de pollo necesito para 6 personas?",
+      "pregunta": "Para la receta más rápida que lleva pollo y zanahoria, ¿cuántas pechugas de pollo necesito para 6 personas?",
       "respuesta": 2.0,
       "tipo": "numero",
       "tolerancia": 0,

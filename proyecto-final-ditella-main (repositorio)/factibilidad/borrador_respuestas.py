@@ -76,11 +76,11 @@ def tareas():
     r = buscar(["papa", "huevo"])[0]
     agregar("¿Cuál es la receta más rápida que lleva papa y huevo?", r["nombre"], "texto", "facil",
             ["buscar_recetas"], nota=f"id {r['id']}, {r['minutos']} min")
-    r = POR_ID[3811]
-    agregar("¿La receta 3811 es apta para veganos? Respondé sí o no.", "sí" if apta(r, "vegana") else "no",
-            "texto", "facil", ["es_apta"], nota=f"{r['nombre']}; caldo: {linea(r, 'caldo')}")
-    r = POR_ID[9041]
-    agregar("¿Cuántos gramos de arroz lleva la receta 9041 si la hago para 6 personas?",
+    r = POR_ID[3814]
+    agregar("¿La receta 3814 es apta para veganos? Respondé sí o no.", "sí" if apta(r, "vegana") else "no",
+            "texto", "facil", ["es_apta"], nota=r["nombre"])
+    r = POR_ID[3628]
+    agregar("¿Cuántos gramos de arroz lleva la receta 3628 si la hago para 6 personas?",
             necesario(r, "arroz", 6)[0], "numero", "facil", ["detalle_receta"],
             nota=f"{r['nombre']}, {r['comensales']} comensales, línea: {linea(r, 'arroz')}")
     vence = min(INVENTARIO, key=lambda k: INVENTARIO[k][2])
@@ -96,7 +96,7 @@ def tareas():
     agregar("De las recetas que llevan lentejas y arroz, ¿cuál es la más rápida que sea vegana?", r["nombre"],
             "texto", "media", ["buscar_recetas", "es_apta", "es_apta"], nota=f"id {r['id']}")
     r = buscar(["pollo", "zanahoria"])[0]
-    agregar("Para la receta más rápida que lleva pollo y zanahoria, ¿cuántos gramos de pollo necesito para "
+    agregar("Para la receta más rápida que lleva pollo y zanahoria, ¿cuántas pechugas de pollo necesito para "
             "6 personas?", necesario(r, "pollo", 6)[0], "numero", "media", ["buscar_recetas", "detalle_receta"],
             nota=f"id {r['id']}, {r['comensales']} comensales, línea: {linea(r, 'pollo')}")
     r = buscar(["papa", "huevo"])[0]
