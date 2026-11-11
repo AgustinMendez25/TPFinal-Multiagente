@@ -1,0 +1,275 @@
+{
+  "inventario": {
+    "pollo": [
+      500,
+      "g",
+      2
+    ],
+    "tomate": [
+      3,
+      "unidad",
+      3
+    ],
+    "leche": [
+      1000,
+      "ml",
+      5
+    ],
+    "zanahoria": [
+      3,
+      "unidad",
+      6
+    ],
+    "cebolla": [
+      2,
+      "unidad",
+      10
+    ],
+    "huevo": [
+      6,
+      "unidad",
+      12
+    ],
+    "papa": [
+      1000,
+      "g",
+      15
+    ],
+    "arroz": [
+      1000,
+      "g",
+      60
+    ],
+    "harina": [
+      1000,
+      "g",
+      90
+    ],
+    "lenteja": [
+      500,
+      "g",
+      90
+    ]
+  },
+  "tareas": [
+    {
+      "id": "rec-001",
+      "pregunta": "¿Cuántas recetas del corpus llevan lentejas y arroz?",
+      "respuesta": 8,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": ""
+    },
+    {
+      "id": "rec-002",
+      "pregunta": "¿Cuál es la receta más rápida que lleva papa y huevo?",
+      "respuesta": "patatas a lo pobre con huevo frito",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "id 18611, 10 min"
+    },
+    {
+      "id": "rec-003",
+      "pregunta": "¿La receta 3811 es apta para veganos? Respondé sí o no.",
+      "respuesta": "sí",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "es_apta"
+      ],
+      "nota": "arroz a la mexicana; caldo: 2 tazas de Caldo de verduras o pollo / 2 cucharaditas de Caldo de pollo o verduras en polvo"
+    },
+    {
+      "id": "rec-004",
+      "pregunta": "¿Cuántos gramos de arroz lleva la receta 9041 si la hago para 6 personas?",
+      "respuesta": 6.0,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "lentejas con arroz y tomate, 4 comensales, línea: 4 vasos pequeños de Arroz"
+    },
+    {
+      "id": "rec-005",
+      "pregunta": "¿Cuál es la receta más rápida que lleva zanahoria y el ingrediente de mi inventario que vence primero?",
+      "respuesta": "ensaladilla rusa original",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "vence primero: pollo (lo marca el harness en el prompt); id 7383"
+    },
+    {
+      "id": "rec-006",
+      "pregunta": "¿Cuál es la receta más rápida que lleva pollo y zanahoria y es sin lactosa?",
+      "respuesta": "ensaladilla rusa original",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta"
+      ],
+      "nota": "id 7383"
+    },
+    {
+      "id": "rec-007",
+      "pregunta": "De las recetas que llevan lentejas y arroz, ¿cuál es la más rápida que sea vegana?",
+      "respuesta": "lentejas con arroz y tomate",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta"
+      ],
+      "nota": "id 9041"
+    },
+    {
+      "id": "rec-008",
+      "pregunta": "Para la receta más rápida que lleva pollo y zanahoria, ¿cuántos gramos de pollo necesito para 6 personas?",
+      "respuesta": 2.0,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "detalle_receta"
+      ],
+      "nota": "id 7383, 3 comensales, línea: 1 pechuga de pollo fileteada"
+    },
+    {
+      "id": "rec-009",
+      "pregunta": "Si hago para 10 personas la receta más rápida que lleva papa y huevo, ¿cuántos huevos me faltan con lo que tengo?",
+      "respuesta": 14.0,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes"
+      ],
+      "nota": "id 18611, 1 comensales, línea: 2 Huevos"
+    },
+    {
+      "id": "rec-010",
+      "pregunta": "Quiero algo vegetariano con arroz y tomate: tomá la receta vegetariana más rápida que los lleve y decime qué me falta comprar para 4 personas.",
+      "respuesta": [
+        "limon",
+        "maiz",
+        "palta",
+        "perejil",
+        "queso",
+        "tomate"
+      ],
+      "tipo": "lista",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 7531 ensalada de arroz basmati rapida y ligera"
+    },
+    {
+      "id": "rec-011",
+      "pregunta": "De las recetas con pollo, zanahoria y cebolla que no llevan huevo, tomá la más rápida que sea sin gluten: ¿qué me falta comprar para hacerla para 6 personas?",
+      "respuesta": [
+        "ajo",
+        "miel",
+        "morron",
+        "pollo",
+        "zapallo"
+      ],
+      "tipo": "lista",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 3628 arroz thai con verduras y pollo"
+    },
+    {
+      "id": "rec-012",
+      "pregunta": "No tengo manteca. De las recetas vegetarianas con leche, harina y huevo que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 personas?",
+      "respuesta": 3,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 8124 pancakes de manzana: faltan ['azucar', 'levadura', 'manzana']"
+    },
+    {
+      "id": "rec-013",
+      "pregunta": "¿Cuántas calorías por porción tiene la receta 9041?",
+      "respuesta": null,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": false,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "el corpus no tiene calorías numéricas"
+    },
+    {
+      "id": "rec-014",
+      "pregunta": "Tengo lentejas, frutillas y pescado y quiero usar los tres: ¿cuál es la receta más rápida que los lleve?",
+      "respuesta": null,
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": false,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "0 recetas los llevan a los tres"
+    },
+    {
+      "id": "rec-015",
+      "pregunta": "¿Cuánto me cuesta comprar lo que me falta para hacer la receta 9041 para 4 personas?",
+      "respuesta": null,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": false,
+      "cadena_esperada": [
+        "faltantes"
+      ],
+      "nota": "el corpus no tiene precios"
+    }
+  ]
+}
