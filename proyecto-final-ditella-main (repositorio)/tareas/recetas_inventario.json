@@ -1,0 +1,62 @@
+[
+  {
+    "ingrediente": "pollo",
+    "cantidad": 500,
+    "unidad": "g",
+    "vence_en_dias": 2
+  },
+  {
+    "ingrediente": "tomate",
+    "cantidad": 3,
+    "unidad": "unidad",
+    "vence_en_dias": 3
+  },
+  {
+    "ingrediente": "leche",
+    "cantidad": 1000,
+    "unidad": "ml",
+    "vence_en_dias": 5
+  },
+  {
+    "ingrediente": "zanahoria",
+    "cantidad": 3,
+    "unidad": "unidad",
+    "vence_en_dias": 6
+  },
+  {
+    "ingrediente": "cebolla",
+    "cantidad": 2,
+    "unidad": "unidad",
+    "vence_en_dias": 10
+  },
+  {
+    "ingrediente": "huevo",
+    "cantidad": 6,
+    "unidad": "unidad",
+    "vence_en_dias": 12
+  },
+  {
+    "ingrediente": "papa",
+    "cantidad": 5,
+    "unidad": "unidad",
+    "vence_en_dias": 15
+  },
+  {
+    "ingrediente": "arroz",
+    "cantidad": 1000,
+    "unidad": "g",
+    "vence_en_dias": 60
+  },
+  {
+    "ingrediente": "harina",
+    "cantidad": 1000,
+    "unidad": "g",
+    "vence_en_dias": 90
+  },
+  {
+    "ingrediente": "lenteja",
+    "cantidad": 500,
+    "unidad": "g",
+    "vence_en_dias": 90
+  }
+]

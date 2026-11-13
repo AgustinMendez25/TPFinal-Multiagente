@@ -1,0 +1,127 @@
+id,tipo,ingrediente,unidad_origen,unidad_destino,factor,estado,nota
+U01,universal,*,taza,ml,240,ok,taza estándar de 240 ml (en España suele ser 250)
+U02,universal,*,cucharada,ml,15,ok,"cucharada sopera estándar; ""cucharada postre"" queda igual (≈10 ml) y no se distingue"
+U03,universal,*,cucharadita,ml,5,ok,cucharadita estándar
+U04,universal,*,vaso,ml,200,ok,"un vaso varía entre 150 y 250 ml, y hay ""vasos pequeños""; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+U05,universal,*,copa,ml,150,ok,una copa varía mucho según el tipo; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+U06,universal,*,cubilete,ml,100,ok,cubilete de Thermomix ≈ 100 ml; otros cubiletes difieren; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+U07,universal,*,libra,g,453.6,ok,libra avoirdupois
+U08,universal,*,onza,g,28.35,ok,"onza de peso; ojo: ""onza de chocolate"" en España es una porción de tableta"
+U09,universal,*,pieza,unidad,1,ok,"""2 piezas de chile"" = 2 unidades"
+D01,densidad,harina,g,ml,0.55,ok,g por ml; 1 taza ≈ 130 g
+D02,densidad,azucar,g,ml,0.85,ok,azúcar blanca granulada; 1 taza ≈ 200 g
+D03,densidad,manteca,g,ml,0.95,ok,1 cucharada ≈ 14 g
+D04,densidad,queso,g,ml,0.45,ok,"queso rallado ≈ 0,4; queso crema ≈ 1,0: depende del tipo; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+D05,densidad,leche,g,ml,1.03,ok,
+D06,densidad,maiz,g,ml,0.7,ok,"granos de choclo ≈ 0,7 pero maicena ≈ 0,55: el léxico los junta; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+D07,densidad,pan,g,ml,0.3,ok,"pan rallado ≈ 0,45; miga de pan ≈ 0,2; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+D08,densidad,salsa de tomate,g,ml,1.05,ok,
+D09,densidad,levadura,g,ml,0.9,ok,polvo de hornear ≈ 4-5 g por cucharadita
+D10,densidad,crema de leche,g,ml,1.0,ok,
+D11,densidad,pasta,g,ml,0.42,ok,depende mucho de la forma de la pasta; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D12,densidad,arroz,g,ml,0.85,ok,arroz crudo; 1 taza ≈ 200 g
+D13,densidad,chocolate,g,ml,0.5,ok,"cacao en polvo ≈ 0,45; chips de chocolate ≈ 0,7; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+D14,densidad,nuez,g,ml,0.5,ok,enteras vs. molidas cambia mucho; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D15,densidad,poroto,g,ml,0.8,ok,secos vs. cocidos; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D16,densidad,arveja,g,ml,0.6,ok,
+D17,densidad,mayonesa,g,ml,0.95,ok,
+D18,densidad,vino,g,ml,1.0,ok,
+D19,densidad,aji,g,ml,1.0,ok,pasta de ají vs. ají picado; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D20,densidad,cebolla,g,ml,0.6,ok,cebolla picada
+D21,densidad,tomate,g,ml,1.0,ok,tomate picado o triturado
+D22,densidad,caldo,g,ml,1.0,ok,
+D23,densidad,miel,g,ml,1.4,ok,
+D24,densidad,yogur,g,ml,1.03,ok,
+D25,densidad,avena,g,ml,0.4,ok,copos de avena
+D26,densidad,lenteja,g,ml,0.8,ok,secas vs. cocidas; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D27,densidad,garbanzo,g,ml,0.8,ok,secos vs. cocidos; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D28,densidad,frutilla,g,ml,0.6,ok,
+D29,densidad,espinaca,g,ml,0.2,ok,cruda vs. cocida; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D30,densidad,champinon,g,ml,0.3,ok,enteros vs. laminados; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D31,densidad,aceituna,g,ml,0.6,ok,
+D32,densidad,zapallo,g,ml,0.6,ok,el léxico junta zapallito y calabaza; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D33,densidad,zanahoria,g,ml,0.5,ok,rallada o picada
+D34,densidad,papa,g,ml,0.6,ok,picada
+D35,densidad,morron,g,ml,0.5,ok,picado
+D36,densidad,jamon,g,ml,0.5,ok,taza de jamón picado: poco frecuente y variable; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D37,densidad,cerdo,g,ml,0.6,ok,carne picada en taza; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D38,densidad,carne vacuna,g,ml,0.6,ok,carne picada en taza; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D39,densidad,pollo,g,ml,0.6,ok,pollo desmenuzado en taza; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D40,densidad,mariscos,g,ml,0.6,ok,revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D41,densidad,pescado,g,ml,0.6,ok,revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D42,densidad,brocoli,g,ml,0.3,ok,ramitos en taza; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D43,densidad,chorizo,g,ml,0.6,ok,revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+D44,densidad,manzana,g,ml,0.5,ok,picada
+D45,densidad,banana,g,ml,0.6,ok,pisada o en rodajas
+P01,peso_unidad,cebolla,unidad,g,150,ok,cebolla mediana
+P02,peso_unidad,papa,unidad,g,200,ok,papa mediana
+P03,peso_unidad,tomate,unidad,g,120,ok,tomate mediano (un tomate cherry pesa ≈ 15 g)
+P04,peso_unidad,zanahoria,unidad,g,80,ok,zanahoria mediana
+P05,peso_unidad,morron,unidad,g,150,ok,
+P06,peso_unidad,zapallo,unidad,g,250,ok,un zapallito ≈ 250 g pero una calabaza entera pesa kilos; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P07,peso_unidad,berenjena,unidad,g,250,ok,
+P08,peso_unidad,puerro,unidad,g,150,ok,
+P09,peso_unidad,pepino,unidad,g,200,ok,
+P10,peso_unidad,batata,unidad,g,250,ok,
+P11,peso_unidad,manzana,unidad,g,180,ok,
+P12,peso_unidad,banana,unidad,g,120,ok,
+P13,peso_unidad,palta,unidad,g,200,ok,
+P14,peso_unidad,naranja,unidad,g,200,ok,
+P15,peso_unidad,limon,unidad,g,100,ok,
+P16,peso_unidad,huevo,unidad,g,55,ok,huevo mediano sin cáscara
+P17,peso_unidad,brocoli,unidad,g,400,ok,¿una cabeza entera o un ramito?; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P18,peso_unidad,lechuga,unidad,g,400,ok,depende de la variedad; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P19,peso_unidad,champinon,unidad,g,20,ok,
+P20,peso_unidad,aceituna,unidad,g,4,ok,
+P21,peso_unidad,chorizo,unidad,g,100,ok,el léxico junta chorizo y salchicha; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P22,peso_unidad,yogur,unidad,g,125,ok,un pote estándar
+P23,peso_unidad,aji,unidad,g,15,ok,de un ají picante chico a un poblano; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P24,peso_unidad,maiz,unidad,g,200,ok,un choclo entero; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P25,peso_unidad,nuez,unidad,g,5,ok,
+P26,peso_unidad,carne vacuna,unidad,g,150,ok,¿un bife? ¿una pieza para asar?; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P27,peso_unidad,cerdo,unidad,g,150,ok,¿una chuleta? ¿una costilla?; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P28,peso_unidad,mariscos,unidad,g,20,ok,un langostino ≈ 20 g pero un calamar o un pulpo mucho más; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+E01,especial,ajo,cabeza,diente,10,ok,
+E02,especial,ajo,unidad,diente,1,ok,"""1 ajo"": ¿un diente o una cabeza?; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+E03,especial,ajo,ml,diente,0.2,ok,1 cucharada de ajo picado ≈ 3 dientes; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+E04,especial,pollo,pechuga,g,200,ok,
+E05,especial,pollo,muslo,g,150,ok,
+E06,especial,pollo,filete,g,150,ok,
+E07,especial,pescado,filete,g,150,ok,
+E08,especial,pescado,lata,g,120,ok,lata de atún escurrida
+E09,especial,carne vacuna,filete,g,150,ok,
+E10,especial,cerdo,filete,g,150,ok,
+E11,especial,cerdo,loncha,g,20,ok,loncha de panceta
+E12,especial,jamon,loncha,g,20,ok,
+E13,especial,jamon,lámina,g,20,ok,
+E14,especial,jamon,rebanada,g,20,ok,
+E15,especial,queso,loncha,g,20,ok,
+E16,especial,queso,lámina,g,20,ok,
+E17,especial,queso,rebanada,g,20,ok,
+E18,especial,pan,rebanada,g,30,ok,
+E19,especial,chocolate,tableta,g,100,ok,
+E20,especial,leche,lata,ml,400,ok,"suele ser leche condensada o evaporada, que el léxico cuenta como leche; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+E21,especial,maiz,lata,g,300,ok,
+E22,especial,tomate,lata,g,400,ok,
+E23,especial,salsa de tomate,lata,ml,400,ok,
+E24,especial,caldo,pastilla,ml,500,ok,una pastilla rinde ≈ 500 ml
+E25,especial,caldo,cubo,ml,500,ok,
+E26,especial,caldo,unidad,ml,500,ok,"""1 caldo"" suele ser una pastilla, pero no siempre; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))"
+E27,especial,levadura,sobre,g,7,ok,levadura seca ≈ 7 g pero un sobre de polvo de hornear ≈ 16 g; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+E28,especial,lechuga,hoja,g,15,ok,
+E29,especial,pasta,paquete,g,500,ok,
+E30,especial,pasta,lámina,g,20,ok,lámina de lasaña
+E31,especial,limon,ml,unidad,0.0333,ok,un limón rinde ≈ 30 ml de jugo
+E32,especial,naranja,ml,unidad,0.0125,ok,una naranja rinde ≈ 80 ml de jugo
+E33,especial,poroto,lata,g,250,ok,lata escurrida
+E34,especial,arveja,lata,g,250,ok,lata escurrida
+E35,especial,garbanzo,lata,g,250,ok,lata escurrida
+E36,especial,garbanzo,envase,g,250,ok,un envase puede ser lata o frasco de distinto tamaño; revisada por grupo: aprobar (aprobación en bloque del valor sugerido (2026-11-13))
+P29,peso_unidad,tortilla de maiz,unidad,g,30,dudosa,tortilla de maíz mediana ≈ 30 g; las de taco son más chicas
+P30,peso_unidad,tortilla de harina,unidad,g,45,dudosa,"tortilla de harina mediana ≈ 45 g; las de burrito, más"
+E37,especial,leche condensada,lata,g,397,ok,lata estándar de 397 g
+E38,especial,leche evaporada,lata,ml,410,dudosa,latas de 315 a 410 g según la marca
+E39,especial,leche de coco,lata,ml,400,ok,lata estándar de 400 ml
+D46,densidad,leche condensada,g,ml,1.3,ok,
+D47,densidad,leche evaporada,g,ml,1.07,ok,
+D48,densidad,leche de coco,g,ml,1.0,ok,

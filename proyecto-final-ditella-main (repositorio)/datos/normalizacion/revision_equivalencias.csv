@@ -1,0 +1,4 @@
+﻿id,equivalencia,nota,recetas_que_destraba,recetas_que_la_usan,lineas_que_la_usan,ejemplo_1,ejemplo_2,ejemplo_3,factor_actual,decision,factor_nuevo,revisor,comentario
+E38,leche evaporada: 1 lata = 410 ml,latas de 315 a 410 g según la marca,21,42,42,1 lata de Leche evaporada → 410 ml (receta 2729),1 lata de Leche evaporada (400 g aprox.) → 410 ml (receta 13614),1 lata de leche evaporada fría tipo Ideal → 410 ml (receta 13776),410,,,,
+P29,tortilla de maiz: 1 unidad = 30 g,tortilla de maíz mediana ≈ 30 g; las de taco son más chicas,7,16,16,½ kilogramo de tortillas de maíz → 16.67 unidad (receta 1375),250 gramos de Tortilla de maíz → 8.33 unidad (receta 1534),1 kilogramo de Tortilla de maíz caliente → 33.33 unidad (receta 1594),30,,,,
+P30,tortilla de harina: 1 unidad = 45 g,"tortilla de harina mediana ≈ 45 g; las de burrito, más",0,0,0,,,,45,,,,

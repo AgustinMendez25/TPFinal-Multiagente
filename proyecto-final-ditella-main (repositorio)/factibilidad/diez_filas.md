@@ -1,133 +1,237 @@
-# Diez filas reales de RecetasDeLaAbuela (`main.csv`, commit c9879423)
+# Diez filas reales del dataset final
 
-Copiadas tal cual del CSV, sin la columna `Pasos` ni `Contexto`. Las celdas vacías se muestran como `''`.
+RecetasDeLaAbuela, `main.csv`, commit `c9879423`. Diez recetas tomadas al azar (semilla 2026) de `datos/recetas_final.csv`: 4 que no necesitaron ningún cambio y 6 corregidas. De cada una va la fila cruda del CSV (sin `Pasos` ni `Contexto`) y, abajo, qué se decidió con cada línea de ingrediente. Las reglas (U01, D02, P01…) están en `datos/normalizacion/equivalencias.csv`; «PAR» es la cantidad que la propia receta escribe entre paréntesis.
 
-## Id 1: Tacos Dorados de Papa
-- **URL:** `'https://www.mexicoenmicocina.com/tacos-dorados-de-papa/'`
-- **Ingredientes:**
+## Id 5627: lomo estofado al vino (sin problema)
 
-  ```
-  ½ taza de cilantro finamente picado, 1 taza de tomate picadito y sin semillas, 1 cucharada de jugo de limón, 12 to rtillas de maíz, ⅔ de taza de aceite vegetal para freír los taquitos, 2 chiles serranos en cubitos, Sal al gusto, 2 tazas de repollo en tiras finas, ½ taza de crema mexicana, Salsa roja, ½ taza de cebolla blanca en cubitos, 3 papas rojas de tamaño mediano ~510 gr. *, 24 palillos de madera para sostener los taquitos enrollados, 1 aguacate opcional, Sal y pimienta al gusto, ½ taza de Queso Cotija o Queso Fresco desmenuzado**
-  ```
-- **Comensales:** `'6'`
-- **Duracion:** `'01:00'`
-- **Categoria:** `'vegetarianos'`
-- **Dificultad:** `''`
-- **Valor nutricional:** `'Alto en calorías, Alto en grasas, Alto en sodio'`
-
-## Id 5036: solomillo de cerdo con setas y trufa
-- **URL:** `'https://www.recetasgratis.net/receta-de-solomillo-de-cerdo-con-setas-y-trufa-36095.html'`
-- **Ingredientes:**
-
-  ```
-  ['1 kg de solomillo cortado en medallones', '1/2 kg de setas (fuera de temporada también puede hacerse con congeladas)', '1 tarrina de trufa natural en su jugo', '1 tomate maduro', '1 cebolla mediana', 'especias para carne', '1 hoja de laurel', 'Sal', 'Pimienta', 'Aceite']
-  ```
-- **Comensales:** `''`
-- **Duracion:** `''`
-- **Categoria:** `'[]'`
-- **Dificultad:** `'Dificultad media'`
-- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 8159: mini tortitas
-- **URL:** `'https://www.recetasgratis.net/receta-de-mini-tortitas-75203.html'`
-- **Ingredientes:**
-
-  ```
-  ['110 gramos de harina 000', '230 centímetros cúbicos de leche descremada', '1 huevo', '1 cucharada sopera de polvo de hornear']
-  ```
+- **URL:** `'https://www.recetasgratis.net/receta-de-lomo-estofado-al-vino-11709.html'`
 - **Comensales:** `'3 comensales'`
 - **Duracion:** `'00:30'`
-- **Categoria:** `"['Recomendada para vegetarianos', 'Recomendada para perder peso', 'Receta sin azúcar', 'Receta sin sal']"`
-- **Dificultad:** `'Dificultad baja'`
-- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 8883: tacu tacu de lentejas
-- **URL:** `'https://www.recetasgratis.net/receta-de-tacu-tacu-de-lentejas-75278.html'`
-- **Ingredientes:**
-
-  ```
-  ['1 cebolla morada grande', '1 cucharada sopera de pasta ají amarillo', '1 cucharada sopera de pasta de ajo', '1 cucharada postre de pasta de tomate', '4 tazas de lentejas cocidas', '4 tazas de arroz blanco cocido', '1 cucharada postre de comino']
-  ```
-- **Comensales:** `'4 comensales'`
-- **Duracion:** `'01:00'`
 - **Categoria:** `'[]'`
 - **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Sin grasas trans'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['½ kilogramo de Lomo de cerdo', '1 kilogramo de Champiñones', '½ litro de Vino tinto', '100 gramos de Mantequilla', '¼ litro de Aceite', '1 diente de Ajo', '1 pizca de Sal', 'Pimienta al gusto']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| ½ kilogramo de Lomo de cerdo | cerdo | 500 g | 500 g | sin_cambio |  |
+| 1 kilogramo de Champiñones | champinon | 1000 g | 1000 g | sin_cambio |  |
+| ½ litro de Vino tinto | vino | 500 ml | 500 ml | sin_cambio |  |
+| 100 gramos de Mantequilla | manteca | 100 g | 100 g | sin_cambio |  |
+| ¼ litro de Aceite | aceite | 250 ml | — | basico |  |
+| 1 diente de Ajo | ajo | 1 diente | 1 diente | sin_cambio |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+| Pimienta al gusto | pimienta | — | — | basico |  |
+
+## Id 12585: nuggets de atun (sin problema)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-nuggets-de-atun-31250.html'`
+- **Comensales:** `'2 comensales'`
+- **Duracion:** `'00:15'`
+- **Categoria:** `'[]'`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Alto en grasas, Alto en sodio, Sin azúcar añadida'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['150 gramos de Atún de lata', '100 gramos de Pan rallado', '120 gramos de Queso crema', '5 unidades de Huevo']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 150 gramos de Atún de lata | pescado | 150 g | 150 g | sin_cambio |  |
+| 100 gramos de Pan rallado | pan | 100 g | 100 g | sin_cambio |  |
+| 120 gramos de Queso crema | queso | 120 g | 120 g | sin_cambio |  |
+| 5 unidades de Huevo | huevo | 5 unidad | 5 unidad | sin_cambio |  |
+
+## Id 16643: mayonesa casera (sin problema)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-mayonesa-casera-62554.html'`
+- **Comensales:** `'1 comensal'`
+- **Duracion:** `'00:10'`
+- **Categoria:** `'[]'`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Alto en grasas, Alto en calorías, Sin sodio'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['1 Huevo', '200 mililitros de Aceite de girasol', '1 chorro de Vinagre o Zumo de limón', '1 pizca de Sal']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 1 Huevo | huevo | 1 unidad | 1 unidad | sin_cambio |  |
+| 200 mililitros de Aceite de girasol | aceite | 200 ml | — | basico |  |
+| 1 chorro de Vinagre o Zumo de limón | condimento | 1 chorro | — | basico |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+
+## Id 16755: salsa raita (sin problema)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-salsa-raita-56122.html'`
+- **Comensales:** `'1 comensal'`
+- **Duracion:** `'00:15'`
+- **Categoria:** `"['Recetas indias']"`
+- **Dificultad:** `'Dificultad baja'`
 - **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 7507: ensaladilla rusa con pollo
-- **URL:** `'https://www.recetasgratis.net/receta-de-ensaladilla-rusa-con-pollo-61179.html'`
-- **Ingredientes:**
+- **Ingredientes (crudo):**
 
   ```
-  ['300 gramos de Patata', '300 gramos de Zanahoria', '200 gramos de Pechuga de pollo', '30 gramos de Chícharos o guisantes', '½ taza de Pimiento morrón picado', '¼ pieza de Cebolla', '1 diente de Ajo', '200 gramos de Mayonesa']
+  ['¼ unidad de Cebolla', '½ unidad de Pepino', '1 unidad de Tomate', '1 pizca de Comino en polvo', '1 pizca de Chat masala o Sal negra', '1 pizca de Sal', '150 gramos de Yogur natural']
   ```
-- **Comensales:** `'4 comensales'`
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| ¼ unidad de Cebolla | cebolla | 0.25 unidad | 0.25 unidad | sin_cambio |  |
+| ½ unidad de Pepino | pepino | 0.5 unidad | 0.5 unidad | sin_cambio |  |
+| 1 unidad de Tomate | tomate | 1 unidad | 1 unidad | sin_cambio |  |
+| 1 pizca de Comino en polvo | condimento | 1 pizca | — | basico |  |
+| 1 pizca de Chat masala o Sal negra | sal | 1 pizca | — | basico |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+| 150 gramos de Yogur natural | yogur | 150 g | 150 g | sin_cambio |  |
+
+## Id 14137: crema pastelera basica (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-crema-pastelera-basica-57593.html'`
+- **Comensales:** `'2 comensales'`
 - **Duracion:** `'00:45'`
 - **Categoria:** `'[]'`
-- **Dificultad:** `'Dificultad baja'`
-- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 17750: crema de zanahorias del huerto
-- **URL:** `'https://www.recetasgratis.net/receta-de-crema-de-zanahorias-del-huerto-52384.html'`
-- **Ingredientes:**
-
-  ```
-  ['1 kg de zanahorias', '1 cebolla grande', '1 litro de caldo de pollo o verduras', 'Sal', 'Aceite de oliva', 'Pimienta blanca', 'Pure de patatas.']
-  ```
-- **Comensales:** `''`
-- **Duracion:** `''`
-- **Categoria:** `''`
-- **Dificultad:** `'Dificultad baja'`
-- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 9880: papas y camarones en ensalada
-- **URL:** `'https://www.recetasgratis.net/receta-de-papas-y-camarones-en-ensalada-52143.html'`
-- **Ingredientes:**
-
-  ```
-  ['4 papas grandes picadas en cuadros para hervirlas 1 lata de maiz 3 huevos hervidos 1lb de camarones medianos pelados 1 cebolla en cuadritos 1 pimiento verde en cuadritos 1 pimiento rojo en cuadritos Mayonesa a gusto']
-  ```
-- **Comensales:** `''`
-- **Duracion:** `''`
-- **Categoria:** `''`
-- **Dificultad:** `'Dificultad baja'`
-- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 15186: tarta de galletas con mousse de chocolate
-- **URL:** `'https://www.recetasgratis.net/receta-de-tarta-de-galletas-con-mousse-de-chocolate-75868.html'`
-- **Ingredientes:**
-
-  ```
-  ['110 gramos de galletas', '20 gramos de azúcar', '130 gramos de crema para repostería', '35 gramos de chocolate para derretir', '2 huevos']
-  ```
-- **Comensales:** `'4 comensales'`
-- **Duracion:** `'01:00'`
-- **Categoria:** `"['Receta sin lactosa', 'Receta sin sal']"`
 - **Dificultad:** `'Dificultad media'`
-- **Valor nutricional:** `'Alto en azúcar, Alto en grasas, Sin colesterol'`
-
-## Id 500: PESCADO A LO CAPRI
-- **URL:** `'https://www.yanuq.com/'`
-- **Ingredientes:**
+- **Valor nutricional:** `'Alto en calorías, Alto en grasas, Alto en azúcar'`
+- **Ingredientes (crudo):**
 
   ```
-  150 g de filete de pescado (corvina o similar), limpio, sin espinas (se puede preparar con pollo),2 tomates, pelados y sin pepas, cortados en rodajas,1 cebolla mediana, pelada y cortada en rodajas delgadas,40 g (1 ½ oz) de queso mozzarella light, rallado o cortado en rodajas delgadas,Orégano seco, al gusto,1 taza de hojas de arúgula,1 taza de lechuga en trozos medianos,Vinagre balsámico, al gusto,Sal,Pimienta,Aceite en spray o la mínima cantidad de aceite vegetal
+  ['4 unidades de Yemas de huevo', '100 gramos de Azúcar                                                                    (½ taza)', '50 gramos de Harina', '2 cucharadas soperas de Maicena', '½ litro de Leche', '1 rama de Canela']
   ```
-- **Comensales:** `''`
-- **Duracion:** `''`
-- **Categoria:** `''`
-- **Dificultad:** `''`
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 4 unidades de Yemas de huevo | huevo | 4 unidad | 4 unidad | sin_cambio |  |
+| 100 gramos de Azúcar                                                                    (½ taza) | azucar | 100 g | 100 g | sin_cambio |  |
+| 50 gramos de Harina | harina | 50 g | 50 g | sin_cambio |  |
+| 2 cucharadas soperas de Maicena | maiz | 2 cucharada | 21 g | corregida | U02 D06 |
+| ½ litro de Leche | leche | 500 ml | 500 ml | sin_cambio |  |
+| 1 rama de Canela | condimento | 1 rama | — | basico |  |
+
+## Id 18019: pimiento relleno de carne molida (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-pimiento-relleno-de-carne-molida-59603.html'`
+- **Comensales:** `'4 comensales'`
+- **Duracion:** `'00:45'`
+- **Categoria:** `"['Recetas al horno', 'Recetas mexicanas']"`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Alto en calorías, Alto en grasas, Alto en sodio'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['4 piezas de Pimiento morrón', '400 gramos de Carne molida de res', '2 Zanahorias', '200 gramos de Chícharos', '1 Papa grande', '¼ Cebolla', '1 diente de Ajo', '1 pizca de Sal', '1 pizca de Pimienta', '2 cucharadas soperas de Aceite']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 4 piezas de Pimiento morrón | morron | 4 pieza | 4 unidad | corregida | U09 |
+| 400 gramos de Carne molida de res | carne vacuna | 400 g | 400 g | sin_cambio |  |
+| 2 Zanahorias | zanahoria | 2 unidad | 2 unidad | sin_cambio |  |
+| 200 gramos de Chícharos | arveja | 200 g | 200 g | sin_cambio |  |
+| 1 Papa grande | papa | 1 unidad | 1 unidad | sin_cambio |  |
+| ¼ Cebolla | cebolla | 0.25 unidad | 0.25 unidad | sin_cambio |  |
+| 1 diente de Ajo | ajo | 1 diente | 1 diente | sin_cambio |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+| 1 pizca de Pimienta | pimienta | 1 pizca | — | basico |  |
+| 2 cucharadas soperas de Aceite | aceite | 2 cucharada | — | basico |  |
+
+## Id 19278: tortilla de acelgas vegana (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-tortilla-de-acelgas-vegana-10448.html'`
+- **Comensales:** `'2 comensales'`
+- **Duracion:** `'00:15'`
+- **Categoria:** `"['Recomendada para veganos']"`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Sin calorías, Sin grasa, Sin grasas trans'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['200 gramos de Hojas acelga', '4 cucharadas soperas de Harina trigo', '3 cucharadas soperas de Harina maíz', '½ sobre de Levadura', '1 vaso de Agua', '1 chorro de Vinagre de vino', '1 chorro de Aceite de oliva', '1 pizca de Sal', '1 pizca de Pimienta negra']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 200 gramos de Hojas acelga | espinaca | 200 g | 200 g | sin_cambio |  |
+| 4 cucharadas soperas de Harina trigo | harina | 4 cucharada | 33 g | corregida | U02 D01 |
+| 3 cucharadas soperas de Harina maíz | harina | 3 cucharada | 24.75 g | corregida | U02 D01 |
+| ½ sobre de Levadura | levadura | 0.5 sobre | 3.89 ml | corregida | E27 D09 |
+| 1 vaso de Agua | agua | 1 vaso | — | basico |  |
+| 1 chorro de Vinagre de vino | condimento | 1 chorro | — | basico |  |
+| 1 chorro de Aceite de oliva | aceite | 1 chorro | — | basico |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+| 1 pizca de Pimienta negra | pimienta | 1 pizca | — | basico |  |
+
+## Id 3591: porridge de avena y platano (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-porridge-de-avena-y-platano-76627.html'`
+- **Comensales:** `'1 comensal'`
+- **Duracion:** `'00:10'`
+- **Categoria:** `"['Recomendada para veganos', 'Recomendada para vegetarianos', 'Recomendada para perder peso', 'Receta sin azúcar']"`
+- **Dificultad:** `'Dificultad muy baja'`
 - **Valor nutricional:** `'Bajo en calorías, Sin grasa, Alto en fibra'`
-
-## Id 19728: chicharron estilo andino
-- **URL:** `'https://cookpad.com/pe/recetas/16948643-chicharron-estilo-andino'`
-- **Ingredientes:**
+- **Ingredientes (crudo):**
 
   ```
-  [' 2 kilos panceta de cerdo', ' 2 cucharaditas sal', ' 1 cucharadita pimienta', ' 1/2 cucharadita comino', ' 2 dientes ajo', ' 1 ramita Huacatay', ' 1/4 taza agua', ' Jugo de limÃ³n', ' Aceite cantidad necesaria para freÃ­r']
+  ['4 cucharadas soperas de avena', '½ taza de agua                                                                    (120 mililitros)', '4 cucharadas soperas de leche descremada o bebida vegetal', '1 plátano chico', '1 pizca de canela']
   ```
-- **Comensales:** `'6'`
-- **Duracion:** `'02:00'`
-- **Categoria:** `''`
-- **Dificultad:** `''`
-- **Valor nutricional:** `'Alto en grasas, Alto en sodio, Sin azúcar'`
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 4 cucharadas soperas de avena | avena | 4 cucharada | 60 ml | corregida | U02 |
+| ½ taza de agua                                                                    (120 mililitros) | agua | 0.5 taza | — | basico |  |
+| 4 cucharadas soperas de leche descremada o bebida vegetal | leche | 4 cucharada | 60 ml | corregida | U02 |
+| 1 plátano chico | banana | 1 unidad | 1 unidad | sin_cambio |  |
+| 1 pizca de canela | condimento | 1 pizca | — | basico |  |
+
+## Id 18184: pastel de patata con bacon y queso (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-pastel-de-patata-con-bacon-y-queso-57678.html'`
+- **Comensales:** `'2 comensales'`
+- **Duracion:** `'01:00'`
+- **Categoria:** `"['Recetas al horno']"`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Alto en calorías, Alto en grasas, Alto en sodio'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['500 gramos de Patata', '100 gramos de Bacon ahumado', '200 mililitros de Nata', '1 unidad de Huevo', '1 pizca de Sal', '120 gramos de Queso en lonchas', '80 gramos de Queso rallado']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 500 gramos de Patata | papa | 500 g | 2.5 unidad | corregida | P02 |
+| 100 gramos de Bacon ahumado | cerdo | 100 g | 100 g | sin_cambio |  |
+| 200 mililitros de Nata | crema de leche | 200 ml | 200 ml | sin_cambio |  |
+| 1 unidad de Huevo | huevo | 1 unidad | 1 unidad | sin_cambio |  |
+| 1 pizca de Sal | sal | 1 pizca | — | basico |  |
+| 120 gramos de Queso en lonchas | queso | 120 g | 120 g | sin_cambio |  |
+| 80 gramos de Queso rallado | queso | 80 g | 80 g | sin_cambio |  |
+
+## Id 6970: batido de manzanas y frutillas bajo en calorias (corregida)
+
+- **URL:** `'https://www.recetasgratis.net/receta-de-batido-de-manzanas-y-frutillas-bajo-en-calorias-51352.html'`
+- **Comensales:** `'1 comensal'`
+- **Duracion:** `'00:10'`
+- **Categoria:** `"['Recomendada para perder peso', 'Receta sin lactosa', 'Receta sin azúcar']"`
+- **Dificultad:** `'Dificultad baja'`
+- **Valor nutricional:** `'Bajo en calorías, Sin grasa, Sin azúcar añadida'`
+- **Ingredientes (crudo):**
+
+  ```
+  ['1 litro de Leche sin lactosa', '500 gramos de Fresa o Frutilla', '2 Manzanas verdes', '1 cucharadita de Edulcorante sin azúcar']
+  ```
+
+| Línea cruda | Ingrediente | Leído | Normalizado | Estado | Reglas |
+|---|---|---|---|---|---|
+| 1 litro de Leche sin lactosa | leche | 1000 ml | 1000 ml | sin_cambio |  |
+| 500 gramos de Fresa o Frutilla | frutilla | 500 g | 500 g | sin_cambio |  |
+| 2 Manzanas verdes | manzana | 2 unidad | 2 unidad | sin_cambio |  |
+| 1 cucharadita de Edulcorante sin azúcar | azucar | 1 cucharadita | 4.25 g | corregida | U03 D02 |

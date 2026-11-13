@@ -33,6 +33,10 @@ LEXICO = {
     "huevo": (["huevo", "huevos", "yema", "yemas", "clara", "claras"], {"huevo"}),
     # lácteos
     "leche": (["leche", "leche entera", "leche desnatada"], {"lacteo"}),
+    # leches especiales: no son leche (decisión D19); la de coco no es lácteo
+    "leche condensada": (["leche condensada", "leche condensada azucarada"], {"lacteo"}),
+    "leche evaporada": (["leche evaporada", "leche ideal"], {"lacteo"}),
+    "leche de coco": (["leche de coco", "crema de coco"], set()),
     "manteca": (["mantequilla", "manteca"], {"lacteo"}),
     "queso": (["queso", "queso rallado", "queso parmesano", "queso crema", "mozzarella", "requeson"], {"lacteo"}),
     "crema de leche": (["nata", "crema de leche", "nata liquida", "crema para batir", "crema"], {"lacteo"}),
@@ -44,6 +48,10 @@ LEXICO = {
     "arroz": (["arroz", "arroz blanco", "arroz integral"], set()),
     "avena": (["avena", "copos de avena"], set()),
     "maiz": (["maiz", "choclo", "elote", "harina de maiz", "maicena"], set()),
+    # las tortillas no son maíz ni harina sueltos (decisión D19)
+    "tortilla de maiz": (["tortilla de maiz", "tortillas de maiz"], set()),
+    "tortilla de harina": (["tortilla de harina", "tortillas de harina", "tortilla de trigo",
+                            "tortillas de trigo"], {"gluten"}),
     # legumbres
     "lenteja": (["lenteja", "lentejas"], set()),
     "garbanzo": (["garbanzo", "garbanzos"], set()),
@@ -52,8 +60,11 @@ LEXICO = {
     # verduras
     "papa": (["papa", "papas", "patata", "patatas"], set()),
     "batata": (["batata", "boniato", "camote"], set()),
-    "cebolla": (["cebolla", "cebollas", "cebolla morada", "cebolleta", "cebollino"], set()),
-    "ajo": (["ajo", "ajos", "diente de ajo", "dientes de ajo"], set()),
+    "cebolla": (["cebolla", "cebollas", "cebolla morada", "cebolleta"], set()),
+    # la de verdeo es otro ingrediente: viene en ramas y no en unidades
+    "cebolla de verdeo": (["cebolla de verdeo", "cebollas de verdeo", "cebolla larga", "cebolla verde",
+                           "cebollin", "cebollino", "cebolla de rama"], set()),
+    "ajo": (["ajo", "ajos", "diente de ajo", "dientes de ajo", "pasta de ajo"], set()),   # "pasta de ajo" no es pasta
     "tomate": (["tomate", "tomates", "jitomate", "jitomates", "tomate cherry"], set()),
     "salsa de tomate": (["salsa de tomate", "tomate frito", "pure de tomate", "pasta de tomate",
                          "tomate triturado", "concentrado de tomate"], set()),
@@ -68,7 +79,7 @@ LEXICO = {
     "puerro": (["puerro", "puerros"], set()),
     "apio": (["apio"], set()),
     "palta": (["palta", "aguacate"], set()),
-    "aji": (["aji", "chile", "chiles", "guindilla", "jalapeno"], set()),
+    "aji": (["aji", "chile", "chiles", "guindilla", "jalapeno", "pasta de aji"], set()),
     # frutas
     "limon": (["limon", "limones", "lima"], set()),
     "manzana": (["manzana", "manzanas"], set()),
@@ -80,7 +91,7 @@ LEXICO = {
     "chocolate": (["chocolate", "cacao"], {"lacteo_posible"}),
     "levadura": (["levadura", "polvo de hornear", "polvo para hornear", "royal"], set()),
     "caldo": (["caldo", "caldo de pollo", "caldo de verduras", "caldo de carne", "caldo de pescado",
-               "cubito", "pastilla de caldo"], set()),
+               "cubito", "pastilla de caldo", "consome", "consome de pollo", "consome de carne"], set()),
     "vino": (["vino", "vino blanco", "vino tinto"], set()),
     "mayonesa": (["mayonesa"], {"huevo"}),
     "miel": (["miel"], set()),
@@ -98,23 +109,41 @@ LEXICO = {
                     "jengibre", "colorante", "azafran", "hierbabuena", "menta", "eneldo", "paprika"], set()),
     "pepino": (["pepino", "pepinos"], set()),
 }
-BASICOS = {"sal", "pimienta", "aceite", "agua", "condimento"}
+# perejil/cilantro/albahaca se tratan como condimento: vienen en pizcas, ramas y puñados (decisión D05)
+BASICOS = {"sal", "pimienta", "aceite", "agua", "condimento", "perejil"}
 # dieta -> etiquetas que la violan
 DIETAS = {"vegetariana": {"carne", "pescado"}, "vegana": {"carne", "pescado", "huevo", "lacteo"},
           "sin_gluten": {"gluten"}, "sin_lactosa": {"lacteo"}}
 
-UNIDADES = {"g": ("g", 1), "gr": ("g", 1), "grs": ("g", 1), "gramo": ("g", 1), "gramos": ("g", 1),
+# unidades exactas del sistema métrico: se pasan a g o ml sin aproximar
+METRICAS = {"g": ("g", 1), "gr": ("g", 1), "grs": ("g", 1), "gramo": ("g", 1), "gramos": ("g", 1),
             "kg": ("g", 1000), "kilo": ("g", 1000), "kilos": ("g", 1000), "kilogramo": ("g", 1000),
-            "kilogramos": ("g", 1000), "ml": ("ml", 1), "cc": ("ml", 1), "mililitros": ("ml", 1),
-            "l": ("ml", 1000), "litro": ("ml", 1000), "litros": ("ml", 1000),
-            "taza": ("taza", 1), "tazas": ("taza", 1), "tz": ("taza", 1),
-            "cucharada": ("cucharada", 1), "cucharadas": ("cucharada", 1),
-            "cucharadita": ("cucharadita", 1), "cucharaditas": ("cucharadita", 1),
-            "diente": ("diente", 1), "dientes": ("diente", 1), "lata": ("lata", 1), "latas": ("lata", 1),
-            "unidad": ("unidad", 1), "unidades": ("unidad", 1)}
+            "kilogramos": ("g", 1000), "ml": ("ml", 1), "cc": ("ml", 1), "mililitro": ("ml", 1),
+            "mililitros": ("ml", 1), "cl": ("ml", 10), "dl": ("ml", 100), "l": ("ml", 1000),
+            "litro": ("ml", 1000), "litros": ("ml", 1000), "centimetros": ("ml", 1), "centímetros": ("ml", 1)}
+# medidas caseras y envases: cada una es su propia unidad (se convierten con datos/normalizacion/equivalencias.csv)
+MEDIDAS = {"taza": "taza", "tazas": "taza", "tz": "taza", "cucharada": "cucharada", "cucharadas": "cucharada",
+           "cda": "cucharada", "cdas": "cucharada", "cucharadita": "cucharadita", "cucharaditas": "cucharadita",
+           "cdta": "cucharadita", "vaso": "vaso", "vasos": "vaso", "vasito": "vaso", "copa": "copa", "copas": "copa",
+           "cubilete": "cubilete", "cubiletes": "cubilete", "libra": "libra", "libras": "libra", "onza": "onza",
+           "onzas": "onza", "pizca": "pizca", "pizcas": "pizca", "pellizco": "pizca", "pellizcos": "pizca",
+           "chorro": "chorro", "chorrito": "chorro", "chorritos": "chorro", "puñado": "puñado", "puñados": "puñado",
+           "gota": "gota", "gotas": "gota", "rama": "rama", "ramas": "rama", "ramita": "rama", "ramitas": "rama",
+           "hoja": "hoja", "hojas": "hoja", "diente": "diente", "dientes": "diente", "lata": "lata", "latas": "lata",
+           "sobre": "sobre", "sobres": "sobre", "rebanada": "rebanada", "rebanadas": "rebanada", "trozo": "trozo",
+           "trozos": "trozo", "loncha": "loncha", "lonchas": "loncha", "lámina": "lámina", "láminas": "lámina",
+           "paquete": "paquete", "paquetes": "paquete", "manojo": "manojo", "manojos": "manojo",
+           "tarrina": "envase", "bote": "envase", "botes": "envase", "tarro": "envase", "botella": "envase",
+           "envase": "envase", "pote": "envase", "bolsa": "envase", "cubo": "cubo", "cubos": "cubo",
+           "rodaja": "rodaja", "rodajas": "rodaja", "pieza": "pieza", "piezas": "pieza", "filete": "filete",
+           "filetes": "filete", "cabeza": "cabeza", "tallo": "tallo", "tallos": "tallo", "tableta": "tableta",
+           "vaina": "vaina", "vainas": "vaina", "barra": "barra", "pastilla": "pastilla", "pechuga": "pechuga",
+           "pechugas": "pechuga", "muslo": "muslo", "muslos": "muslo"}
 FRACCIONES = {"½": Fraction(1, 2), "¼": Fraction(1, 4), "¾": Fraction(3, 4), "⅓": Fraction(1, 3),
               "⅔": Fraction(2, 3)}
-CANTIDAD = re.compile(r"^\s*(\d+\s*[½¼¾⅓⅔]|\d+\s+\d+/\d+|\d+/\d+|\d+(?:[.,]\d+)?|[½¼¾⅓⅔])\s*(?:de\s+)?([a-zñ]+\.?)?")
+_NUM = r"(\d+\s*[½¼¾⅓⅔]|\d+\s+\d+/\d+|\d+/\d+|\d+(?:[.,]\d+)?|[½¼¾⅓⅔])"
+CANTIDAD = re.compile(r"^\s*" + _NUM + r"(\s*(?:a|o|-|y)\s*" + _NUM + r")?\s*(?:de\s+)?([^\s(,]+)?")
+PARENTESIS = re.compile(r"\(\s*(?:unos\s+|aprox\.?\s+)?(\d+(?:[.,]\d+)?)\s*(g|gr|grs|gramos|ml|cc)\b\.?\s*\)")
 
 
 def normalizar_texto(texto: str) -> str:
@@ -142,26 +171,41 @@ def _numero(texto: str) -> float:
 
 
 def parsear_linea(linea: str) -> dict:
-    """{'ingrediente': canónico o None, 'cantidad': float o None, 'unidad': str o None, 'texto': linea}."""
+    """De una línea cruda a {ingrediente, cantidad, unidad, rango, parentesis, texto}.
+
+    `unidad` es "g" o "ml" (ya convertidas desde kg, l, cc…), "unidad" para un conteo ("2 huevos",
+    "2 unidades de tomate"), una medida casera o envase ("taza", "pizca", "lata"…), o None si la línea no
+    trae número ("Sal"). `rango` marca "2 o 3". `parentesis` es una cantidad métrica que la propia receta
+    escribe entre paréntesis ("1 taza de harina (100 gr)"): (valor, "g"|"ml") o None.
+    """
     texto = normalizar_texto(linea)
     mejor = None
     for patron, canonico in _formas():
         m = patron.search(texto)
         if m and (mejor is None or m.start() < mejor[0]):
             mejor = (m.start(), canonico)
-    cantidad, unidad = None, None
+    cantidad, unidad, rango, parentesis = None, None, False, None
     # la cantidad se lee sin NFKD: NFKD convierte "½" en "1⁄2" y se leería como 1
-    m = CANTIDAD.match(re.sub(r"\s+", " ", linea.casefold()))
+    crudo = re.sub(r"\s+", " ", linea.casefold())
+    m = CANTIDAD.match(crudo)
     if m:
         cantidad = _numero(m.group(1))
-        palabra = (m.group(2) or "").rstrip(".")
-        if palabra in UNIDADES:
-            unidad, factor = UNIDADES[palabra]
+        rango = m.group(2) is not None
+        palabra = (m.group(4) or "").strip(".,")
+        if palabra in METRICAS:
+            unidad, factor = METRICAS[palabra]
             cantidad *= factor
+        elif palabra in ("unidad", "unidades"):
+            unidad = "unidad"
+        elif palabra in MEDIDAS:
+            unidad = MEDIDAS[palabra]
         else:
             unidad = "unidad"   # "2 huevos", "1 cebolla": la palabra que sigue es el ingrediente
-    return {"ingrediente": mejor[1] if mejor else None, "cantidad": cantidad, "unidad": unidad,
-            "texto": linea.strip()}
+    p = PARENTESIS.search(crudo)
+    if p:
+        parentesis = (float(p.group(1).replace(",", ".")), "g" if p.group(2) in ("g", "gr", "grs", "gramos") else "ml")
+    return {"ingrediente": mejor[1] if mejor else None, "cantidad": cantidad, "unidad": unidad, "rango": rango,
+            "parentesis": parentesis, "texto": linea.strip()}
 
 
 @lru_cache(maxsize=1)
@@ -181,8 +225,8 @@ def corpus_trabajo() -> list[dict]:
             duracion = re.fullmatch(r"(\d+):(\d+)(?::\d+)?", fila["Duracion"])
             if not comensales or not duracion or len(lineas) < 3:
                 continue
-            recetas.append({"id": int(fila["Id"]), "nombre": fila["Nombre"].strip(),
-                            "comensales": int(comensales.group()),
+            recetas.append({"id": int(fila["Id"]), "nombre": fila["Nombre"].strip(), "url": fila["URL"],
+                            "categoria": fila["Categoria"], "comensales": int(comensales.group()),
                             "minutos": int(duracion.group(1)) * 60 + int(duracion.group(2)),
                             "ingredientes": [parsear_linea(l) for l in lineas]})
     return recetas
@@ -198,7 +242,7 @@ if __name__ == "__main__":
     for i in lineas:
         c["con_ingrediente"] += i["ingrediente"] is not None
         c["con_cantidad"] += i["cantidad"] is not None
-        c["unidad_comparable"] += i["unidad"] in ("g", "ml", "unidad")
+        c["unidad_g_ml_o_conteo"] += i["unidad"] in ("g", "ml", "unidad")
     print(f"recetas: {len(recetas)}  líneas: {len(lineas)}")
     for k, v in c.items():
         print(f"  {k}: {v} ({v / len(lineas):.0%})")

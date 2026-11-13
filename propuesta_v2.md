@@ -2,7 +2,7 @@
 
 > **Qué cambió respecto de la v1** (respuesta a la devolución):
 > 1. Conjunto de evaluación definido: 15 tareas con respuesta cerrada calculada sobre los datos, entre ellas 3 imposibles (§5 y Anexo A). Sacamos las tareas abiertas, así que no hace falta un corrector de restricciones aparte.
-> 2. Diez filas reales del dataset y una medición de cuánto se puede parsear (§2 y Anexo B). El dominio sigue siendo viable, pero con alcance acotado.
+> 2. Diez filas reales del dataset, crudas y procesadas, y la normalización de cantidades y unidades, con cada decisión registrada (§2, Anexos B y C). El dominio es viable con alcance acotado: 3.198 recetas con una unidad por ingrediente.
 > 3. Prueba de factibilidad hecha en su versión mínima, a libro cerrado y con resultados pegados (§7).
 > 4. Herramientas rediseñadas: son 4 y cada una hace una sola cosa. El inventario es estado de la sesión y el vencimiento lo calcula el harness (§3).
 > 5. Agregamos la cota de ruido y rehicimos el presupuesto (§8).
@@ -15,29 +15,61 @@ No pretendemos reemplazar recomendaciones médicas ni garantizar la ausencia de 
 
 ## 2. Datos
 
-**RecetasDeLaAbuela** (SomosNLP, hackathon 2024), Hugging Face `somosnlp/RecetasDeLaAbuela`, licencia OpenRAIL. Usamos el archivo `main.csv`, **fijado en el commit `c9879423aeb4b151fb8941f79098e9606d25c782`**, con 20.236 filas y 14 columnas. Se baja con `datos/descargar_recetas.py` y no se versiona en el repositorio.
+**RecetasDeLaAbuela** (SomosNLP, hackathon 2024), Hugging Face `somosnlp/RecetasDeLaAbuela`, licencia OpenRAIL. Usamos el archivo `main.csv`, **fijado en el commit `c9879423aeb4b151fb8941f79098e9606d25c782`**, con 20.236 filas y 14 columnas. Un script baja el CSV en ese commit. El dataset que usa el agente es una versión derivada y normalizada, que guardamos versionada junto con el registro de cada decisión.
 
-**Cómo vienen los ingredientes** (diez filas crudas en el Anexo B). Son texto libre, en dos formatos según el sitio de origen:
+**Cómo vienen los ingredientes** (diez filas crudas y procesadas en el Anexo B). Son texto libre y el formato depende del sitio de origen:
 
-- **recetasgratis.net (18.187 filas, el 90%):** una lista de Python serializada, con una línea por ingrediente: `['1 kg de solomillo cortado en medallones', '1/2 kg de setas (…)', 'Sal', …]`.
-- **Los otros sitios:** un solo string separado por comas, y la coma también aparece dentro de un ingrediente (`½ taza de Queso Fresco mexicano, cortado en cubitos`). Hay además mojibake (`kiÃ³n`), líneas en portugués y recetas con todos los ingredientes en una sola línea.
+- **recetasgratis.net** (18.187 filas, el 90%): una lista con una línea por ingrediente, generada con plantillas bastante regulares (`300 gramos de X`, `2 unidades de X`, `1 cucharada sopera de X`). **Es la única fuente que usamos**.
+- **cookpad** (718): también viene como lista, pero el 87% de las filas tiene mojibake (`atÃºn`). **yanuq** (832) no tiene comensales ni duración en ninguna fila. **mexicoenmicocina y otros sitios chicos** (499): un string separado por comas, donde la coma también aparece dentro de un ingrediente. Entre todos aportarían unas 250 recetas útiles (+5%), y no justifican el costo.
 
-Las cantidades mezclan números, fracciones unicode (`½`, `⅔`), rangos (`2 o 3`) y unidades heterogéneas: gramos, tazas, "vasos pequeños", "1 pechuga", "1 chorro", "al gusto". `Comensales` está vacío en el 31% de las filas de recetasgratis y `Duracion` también. `Valor nutricional` es una etiqueta cualitativa ("Alto en calorías…") y **no hay calorías numéricas**.
+`Valor nutricional` es una etiqueta cualitativa ("Alto en calorías…"): **no hay calorías numéricas**.
 
-**Decisión: acotamos el corpus en vez de resolver el parseo general.** Medimos un normalizador de borrador (`factibilidad/normalizar.py`), que tiene un léxico de unos 60 ingredientes canónicos con sus sinónimos regionales (papa/patata, poroto/frijol/alubia, manteca/mantequilla), etiquetas para las dietas y una tabla de unidades:
+**Leer la cantidad es fácil. Compararla es difícil.** En recetasgratis el 94% de las líneas trae un número y solo 45 tienen rangos ("2 o 3"). El problema es que **el mismo ingrediente viene en unidades distintas según la receta**: la harina viene en gramos o en tazas, la cebolla en unidades o en gramos, el pollo en gramos, pechugas o piezas. Eso es lo que hay que resolver para escalar porciones y calcular faltantes.
 
-| Medida (recetasgratis con comensales y duración: 12.473 recetas, 106.896 líneas) | Valor |
+**Lo resolvemos normalizando a una sola unidad por ingrediente.** Un script hace la normalización y registra cada decisión, línea por línea y regla por regla, para poder auditarla y rehacerla.
+
+1. **Filtros.** Usamos solo recetasgratis, con comensales y duración, con al menos 3 líneas y con todas sus líneas reconocidas por el léxico. El léxico tiene unos 60 ingredientes canónicos, con sinónimos regionales (papa/patata, poroto/frijol/alubia, manteca/mantequilla) y etiquetas de dieta.
+2. **Una unidad por ingrediente:** la más frecuente en el corpus (Anexo C). Por ejemplo, gramos para harina, pollo y arroz; unidades para cebolla, papa, tomate y huevo; mililitros para leche y caldo; dientes para el ajo. **No depende del inventario.**
+3. **Conversiones en orden de confianza:**
+   - exactas: kg, l y cc pasan a g o ml;
+   - la cantidad métrica que la propia receta escribe entre paréntesis ("1 taza de harina (100 gr)");
+   - una tabla de **126 equivalencias estándar** (Anexo C): taza = 240 ml, densidad de la harina 0,55 g/ml, una cebolla = 150 g, una pechuga = 200 g, una lata de atún = 120 g, y otras.
+4. **Las equivalencias dudosas se revisan a mano.** De las primeras 118, marcamos 39 como `dudosa`: por ejemplo, el vaso de 200 ml, la densidad del queso (rallado o crema) y el peso de un zapallo (zapallito o calabaza). Las revisamos en una planilla con ejemplos reales de cada una y el grupo las aprobó en bloque con su valor sugerido. Después agregamos 8 equivalencias para las tortillas y las leches especiales, y 3 de ellas quedan `dudosa`: el peso de una tortilla de maíz y de una de harina, y el contenido de una lata de leche evaporada. Hasta que se revisen, las 28 recetas que las usan quedan apartadas, no descartadas.
+5. **Lo que no es una cantidad se descarta:** pizca, chorro, puñado, gota, rangos y líneas sin número. Sal, pimienta, aceite, agua, condimentos secos y hierbas (perejil, cilantro, albahaca) son **básicos**: se suponen disponibles y no se cuentan.
+
+**Resultado:**
+
+| Paso | Recetas |
 |---|---|
-| Líneas con ingrediente canónico reconocido | 88% |
-| Líneas con cantidad numérica | 94% |
-| Líneas con unidad comparable (g, ml o unidades sueltas) | 70% |
-| Recetas con **todas** sus líneas reconocidas | **5.151 (41%)** |
+| recetasgratis.net | 18.187 |
+| con comensales, duración y al menos 3 líneas | 12.473 |
+| con todas las líneas reconocidas por el léxico (corpus base) | 5.197 |
+| **dataset final** | **3.198** |
 
-El **corpus de trabajo** son esas 5.151 recetas: recetasgratis, con comensales, duración y todas las líneas reconocidas. Alcanza para tareas con respuesta única. Sal, pimienta, aceite, agua y condimentos secos se suponen siempre disponibles y no cuentan como faltantes. Las cantidades se comparan solo cuando la unidad coincide (gramos con gramos, mililitros con mililitros, unidades con unidades). Si no se puede comparar, la herramienta lo dice en lugar de adivinar. Las tareas se eligen para que su respuesta no dependa de una conversión dudosa.
+| Estado de las 5.197 recetas del corpus base | Recetas |
+|---|---|
+| Sin ningún problema: todas las cantidades ya venían en la unidad elegida | 772 (15%) |
+| Corregidas: al menos una cantidad convertida con una equivalencia `ok` | 2.426 (47%) |
+| Dudosas: apartadas hasta revisar 3 equivalencias nuevas | 28 (1%) |
+| Descartadas: alguna línea sin cantidad convertible | 1.971 (38%) |
 
-El borrador ya mostró fallas concretas que el normalizador definitivo tiene que cubrir y que el verificador de tareas tiene que esquivar. NFKD convertía `½` en `1⁄2` y se leía como 1 (ya está corregido). `4 vasos pequeños de Arroz` no tiene unidad convertible. `Caldo de verduras o pollo` deja indefinido si la receta es vegetariana. `1 litro de caldo de pollo` hacía que una crema de zanahorias apareciera como "receta con pollo" (se corrige dando prioridad a las formas largas del léxico).
+De las líneas no básicas, el 59% no necesitó ningún cambio, el 30% se corrigió y el 10% se descartó. Antes de aprobar las 39 dudosas, el dataset final tenía 2.195 recetas. La aprobación sumó 1.019, que dependían de alguna de ellas: el vaso de 200 ml sola destrababa 116; la densidad del maíz, 73; la del queso, 67; el peso del zapallo, 64.
 
-El **inventario** no sale del corpus. Lo define cada tarea (ingrediente, cantidad, unidad, días hasta vencer) y el harness lo carga como estado de la sesión.
+**Qué significa esto para el agente.** Dentro del dataset final, todas las cantidades de un ingrediente están en la misma unidad, así que escalar porciones y comparar con el inventario es siempre posible. Pero **el 30% de las líneas es una aproximación** ("una cebolla ≈ 150 g"), y algunas de las aprobadas en bloque son gruesas: un vaso puede tener de 150 a 250 ml y "un zapallo" puede ser un zapallito o una calabaza. Las respuestas esperadas son exactas respecto de la tabla de equivalencias, no de la cocina real, y lo declaramos como limitación. Para no depender de eso, el conjunto de evaluación usa solo cantidades sin conversión en las respuestas numéricas, y exige que cada faltante se mantenga aunque una equivalencia se equivoque en ±30% (§5).
+
+**Fallas encontradas y corregidas en el camino:**
+
+- NFKD convertía `½` en `1⁄2`, que se leía como 1.
+- "pasta de ajo" se leía como pasta (182 líneas).
+- "consomé de pollo" convertía en "receta con pollo" a recetas que no lo llevan.
+- La cebolla de verdeo se mezclaba con la cebolla.
+- El parser leía "1 pizca", "1 rama" o "1 pechuga" como unidades sueltas.
+- Las tortillas se leían como maíz o harina: "9 tortillas de maíz" daba 9 choclos de 200 g. Ahora la tortilla de maíz y la de harina son ingredientes propios.
+- La leche condensada, la evaporada y la de coco se leían como leche, así que la leche de coco figuraba como lácteo. Ahora son tres ingredientes propios, y la de coco no es lácteo.
+
+**Fallas conocidas que quedan:** "crema pastelera" se lee como crema de leche, y "mantequilla vegetal" como manteca, con la etiqueta de lácteo: `es_apta` puede negar por error que una receta sea vegana. Algunas equivalencias aprobadas en bloque son gruesas: "1 vaso pequeño" cuenta como 200 ml (54 recetas) y "2 piezas de calabaza" como dos zapallitos de 250 g (18 recetas). El script que genera las tareas no usa recetas con esas líneas. La muestra al azar del Anexo B mostró dos errores más del léxico: "3 cucharadas de Harina maíz" (sin "de") se lee como harina común, y "Edulcorante sin azúcar" se lee como azúcar. Ampliar el léxico unos 150 nombres llevaría el corpus base a unas 7.700 recetas; queda como alternativa, porque requiere revisión manual.
+
+El **inventario** no sale del corpus. Es fijo para todas las tareas, se expresa en la unidad elegida para cada ingrediente y el harness lo carga como estado de la sesión.
 
 ## 3. Herramientas
 
@@ -46,9 +78,9 @@ El inventario es **estado de la sesión**. El harness lo muestra en el prompt de
 | Herramienta | Qué hace (una sola cosa) |
 |---|---|
 | `buscar_recetas(contiene: list[str], excluye: list[str] = [])` | Filtra por presencia de ingredientes canónicos. Devuelve el total y las primeras 10 recetas (`id`, `nombre`, `minutos`, `comensales`), ordenadas por duración y, si empatan, por id. Si un nombre no está en el léxico, devuelve un error con los nombres válidos más parecidos. |
-| `detalle_receta(receta_id: int, porciones: int \| None)` | Devuelve los ingredientes de una receta: canónico, cantidad, unidad y línea original. Con `porciones`, escala las cantidades. |
+| `detalle_receta(receta_id: int, porciones: int \| None)` | Devuelve los ingredientes de una receta: canónico, cantidad normalizada, unidad y línea original. Con `porciones`, escala las cantidades. |
 | `es_apta(receta_id: int, dieta: "vegetariana" \| "vegana" \| "sin_gluten" \| "sin_lactosa")` | Devuelve `{apta, ingredientes_que_lo_impiden}`, según las etiquetas del léxico. |
-| `faltantes(receta_id: int, porciones: int)` | Compara la receta escalada con el inventario de la sesión. Devuelve, por ingrediente, si alcanza, si falta o si no se puede comparar por la unidad. |
+| `faltantes(receta_id: int, porciones: int)` | Compara la receta escalada con el inventario de la sesión, en la unidad de cada ingrediente. Devuelve, por ingrediente, cuánto hace falta, cuánto hay y si alcanza. |
 | `terminar(respuesta, motivo)` | La del kit. `respuesta = null` cuando los datos no alcanzan. |
 
 **Qué sacamos y por qué:**
@@ -58,20 +90,20 @@ El inventario es **estado de la sesión**. El harness lo muestra en el prompt de
 - `buscar_sustituciones` sale porque no hay una fuente de datos de sustituciones: la tabla la habríamos inventado nosotros.
 - `buscar_recetas` pierde `priorizar`, `restricciones` y `limite`: solo filtra. Las restricciones de dieta se comprueban con `es_apta` sobre cada candidata, así que una tarea con dieta necesita **buscar → es_apta (una o más veces) → faltantes o detalle**.
 
-**Encadenamiento:** 7 de las 15 tareas necesitan dos llamadas o más (las 4 medias respondibles y las 3 difíciles, que necesitan tres o más). Ver la columna "cadena" del Anexo A.
+**Encadenamiento:** 7 de las 15 tareas necesitan dos llamadas o más (las 4 medias respondibles y las 3 difíciles, que necesitan cuatro: buscar, `es_apta` dos veces y `faltantes`). En las tareas con dieta, la primera receta de la búsqueda nunca cumple la dieta: saltear `es_apta` da una respuesta equivocada. Ver la columna "cadena" del Anexo A.
 
 ## 4. Dos decisiones de agente que vamos a medir
 
 1. **Planificación antes de usar herramientas** (plan-and-execute). Una primera llamada escribe el plan como lista de pasos (qué buscar, qué filtro de dieta, para cuántas porciones). Falla que esperamos arreglar: en la §7, con los resultados delante, el modelo no eligió una receta (devolvió las tres) y no cruzó lo que pedía la pregunta con los datos. En las tareas difíciles esperamos que salte `es_apta` o que use las porciones equivocadas.
 2. **Verificación antes de `terminar`.** Un chequeo en código del harness, no del modelo, revisa que la receta citada exista en las trazas de esta corrida, que haya pasado por `es_apta` si la pregunta pedía una dieta y por `faltantes` con las porciones de la pregunta, y que la respuesta no contenga ingredientes o cantidades que no aparecieron en ningún resultado de herramienta. Si algo falla, le devuelve al modelo qué faltó. Falla que esperamos arreglar: respuestas con cantidades inventadas y respuestas a tareas imposibles.
 
-**No es circular.** La métrica compara la respuesta con la esperada del conjunto congelado, que calcula `tareas/verificadores_recetas.py` directo sobre el corpus normalizado, sin llamar a las herramientas ni al verificador del agente. Lo único que comparten es la capa de datos (léxico y parser), y eso lo declaramos.
+**No es circular.** La métrica compara la respuesta con la esperada del conjunto congelado, que un script de verificación calcula directo sobre el corpus normalizado, sin llamar a las herramientas ni al verificador del agente. Lo único que comparten es la capa de datos (léxico, parser y tabla de equivalencias), y eso lo declaramos.
 
 Cada decisión se mide por separado contra el agente sin ella, con las mismas 15 tareas.
 
 ## 5. Conjunto de evaluación
 
-Son 15 tareas en `tareas/recetas.json`, con el formato del kit más un campo `inventario` que carga el harness. Todas usan el mismo inventario fijo:
+Son 15 tareas con exactamente el formato de las tareas públicas del Mundial del kit. Todas usan el mismo inventario fijo, expresado en la unidad elegida para cada ingrediente, que el harness carga como estado de la sesión:
 
 | Ingrediente | Cantidad | Vence en |
 |---|---|---|
@@ -81,15 +113,16 @@ Son 15 tareas en `tareas/recetas.json`, con el formato del kit más un campo `in
 | zanahoria | 3 unidades | 6 días |
 | cebolla | 2 unidades | 10 días |
 | huevo | 6 unidades | 12 días |
-| papa | 1000 g | 15 días |
+| papa | 5 unidades | 15 días |
 | arroz | 1000 g | 60 días |
 | harina | 1000 g | 90 días |
 | lenteja | 500 g | 90 días |
 
 - **Dificultad:** 6 fáciles (5 respondibles con una llamada y 1 imposible), 6 medias (4 respondibles y 2 imposibles) y 3 difíciles (tres llamadas encadenadas).
 - **Imposibles (3), pero verosímiles:** calorías por porción (no están en los datos), una combinación de ingredientes sin ninguna receta en el corpus (verificado: 0) y el costo de los faltantes (no hay precios).
-- **Respuestas cerradas:** `numero`, `texto` (el nombre de la receta) o `lista` (los ingredientes canónicos que faltan). Cuando la pregunta pide "la más rápida", el empate se rompe por el id más bajo, que es el orden en que devuelve `buscar_recetas`. Para las respuestas de tipo `lista`, el evaluador compara conjuntos después de normalizar con el mismo léxico, de modo que "lentejas" y "lenteja" cuentan igual.
-- **Verificadas con código:** `factibilidad/borrador_respuestas.py` calcula hoy cada respuesta sobre el corpus y es la base de `tareas/verificadores_recetas.py`. El conjunto se congela antes de la primera corrida del agente. Lo redactamos nosotros con ayuda de un asistente de código, y cada respuesta la revisamos a mano contra las líneas crudas de la receta (la nota de cada tarea del Anexo A cita esa línea).
+- **Respuestas cerradas:** `numero`, `texto` (el nombre de la receta) o `lista` (los ingredientes canónicos que faltan). Cuando la pregunta pide "la más rápida", la receta correcta es única por construcción: el script que genera las tareas comprueba que no empate en duración con otra que cumpla lo pedido, así que la respuesta no depende del desempate. Para las respuestas de tipo `lista`, el evaluador compara conjuntos después de normalizar con el mismo léxico, de modo que "lentejas" y "lenteja" cuentan igual.
+- **Robustas a las aproximaciones:** las respuestas numéricas salen de líneas sin conversión. Cuando un faltante depende de una cantidad convertida, el generador exige que la conclusión se mantenga aunque la equivalencia se equivoque en ±30%. Por ejemplo, una versión anterior de una tarea pedía "pizza keto de pollo para 6 personas", y que faltara pollo dependía de que una pechuga pesara 200 g. El generador la rechazó.
+- **Verificadas con código:** un script calcula cada respuesta directo sobre el dataset final, sin pasar por las herramientas del agente. Es la base del verificador del conjunto. Elige las recetas por consulta y no por id fijo: cada tarea tiene una lista de combinaciones candidatas y usa la primera que pasa todas las comprobaciones. Así, si cambian los datos, la tarea se adapta en vez de quedar mal. Las tareas que piden el nombre de una receta nunca repiten respuesta, y ninguna respuesta puede salir de una receta con líneas sospechosas conocidas: "vaso pequeño", calabaza entera, crema pastelera o mantequilla vegetal. El conjunto se congela antes de la primera corrida del agente. Lo redactamos nosotros con ayuda de un asistente de código, y cada respuesta la revisamos a mano contra las líneas crudas de la receta (la nota de cada tarea del Anexo A cita esa línea).
 
 El detalle completo de las tareas está en el Anexo A.
 
@@ -100,7 +133,7 @@ El detalle completo de las tareas está en el Anexo A.
 
 ## 7. Prueba de factibilidad (versión mínima: libro cerrado y resultado pegado)
 
-Todavía no tenemos el loop del Bloque 1, así que hicimos la versión mínima que propuso la devolución. Corrimos las cinco tareas de la v1 con `qwen3:8b` sin herramientas. En las tareas 2 y 3 repetimos la pregunta pegando en el prompt el resultado real de `buscar_recetas` y de `detalle_receta` sobre el corpus, tal como lo devolvería una herramienta. Usamos `factibilidad/libro_cerrado_5.py` con temperatura 0, semilla 1337, `think` apagado, `num_ctx` 8192 y `num_predict` 800. La corrida fue local en CPU, sin GPU, con Ollama 0.40.16. Las trazas están en `factibilidad/trazas/` y las respuestas completas en `factibilidad/respuestas.json`.
+Todavía no tenemos el loop del Bloque 1, así que hicimos la versión mínima que propuso la devolución. Corrimos las cinco tareas de la v1 con `qwen3:8b` sin herramientas. En las tareas 2 y 3 repetimos la pregunta pegando en el prompt el resultado real de `buscar_recetas` y de `detalle_receta` sobre el corpus, tal como lo devolvería una herramienta. Usamos temperatura 0, semilla 1337, `think` apagado, `num_ctx` 8192 y `num_predict` 800. La corrida fue local en CPU, sin GPU, con Ollama 0.40.16. Guardamos las trazas con el esquema del kit y las respuestas completas.
 
 | Tarea | Variante | ¿Herramientas o memoria? | Herramientas y llamadas | ¿La resolvió? | Error o rareza observada |
 |---|---|---|---|---|---|
@@ -153,41 +186,110 @@ Con la verificación en código antes de `terminar`, el agente baja las respuest
 
 ## Anexo A: las 15 tareas, con su respuesta calculada
 
-Las respuestas las calculó `factibilidad/borrador_respuestas.py` sobre el corpus de trabajo. Inventario: el de la §5.
+Respuestas calculadas con código sobre el dataset final. Inventario: el de la §5. La nota dice de qué receta, y cuando hace falta de qué línea, sale cada respuesta.
 
 | id | Pregunta | Respuesta | Tipo | Dif. | Cadena esperada | Nota (de dónde sale) |
 |---|---|---|---|---|---|---|
-| rec-001 | ¿Cuántas recetas del corpus llevan lentejas y arroz? | 8 | numero | facil | buscar_recetas |  |
+| rec-001 | ¿Cuántas recetas del corpus llevan lentejas? | 33 | numero | facil | buscar_recetas |  |
 | rec-002 | ¿Cuál es la receta más rápida que lleva papa y huevo? | patatas a lo pobre con huevo frito | texto | facil | buscar_recetas | id 18611, 10 min |
-| rec-003 | ¿La receta 3814 es apta para veganos? Respondé sí o no. | sí | texto | facil | es_apta | arroz con lentejas arabe |
+| rec-003 | ¿La receta 7533 es apta para veganos? Respondé sí o no. | sí | texto | facil | es_apta | ensalada de lentejas con pimientos: ['aceite', 'ajo', 'cebolla', 'condimento', 'lenteja', 'morron', 'sal'] |
 | rec-004 | ¿Cuántos gramos de arroz lleva la receta 3628 si la hago para 6 personas? | 300 | numero | facil | detalle_receta | arroz thai con verduras y pollo, 2 comensales, línea: 100 gramos de Arroz blanco cocido |
-| rec-005 | ¿Cuál es la receta más rápida que lleva zanahoria y el ingrediente de mi inventario que vence primero? | ensaladilla rusa original | texto | facil | buscar_recetas | vence primero: pollo (lo marca el harness en el prompt); id 7383 |
-| rec-006 | ¿Cuál es la receta más rápida que lleva pollo y zanahoria y es sin lactosa? | ensaladilla rusa original | texto | media | buscar_recetas → es_apta | id 7383 |
-| rec-007 | De las recetas que llevan lentejas y arroz, ¿cuál es la más rápida que sea vegana? | lentejas con arroz y tomate | texto | media | buscar_recetas → es_apta → es_apta | id 9041 |
-| rec-008 | Para la receta más rápida que lleva pollo y zanahoria, ¿cuántas pechugas de pollo necesito para 6 personas? | 2 | numero | media | buscar_recetas → detalle_receta | id 7383, 3 comensales, línea: 1 pechuga de pollo fileteada |
-| rec-009 | Si hago para 10 personas la receta más rápida que lleva papa y huevo, ¿cuántos huevos me faltan con lo que tengo? | 14 | numero | media | buscar_recetas → faltantes | id 18611, 1 comensales, línea: 2 Huevos |
-| rec-010 | Quiero algo vegetariano con arroz y tomate: tomá la receta vegetariana más rápida que los lleve y decime qué me falta comprar para 4 personas. | `["limon", "maiz", "palta", "perejil", "queso", "tomate"]` | lista | dificil | buscar_recetas → es_apta → faltantes | id 7531 ensalada de arroz basmati rapida y ligera |
-| rec-011 | De las recetas con pollo, zanahoria y cebolla que no llevan huevo, tomá la más rápida que sea sin gluten: ¿qué me falta comprar para hacerla para 6 personas? | `["ajo", "miel", "morron", "pollo", "zapallo"]` | lista | dificil | buscar_recetas → es_apta → faltantes | id 3628 arroz thai con verduras y pollo |
-| rec-012 | No tengo manteca. De las recetas vegetarianas con leche, harina y huevo que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 personas? | 3 | numero | dificil | buscar_recetas → es_apta → faltantes | id 8124 pancakes de manzana: faltan ['azucar', 'levadura', 'manzana'] |
-| rec-013 | ¿Cuántas calorías por porción tiene la receta 9041? | `null` (imposible) | numero | facil | detalle_receta | el corpus no tiene calorías numéricas |
+| rec-005 | ¿Cuál es la receta más rápida que lleva leche y el ingrediente de mi inventario que vence primero? | salchichas con crema de queso | texto | facil | buscar_recetas | vence primero: pollo (lo marca el harness en el prompt); id 6029 |
+| rec-006 | ¿Cuál es la receta más rápida que lleva huevo y pasta y es sin lactosa? | sopa de fideos con huevo | texto | media | buscar_recetas → es_apta → es_apta → es_apta → es_apta → es_apta → es_apta | id 17022; posición 6 en la búsqueda; la primera (10857 spaghetti carbonara con nata) no es sin lactosa |
+| rec-007 | ¿Cuál es la receta más rápida que lleva papa y harina y es vegetariana? | gofres de patata | texto | media | buscar_recetas → es_apta → es_apta | id 8142; posición 2 en la búsqueda; la primera (2319 croquetas de patata y jamon) no es vegetariana |
+| rec-008 | Para la receta más rápida que lleva pollo y morrón y no lleva cebolla, ¿cuántos gramos de pollo necesito para 6 personas? | 150 | numero | media | buscar_recetas → detalle_receta | id 4052, 4 comensales, línea: 100 gramos de Pechuga de pollo |
+| rec-009 | Si hago para 10 personas la receta más rápida que lleva papa y huevo, ¿cuántos huevos me faltan con lo que tengo? | 14 | numero | media | buscar_recetas → faltantes | id 18611, 1 comensales, línea: 2 Huevos; necesita 20 |
+| rec-010 | De las recetas con arroz y tomate, tomá la más rápida que sea vegetariana: ¿qué me falta comprar para hacerla para 4 personas? | `["ajo", "banana", "cebolla", "tomate"]` | lista | dificil | buscar_recetas → es_apta → es_apta → faltantes | id 4281 arroz a la cubana con platano; posición 2 en la búsqueda |
+| rec-011 | De las recetas con tomate y queso, tomá la más rápida que sea vegetariana: ¿qué me falta comprar para hacerla para 4 personas? | `["espinaca", "queso"]` | lista | dificil | buscar_recetas → es_apta → es_apta → faltantes | id 8826 revuelto de espinacas con tomate y queso; posición 2 en la búsqueda |
+| rec-012 | No tengo manteca. De las recetas vegetarianas con zanahoria y queso que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 personas? | 5 | numero | dificil | buscar_recetas → es_apta → es_apta → faltantes | id 10788 espaguetis integrales con zanahoria: faltan ['arveja', 'maiz', 'pasta', 'queso', 'zanahoria'] |
+| rec-013 | ¿Cuántas calorías por porción tiene la receta 7533? | `null` (imposible) | numero | facil | detalle_receta | el corpus no tiene calorías numéricas |
 | rec-014 | Tengo lentejas, frutillas y pescado y quiero usar los tres: ¿cuál es la receta más rápida que los lleve? | `null` (imposible) | texto | media | buscar_recetas | 0 recetas los llevan a los tres |
-| rec-015 | ¿Cuánto me cuesta comprar lo que me falta para hacer la receta 9041 para 4 personas? | `null` (imposible) | numero | media | faltantes | el corpus no tiene precios |
+| rec-015 | ¿Cuánto me cuesta comprar lo que me falta para hacer la receta 7533 para 4 personas? | `null` (imposible) | numero | media | faltantes | el corpus no tiene precios |
 
-## Anexo B: diez filas reales
+## Anexo B: diez filas reales, crudas y procesadas
 
-En `factibilidad/diez_filas.md` están las diez filas tal como vienen en el CSV: 6 de recetasgratis.net (el subconjunto que usamos) y 1 de cada uno de los otros sitios grandes (mexicoenmicocina, yanuq y cookpad), sin las columnas `Pasos` ni `Contexto`. Tres ejemplos representativos de la columna `Ingredientes`:
+### B.1. Diez filas crudas de recetasgratis.net
 
-```
-Id 8124 (recetasgratis, lista):
-['1 manzana', '1 huevo', '1 taza de leche (200 cc)', '1 taza de harina (100 gr)',
- '1 cucharada postre de polvo para hornear', '1 cucharada sopera de azúcar',
- '1 cucharadita de esencia de vainilla']
+Tal como vienen en el CSV (columnas `Id`, `Nombre`, `Comensales`, `Duracion` e `Ingredientes`; se omiten `URL`, `Pasos`, `Contexto` y el resto). Elegidas al azar, con semilla fija, entre las recetas del dataset final: las 4 primeras no necesitaron ningún cambio y las 6 siguientes se corrigieron.
 
-Id 1 (mexicoenmicocina, texto con comas):
-½ taza de cilantro finamente picado, 1 taza de tomate picadito y sin semillas, …,
-3 papas rojas de tamaño mediano ~510 gr. *, 24 palillos de madera para sostener los taquitos …
+| Id | Nombre | Comensales | Duracion | Ingredientes |
+|---|---|---|---|---|
+| 5627 | lomo estofado al vino | `3 comensales` | `00:30` | `['½ kilogramo de Lomo de cerdo', '1 kilogramo de Champiñones', '½ litro de Vino tinto', '100 gramos de Mantequilla', '¼ litro de Aceite', '1 diente de Ajo', '1 pizca de Sal', 'Pimienta al gusto']` |
+| 12585 | nuggets de atun | `2 comensales` | `00:15` | `['150 gramos de Atún de lata', '100 gramos de Pan rallado', '120 gramos de Queso crema', '5 unidades de Huevo']` |
+| 16643 | mayonesa casera | `1 comensal` | `00:10` | `['1 Huevo', '200 mililitros de Aceite de girasol', '1 chorro de Vinagre o Zumo de limón', '1 pizca de Sal']` |
+| 16755 | salsa raita | `1 comensal` | `00:15` | `['¼ unidad de Cebolla', '½ unidad de Pepino', '1 unidad de Tomate', '1 pizca de Comino en polvo', '1 pizca de Chat masala o Sal negra', '1 pizca de Sal', '150 gramos de Yogur natural']` |
+| 14137 | crema pastelera basica | `2 comensales` | `00:45` | `['4 unidades de Yemas de huevo', '100 gramos de Azúcar                                                                    (½ taza)', '50 gramos de Harina', '2 cucharadas soperas de Maicena', '½ litro de Leche', '1 rama de Canela']` |
+| 18019 | pimiento relleno de carne molida | `4 comensales` | `00:45` | `['4 piezas de Pimiento morrón', '400 gramos de Carne molida de res', '2 Zanahorias', '200 gramos de Chícharos', '1 Papa grande', '¼ Cebolla', '1 diente de Ajo', '1 pizca de Sal', '1 pizca de Pimienta', '2 cucharadas soperas de Aceite']` |
+| 19278 | tortilla de acelgas vegana | `2 comensales` | `00:15` | `['200 gramos de Hojas acelga', '4 cucharadas soperas de Harina trigo', '3 cucharadas soperas de Harina maíz', '½ sobre de Levadura', '1 vaso de Agua', '1 chorro de Vinagre de vino', '1 chorro de Aceite de oliva', '1 pizca de Sal', '1 pizca de Pimienta negra']` |
+| 3591 | porridge de avena y platano | `1 comensal` | `00:10` | `['4 cucharadas soperas de avena', '½ taza de agua                                                                    (120 mililitros)', '4 cucharadas soperas de leche descremada o bebida vegetal', '1 plátano chico', '1 pizca de canela']` |
+| 18184 | pastel de patata con bacon y queso | `2 comensales` | `01:00` | `['500 gramos de Patata', '100 gramos de Bacon ahumado', '200 mililitros de Nata', '1 unidad de Huevo', '1 pizca de Sal', '120 gramos de Queso en lonchas', '80 gramos de Queso rallado']` |
+| 6970 | batido de manzanas y frutillas bajo en calorias | `1 comensal` | `00:10` | `['1 litro de Leche sin lactosa', '500 gramos de Fresa o Frutilla', '2 Manzanas verdes', '1 cucharadita de Edulcorante sin azúcar']` |
 
-Id 9880 (recetasgratis, todo en una línea):
-['4 papas grandes picadas en cuadros para hervirlas 1 lata de maiz 3 huevos hervidos 1lb de
-  camarones medianos pelados 1 cebolla en cuadritos …']
-```
+### B.2. Las mismas diez filas después de la normalización
+
+Cada ingrediente queda con su nombre canónico, su cantidad y la unidad elegida para ese ingrediente. Los básicos (sal, pimienta, aceite, agua, condimentos, hierbas) quedan sin cantidad. Las cantidades marcadas con * son conversiones; la última columna dice de qué línea salen y con qué equivalencia.
+
+| Id | Comensales | Minutos | Ingredientes normalizados | Conversiones aplicadas | Estado |
+|---|---|---|---|---|---|
+| 5627 | 3 | 30 | cerdo 500 g · champinon 1000 g · vino 500 ml · manteca 100 g · aceite (básico) · ajo 1 diente · sal (básico) · pimienta (básico) | — | sin cambios |
+| 12585 | 2 | 15 | pescado 150 g · pan 100 g · queso 120 g · huevo 5 unidad | — | sin cambios |
+| 16643 | 1 | 10 | huevo 1 unidad · aceite (básico) · condimento (básico) · sal (básico) | — | sin cambios |
+| 16755 | 1 | 15 | cebolla 0,25 unidad · pepino 0,5 unidad · tomate 1 unidad · condimento (básico) · sal (básico) · sal (básico) · yogur 150 g | — | sin cambios |
+| 14137 | 2 | 45 | huevo 4 unidad · azucar 100 g · harina 50 g · maiz 21 g* · leche 500 ml · condimento (básico) | «2 cucharadas soperas de Maicena» → 21 g (1 cucharada = 15 ml; maiz: 0,7 g por ml) | corregida |
+| 18019 | 4 | 45 | morron 4 unidad* · carne vacuna 400 g · zanahoria 2 unidad · arveja 200 g · papa 1 unidad · cebolla 0,25 unidad · ajo 1 diente · sal (básico) · pimienta (básico) · aceite (básico) | «4 piezas de Pimiento morrón» → 4 unidad (1 pieza = 1 unidad) | corregida |
+| 19278 | 2 | 15 | espinaca 200 g · harina 33 g* · harina 24,75 g* · levadura 3,89 ml* · agua (básico) · condimento (básico) · aceite (básico) · sal (básico) · pimienta (básico) | «4 cucharadas soperas de Harina trigo» → 33 g (1 cucharada = 15 ml; harina: 0,55 g por ml)<br>«3 cucharadas soperas de Harina maíz» → 24,75 g (1 cucharada = 15 ml; harina: 0,55 g por ml)<br>«½ sobre de Levadura» → 3,89 ml (levadura: 1 sobre = 7 g; levadura: 0,9 g por ml) | corregida |
+| 3591 | 1 | 10 | avena 60 ml* · agua (básico) · leche 60 ml* · banana 1 unidad · condimento (básico) | «4 cucharadas soperas de avena» → 60 ml (1 cucharada = 15 ml)<br>«4 cucharadas soperas de leche descremada o bebida vegetal» → 60 ml (1 cucharada = 15 ml) | corregida |
+| 18184 | 2 | 60 | papa 2,5 unidad* · cerdo 100 g · crema de leche 200 ml · huevo 1 unidad · sal (básico) · queso 120 g · queso 80 g | «500 gramos de Patata» → 2,5 unidad (papa: 1 unidad = 200 g) | corregida |
+| 6970 | 1 | 10 | leche 1000 ml · frutilla 500 g · manzana 2 unidad · azucar 4,25 g* | «1 cucharadita de Edulcorante sin azúcar» → 4,25 g (1 cucharadita = 5 ml; azucar: 0,85 g por ml) | corregida |
+
+Los nombres canónicos van sin tildes (`champinon`, `azucar`). Dos errores del léxico se ven en esta muestra: en la 19278, «3 cucharadas soperas de Harina maíz» quedó como harina de trigo, y en la 6970, «Edulcorante sin azúcar» quedó como azúcar. Están entre las fallas conocidas de la §2.
+
+## Anexo C: unidades y equivalencias
+
+**Unidad elegida para los ingredientes del inventario** (la más frecuente en el corpus). La última columna dice qué parte de sus líneas ya venía en esa unidad o se lleva a ella con una conversión fija:
+
+| Ingrediente | Unidad | Líneas | En esa unidad |
+|---|---|---|---|
+| pollo | g | 240 | 65% |
+| tomate | unidad | 966 | 78% |
+| leche | ml | 1082 | 88% |
+| zanahoria | unidad | 455 | 84% |
+| cebolla | unidad | 2043 | 85% |
+| huevo | unidad | 2013 | 99% |
+| papa | unidad | 700 | 70% |
+| arroz | g | 289 | 58% |
+| harina | g | 1371 | 70% |
+| lenteja | g | 69 | 78% |
+
+**Las 126 equivalencias**: 9 universales (valen para cualquier ingrediente), 48 densidades (gramos por mililitro), 30 pesos por unidad y 39 unidades propias de un ingrediente. Todas son valores estándar de cocina, aproximados. Las universales y una muestra del resto:
+
+| Tipo | Equivalencia | Estado |
+|---|---|---|
+| universal | 1 taza = 240 ml | ok |
+| universal | 1 cucharada = 15 ml | ok |
+| universal | 1 cucharadita = 5 ml | ok |
+| universal | 1 vaso = 200 ml | revisada: aprobada |
+| universal | 1 copa = 150 ml | revisada: aprobada |
+| universal | 1 cubilete = 100 ml | revisada: aprobada |
+| universal | 1 libra = 453,6 g | ok |
+| universal | 1 onza = 28,35 g | ok |
+| universal | 1 pieza = 1 unidad | ok |
+| densidad | harina: 0,55 g por ml | ok |
+| densidad | azucar: 0,85 g por ml | ok |
+| densidad | queso: 0,45 g por ml | revisada: aprobada |
+| densidad | leche: 1,03 g por ml | ok |
+| densidad | arroz: 0,85 g por ml | ok |
+| peso por unidad | cebolla: 1 unidad = 150 g | ok |
+| peso por unidad | papa: 1 unidad = 200 g | ok |
+| peso por unidad | tomate: 1 unidad = 120 g | ok |
+| peso por unidad | zanahoria: 1 unidad = 80 g | ok |
+| peso por unidad | zapallo: 1 unidad = 250 g | revisada: aprobada |
+| peso por unidad | huevo: 1 unidad = 55 g | ok |
+| especial | pollo: 1 pechuga = 200 g | ok |
+| especial | pescado: 1 lata = 120 g | ok |
+| especial | caldo: 1 pastilla = 500 ml | ok |
+| especial | pasta: 1 paquete = 500 g | ok |
+| especial | limón: 1 limón rinde 30 ml de jugo | ok |
+| especial | leche condensada: 1 lata = 397 g | ok |
+
+**Pendientes de revisión (3):** tortilla de maiz: 1 unidad = 30 g (tortilla de maíz mediana ≈ 30 g; las de taco son más chicas); tortilla de harina: 1 unidad = 45 g (tortilla de harina mediana ≈ 45 g; las de burrito, más); leche evaporada: 1 lata = 410 ml (latas de 315 a 410 g según la marca).

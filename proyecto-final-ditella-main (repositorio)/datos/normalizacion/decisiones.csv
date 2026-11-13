@@ -1,0 +1,20 @@
+id,tema,decision,motivo,alcance,estado
+D01,fuente,Usar solo recetasgratis.net,Es el 90% del CSV y trae los ingredientes como lista; los otros sitios suman ~250 recetas útiles y piden reparar mojibake (cookpad) o cortar por comas (el resto),18187 recetas,aplicada
+D02,filtro,"Exigir comensales, duración y al menos 3 líneas de ingredientes",Un único corpus: todas las recetas sirven para escalar porciones y ordenar por tiempo,quedan 12473 recetas,aplicada
+D03,filtro,Exigir que el léxico reconozca todas las líneas,"Sin eso no se puede saber si una receta cumple una dieta ni qué falta; ampliar el léxico es una alternativa guardada (~150 nombres más, revisión manual)",quedan 5197 recetas,aplicada
+D04,léxico,"«pasta de ajo» es ajo y «pasta de ají» es ají, no pasta",Se leían como pasta y aparecían como «1 pizca de pasta»,182 líneas,aplicada
+D05,léxico,"Perejil, cilantro y albahaca se tratan como básicos (como la sal)","Vienen en pizcas, ramas y puñados, que no son cantidades convertibles",984 líneas,aplicada
+D06,léxico,La cebolla de verdeo es un ingrediente distinto de la cebolla,Viene en ramas y tallos; mezclada con la cebolla rompía su unidad,150 líneas,aplicada
+D07,léxico,«Consomé» es caldo,«Consomé de pollo» hacía aparecer como receta con pollo a recetas que no lo llevan,64 líneas,aplicada
+D08,unidades,Cada ingrediente tiene una sola unidad: la más frecuente en el corpus base,"Una regla por ingrediente, que no depende del inventario; ver unidades_por_ingrediente.csv",62 ingredientes,aplicada
+D09,unidades,"kg, l, cl, dl y cc se pasan a g o ml sin aproximar",Son conversiones exactas,incluidas en las líneas sin_cambio,aplicada
+D10,unidades,"Si la receta escribe la cantidad métrica entre paréntesis, se usa esa",«1 taza de harina (100 gr)»: el dato de la propia receta es mejor que una equivalencia,408 líneas,aplicada
+D11,unidades,"Medidas caseras, pesos por unidad y envases se convierten con equivalencias estándar «ok»",Ver equivalencias.csv; son aproximaciones declaradas,8385 líneas corregidas en 2426 recetas,aplicada
+D12,unidades,Las equivalencias marcadas «dudosa» no se aplican: esas recetas quedan apartadas,Ver revision_dudosas.csv; aprobar una equivalencia es cambiar su estado a «ok» y volver a correr,58 líneas en 28 recetas,para_revision
+D13,unidades,"Pizca, chorro, puñado y gota no se convierten: la receta se descarta",No son una cantidad,610 líneas,aplicada
+D14,unidades,Las cantidades en rango («2 o 3») se descartan,No hay una cantidad única,12 líneas,aplicada
+D15,unidades,Un ingrediente no básico sin cantidad descarta la receta,No se puede escalar ni comparar con el inventario,781 líneas,aplicada
+D16,unidades,«Pieza» equivale a una unidad,«2 piezas de chile» son 2 chiles,623 líneas,aplicada
+D17,inventario,El inventario se expresa en la unidad elegida para cada ingrediente,El corpus no cambia si cambia el inventario,tareas/recetas_inventario.json,aplicada
+D18,unidades,Equivalencias revisadas a mano (ver la nota «revisada por» en equivalencias.csv),Las 39 dudosas se aprobaron en bloque con su valor sugerido el 2026-11-13; registro en revision_equivalencias_2026-11-13_aprobada.csv,39 equivalencias revisadas,aplicada
+D19,léxico,"Tortillas (de maíz, de harina) y leches especiales (condensada, evaporada, de coco) son ingredientes propios","Se leían como maíz, harina o leche: «9 tortillas de maíz» daba 9 choclos y la leche de coco figuraba como lácteo",329 líneas,aplicada

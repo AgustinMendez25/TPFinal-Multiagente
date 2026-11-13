@@ -1,0 +1,145 @@
+[
+  {
+    "id": "rec-001",
+    "pregunta": "¿Cuántas recetas del corpus llevan lentejas?",
+    "respuesta": 33,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-002",
+    "pregunta": "¿Cuál es la receta más rápida que lleva papa y huevo?",
+    "respuesta": "patatas a lo pobre con huevo frito",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-003",
+    "pregunta": "¿La receta 7533 es apta para veganos? Respondé sí o no.",
+    "respuesta": "sí",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-004",
+    "pregunta": "¿Cuántos gramos de arroz lleva la receta 3628 si la hago para 6 personas?",
+    "respuesta": 300,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-005",
+    "pregunta": "¿Cuál es la receta más rápida que lleva leche y el ingrediente de mi inventario que vence primero?",
+    "respuesta": "salchichas con crema de queso",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-006",
+    "pregunta": "¿Cuál es la receta más rápida que lleva huevo y pasta y es sin lactosa?",
+    "respuesta": "sopa de fideos con huevo",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-007",
+    "pregunta": "¿Cuál es la receta más rápida que lleva papa y harina y es vegetariana?",
+    "respuesta": "gofres de patata",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-008",
+    "pregunta": "Para la receta más rápida que lleva pollo y morrón y no lleva cebolla, ¿cuántos gramos de pollo necesito para 6 personas?",
+    "respuesta": 150,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-009",
+    "pregunta": "Si hago para 10 personas la receta más rápida que lleva papa y huevo, ¿cuántos huevos me faltan con lo que tengo?",
+    "respuesta": 14,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-010",
+    "pregunta": "De las recetas con arroz y tomate, tomá la más rápida que sea vegetariana: ¿qué me falta comprar para hacerla para 4 personas?",
+    "respuesta": [
+      "ajo",
+      "banana",
+      "cebolla",
+      "tomate"
+    ],
+    "tipo": "lista",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "rec-011",
+    "pregunta": "De las recetas con tomate y queso, tomá la más rápida que sea vegetariana: ¿qué me falta comprar para hacerla para 4 personas?",
+    "respuesta": [
+      "espinaca",
+      "queso"
+    ],
+    "tipo": "lista",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "rec-012",
+    "pregunta": "No tengo manteca. De las recetas vegetarianas con zanahoria y queso que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 personas?",
+    "respuesta": 5,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "rec-013",
+    "pregunta": "¿Cuántas calorías por porción tiene la receta 7533?",
+    "respuesta": null,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": false
+  },
+  {
+    "id": "rec-014",
+    "pregunta": "Tengo lentejas, frutillas y pescado y quiero usar los tres: ¿cuál es la receta más rápida que los lleve?",
+    "respuesta": null,
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": false
+  },
+  {
+    "id": "rec-015",
+    "pregunta": "¿Cuánto me cuesta comprar lo que me falta para hacer la receta 7533 para 4 personas?",
+    "respuesta": null,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": false
+  }
+]
