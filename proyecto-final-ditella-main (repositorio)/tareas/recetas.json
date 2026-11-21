@@ -141,5 +141,59 @@
     "tolerancia": 0,
     "dificultad": "media",
     "respondible": false
+  },
+  {
+    "id": "rec-016",
+    "pregunta": "De las recetas con pollo y vino, ¿cuál me deja menos ingredientes por comprar para hacerla para 4 personas?",
+    "respuesta": "arroz con pollo y champinones en arrocera",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "rec-017",
+    "pregunta": "¿Para cuántas personas como máximo me alcanzan los huevos que tengo si hago la receta 8185?",
+    "respuesta": 6,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-018",
+    "pregunta": "De las recetas con papa y huevo, ¿cuál es la más rápida que puedo hacer para 2 personas sin comprar nada?",
+    "respuesta": "revuelto de patatas con thermomix",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "rec-019",
+    "pregunta": "Quiero usar los dos ingredientes de mi heladera que vencen antes, junto con pasta. ¿Cuál es la receta más rápida que lleva los tres?",
+    "respuesta": "espaguetis con pollo y brocoli",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "rec-020",
+    "pregunta": "Para la receta más rápida que lleva lentejas y zanahoria: de los ingredientes que usa y tengo en la heladera, ¿cuál vence primero?",
+    "respuesta": "tomate",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "rec-021",
+    "pregunta": "El pollo me vence en 2 días y no quiero comprar más. De las recetas con pollo y palta, ¿cuántas puedo hacer para 8 personas con el pollo que tengo?",
+    "respuesta": 2,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
   }
 ]

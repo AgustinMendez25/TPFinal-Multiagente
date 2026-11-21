@@ -73,7 +73,11 @@
       "cadena_esperada": [
         "buscar_recetas"
       ],
-      "nota": ""
+      "nota": "",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
     },
     {
       "id": "rec-002",
@@ -86,7 +90,11 @@
       "cadena_esperada": [
         "buscar_recetas"
       ],
-      "nota": "id 18611, 10 min"
+      "nota": "id 18611, 10 min",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 18611,
+      "firma": "más rápida: ('papa', 'huevo')"
     },
     {
       "id": "rec-003",
@@ -99,7 +107,11 @@
       "cadena_esperada": [
         "es_apta"
       ],
-      "nota": "ensalada de lentejas con pimientos: ['aceite', 'ajo', 'cebolla', 'condimento', 'lenteja', 'morron', 'sal']"
+      "nota": "ensalada de lentejas con pimientos: ['aceite', 'ajo', 'cebolla', 'condimento', 'lenteja', 'morron', 'sal']",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 7533,
+      "firma": null
     },
     {
       "id": "rec-004",
@@ -112,7 +124,11 @@
       "cadena_esperada": [
         "detalle_receta"
       ],
-      "nota": "arroz thai con verduras y pollo, 2 comensales, línea: 100 gramos de Arroz blanco cocido"
+      "nota": "arroz thai con verduras y pollo, 2 comensales, línea: 100 gramos de Arroz blanco cocido",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 3628,
+      "firma": null
     },
     {
       "id": "rec-005",
@@ -125,7 +141,11 @@
       "cadena_esperada": [
         "buscar_recetas"
       ],
-      "nota": "vence primero: pollo (lo marca el harness en el prompt); id 6029"
+      "nota": "vence primero: pollo (lo marca el harness en el prompt); id 6029",
+      "en_esquema": true,
+      "usa_vencimiento": true,
+      "receta_id": 6029,
+      "firma": "vence primero: ('leche',)"
     },
     {
       "id": "rec-006",
@@ -144,7 +164,11 @@
         "es_apta",
         "es_apta"
       ],
-      "nota": "id 17022; posición 6 en la búsqueda; la primera (10857 spaghetti carbonara con nata) no es sin lactosa"
+      "nota": "id 17022; posición 6 en la búsqueda; la primera (10857 spaghetti carbonara con nata) no es sin lactosa",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 17022,
+      "firma": "más rápida con dieta: ('huevo', 'pasta', 'sin_lactosa')"
     },
     {
       "id": "rec-007",
@@ -159,7 +183,11 @@
         "es_apta",
         "es_apta"
       ],
-      "nota": "id 8142; posición 2 en la búsqueda; la primera (2319 croquetas de patata y jamon) no es vegetariana"
+      "nota": "id 8142; posición 2 en la búsqueda; la primera (2319 croquetas de patata y jamon) no es vegetariana",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 8142,
+      "firma": "más rápida con dieta: ('papa', 'harina', 'vegetariana')"
     },
     {
       "id": "rec-008",
@@ -173,7 +201,11 @@
         "buscar_recetas",
         "detalle_receta"
       ],
-      "nota": "id 4052, 4 comensales, línea: 100 gramos de Pechuga de pollo"
+      "nota": "id 4052, 4 comensales, línea: 100 gramos de Pechuga de pollo",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 4052,
+      "firma": "gramos de pollo: ('morron', 'cebolla')"
     },
     {
       "id": "rec-009",
@@ -187,7 +219,11 @@
         "buscar_recetas",
         "faltantes"
       ],
-      "nota": "id 18611, 1 comensales, línea: 2 Huevos; necesita 20"
+      "nota": "id 18611, 1 comensales, línea: 2 Huevos; necesita 20",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 18611,
+      "firma": "huevos que faltan: ('papa',)"
     },
     {
       "id": "rec-010",
@@ -208,7 +244,11 @@
         "es_apta",
         "faltantes"
       ],
-      "nota": "id 4281 arroz a la cubana con platano; posición 2 en la búsqueda"
+      "nota": "id 4281 arroz a la cubana con platano; posición 2 en la búsqueda",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 4281,
+      "firma": "qué falta: (['arroz', 'tomate'], [], 'vegetariana', 4)"
     },
     {
       "id": "rec-011",
@@ -227,7 +267,11 @@
         "es_apta",
         "faltantes"
       ],
-      "nota": "id 8826 revuelto de espinacas con tomate y queso; posición 2 en la búsqueda"
+      "nota": "id 8826 revuelto de espinacas con tomate y queso; posición 2 en la búsqueda",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 8826,
+      "firma": "qué falta: (['tomate', 'queso'], [], 'vegetariana', 4)"
     },
     {
       "id": "rec-012",
@@ -243,7 +287,11 @@
         "es_apta",
         "faltantes"
       ],
-      "nota": "id 10788 espaguetis integrales con zanahoria: faltan ['arveja', 'maiz', 'pasta', 'queso', 'zanahoria']"
+      "nota": "id 10788 espaguetis integrales con zanahoria: faltan ['arveja', 'maiz', 'pasta', 'queso', 'zanahoria']",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 10788,
+      "firma": "cuántos faltan: (['zanahoria', 'queso'], ['manteca'], 'vegetariana', 8)"
     },
     {
       "id": "rec-013",
@@ -256,7 +304,11 @@
       "cadena_esperada": [
         "detalle_receta"
       ],
-      "nota": "el corpus no tiene calorías numéricas"
+      "nota": "el corpus no tiene calorías numéricas",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": 7533,
+      "firma": null
     },
     {
       "id": "rec-014",
@@ -269,7 +321,11 @@
       "cadena_esperada": [
         "buscar_recetas"
       ],
-      "nota": "0 recetas los llevan a los tres"
+      "nota": "0 recetas los llevan a los tres",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
     },
     {
       "id": "rec-015",
@@ -282,7 +338,537 @@
       "cadena_esperada": [
         "faltantes"
       ],
-      "nota": "el corpus no tiene precios"
+      "nota": "el corpus no tiene precios",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
+    },
+    {
+      "id": "rec-016",
+      "pregunta": "De las recetas con pollo y vino, ¿cuál me deja menos ingredientes por comprar para hacerla para 4 personas?",
+      "respuesta": "arroz con pollo y champinones en arrocera",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "id 4053; posición 5 de 6; faltan ['champinon', 'vino']; cantidad de faltantes por candidata: [3, 3, 5, 5, 2, 3]",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 4053,
+      "firma": "menos compras: ('pollo', 'vino', 4)"
+    },
+    {
+      "id": "rec-017",
+      "pregunta": "¿Para cuántas personas como máximo me alcanzan los huevos que tengo si hago la receta 8185?",
+      "respuesta": 6,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "tortilla de harina y huevo, 4 comensales, línea: 4 Huevos; hay 6 huevos",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 8185,
+      "firma": "huevos alcanzan: ('harina',)"
+    },
+    {
+      "id": "rec-018",
+      "pregunta": "De las recetas con papa y huevo, ¿cuál es la más rápida que puedo hacer para 2 personas sin comprar nada?",
+      "respuesta": "revuelto de patatas con thermomix",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "id 8441; posición 8 en la búsqueda; las anteriores necesitan comprar algo",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 8441,
+      "firma": "sin comprar: ('papa', 'huevo', 2)"
+    },
+    {
+      "id": "rec-019",
+      "pregunta": "Quiero usar los dos ingredientes de mi heladera que vencen antes, junto con pasta. ¿Cuál es la receta más rápida que lleva los tres?",
+      "respuesta": "espaguetis con pollo y brocoli",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "vencen antes: ['pollo', 'tomate'] (lo marca el harness en el prompt); id 11650",
+      "en_esquema": true,
+      "usa_vencimiento": true,
+      "receta_id": 11650,
+      "firma": "los que vencen: (('pasta',),)"
+    },
+    {
+      "id": "rec-020",
+      "pregunta": "Para la receta más rápida que lleva lentejas y zanahoria: de los ingredientes que usa y tengo en la heladera, ¿cuál vence primero?",
+      "respuesta": "tomate",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "detalle_receta"
+      ],
+      "nota": "id 7604 ensalada de lentejas con langostinos; del inventario usa [('tomate', 3), ('zanahoria', 6), ('cebolla', 10), ('lenteja', 90)]",
+      "en_esquema": false,
+      "usa_vencimiento": true,
+      "receta_id": 7604,
+      "firma": "vence primero de la receta: ('lenteja', 'zanahoria')"
+    },
+    {
+      "id": "rec-021",
+      "pregunta": "El pollo me vence en 2 días y no quiero comprar más. De las recetas con pollo y palta, ¿cuántas puedo hacer para 8 personas con el pollo que tengo?",
+      "respuesta": 2,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "7 candidatas; alcanzan [1586, 7633]; gramos de pollo por candidata: [2400, 1000, 288, 800, 200, 1012, 800] (hay 500)",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": "pollo alcanza: ('palta', 8)"
+    }
+  ],
+  "desarrollo": [
+    {
+      "id": "dev-001",
+      "pregunta": "¿Cuántas recetas del corpus llevan espinaca?",
+      "respuesta": 88,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
+    },
+    {
+      "id": "dev-002",
+      "pregunta": "¿Cuál es la receta más rápida que lleva huevo y maíz?",
+      "respuesta": "crema pastelera al microondas",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "id 13041, 10 min",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 13041,
+      "firma": "más rápida: ('huevo', 'maiz')"
+    },
+    {
+      "id": "dev-003",
+      "pregunta": "¿La receta 2176 es apta para veganos? Respondé sí o no.",
+      "respuesta": "no",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "es_apta"
+      ],
+      "nota": "croquetas de lentejas y queso: ['ajo', 'cebolla', 'condimento', 'lenteja', 'pan', 'queso', 'sal']",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 2176,
+      "firma": null
+    },
+    {
+      "id": "dev-004",
+      "pregunta": "¿Cuántos gramos de arroz lleva la receta 4057 si la hago para 6 comensales?",
+      "respuesta": 480,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "arroz con pollo verduras y salsa de soja, 2 comensales, línea: 160 gramos de Arroz",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 4057,
+      "firma": null
+    },
+    {
+      "id": "dev-005",
+      "pregunta": "¿Cuál es la receta más rápida que lleva huevo y el ingrediente de mi inventario que vence primero?",
+      "respuesta": "pizza keto de pollo",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "vence primero: pollo (lo marca el harness en el prompt); id 11146",
+      "en_esquema": true,
+      "usa_vencimiento": true,
+      "receta_id": 11146,
+      "firma": "vence primero: ('huevo',)"
+    },
+    {
+      "id": "dev-006",
+      "pregunta": "¿Cuál es la receta más rápida que lleva queso y morrón y no lleva carne ni pescado?",
+      "respuesta": "ensalada de pimientos con queso",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta",
+        "es_apta"
+      ],
+      "nota": "id 7716; posición 3 en la búsqueda; la primera (1498 sandwichon de jamon y queso) no es vegetariana",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 7716,
+      "firma": "más rápida con dieta: ('queso', 'morron', 'vegetariana')"
+    },
+    {
+      "id": "dev-007",
+      "pregunta": "¿Cuál es la receta más rápida que lleva huevo y vino y es apta para vegetarianos?",
+      "respuesta": "empanada de verduras facil",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta"
+      ],
+      "nota": "id 2113; posición 2 en la búsqueda; la primera (10857 spaghetti carbonara con nata) no es vegetariana",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 2113,
+      "firma": "más rápida con dieta: ('huevo', 'vino', 'vegetariana')"
+    },
+    {
+      "id": "dev-008",
+      "pregunta": "Para la receta más rápida que lleva pollo y limón y no lleva queso, ¿cuántos gramos de pollo necesito para 6 porciones?",
+      "respuesta": 1200,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "detalle_receta"
+      ],
+      "nota": "id 18612, 1 comensales, línea: 200 gramos de Pechuga de pollo",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 18612,
+      "firma": "gramos de pollo: ('limon', 'queso')"
+    },
+    {
+      "id": "dev-009",
+      "pregunta": "Si hago para diez personas la receta más rápida que lleva vino y huevo, ¿cuántos huevos me faltan con lo que tengo?",
+      "respuesta": 4,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes"
+      ],
+      "nota": "id 10857, 1 comensales, línea: 1 Huevo; necesita 10",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 10857,
+      "firma": "huevos que faltan: ('vino',)"
+    },
+    {
+      "id": "dev-010",
+      "pregunta": "De las recetas con queso y morrón que no llevan huevo, tomá la más rápida que sea apta para celíacos: ¿qué me falta comprar para hacerla para 4 personas?",
+      "respuesta": [
+        "cerdo",
+        "chorizo",
+        "morron",
+        "queso"
+      ],
+      "tipo": "lista",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 2394 pinchos de salchicha; posición 2 en la búsqueda",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 2394,
+      "firma": "qué falta: (['queso', 'morron'], ['huevo'], 'sin_gluten', 4)"
+    },
+    {
+      "id": "dev-011",
+      "pregunta": "De las recetas con tomate y leche que no llevan huevo, tomá la más rápida que no lleve gluten: ¿qué me falta comprar para hacerla para 4 comensales?",
+      "respuesta": [
+        "caldo",
+        "crema de leche",
+        "tomate",
+        "vino"
+      ],
+      "tipo": "lista",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta",
+        "es_apta",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 17783 sopa de tomate y albahaca; posición 4 en la búsqueda",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 17783,
+      "firma": "qué falta: (['tomate', 'leche'], ['huevo'], 'sin_gluten', 4)"
+    },
+    {
+      "id": "dev-012",
+      "pregunta": "No tengo manteca. De las recetas sin carne ni pescado con huevo y pan que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 porciones?",
+      "respuesta": 2,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "es_apta",
+        "es_apta",
+        "faltantes"
+      ],
+      "nota": "id 8625 tostadas con huevo en el centro: faltan ['huevo', 'pan']",
+      "en_esquema": true,
+      "usa_vencimiento": false,
+      "receta_id": 8625,
+      "firma": "cuántos faltan: (['huevo', 'pan'], ['manteca'], 'vegetariana', 8)"
+    },
+    {
+      "id": "dev-013",
+      "pregunta": "¿Cuántos gramos de proteína tiene una porción de la receta 7105?",
+      "respuesta": null,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": false,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "el corpus no tiene datos nutricionales",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": 7105,
+      "firma": null
+    },
+    {
+      "id": "dev-014",
+      "pregunta": "Quiero una receta que lleve arroz, frutillas y cerdo a la vez: ¿cuál es la más rápida?",
+      "respuesta": null,
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": false,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "0 recetas los llevan a los tres",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
+    },
+    {
+      "id": "dev-015",
+      "pregunta": "¿En qué supermercado me conviene comprar lo que me falta para la receta 7105 para dos personas?",
+      "respuesta": null,
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": false,
+      "cadena_esperada": [
+        "faltantes"
+      ],
+      "nota": "el corpus no tiene comercios ni precios",
+      "en_esquema": null,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": null
+    },
+    {
+      "id": "dev-016",
+      "pregunta": "De las recetas con pollo y maíz, ¿cuál me deja menos ingredientes por comprar para hacerla para 2 personas?",
+      "respuesta": "empanadas de pollo colombianas",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "id 2121; posición 2 de 6; faltan ['maiz', 'salsa de tomate']; cantidad de faltantes por candidata: [3, 2, 3, 6, 3, 5]",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 2121,
+      "firma": "menos compras: ('pollo', 'maiz', 2)"
+    },
+    {
+      "id": "dev-017",
+      "pregunta": "¿Para cuántas personas como máximo me alcanzan los huevos que tengo si hago la receta 8630?",
+      "respuesta": 12,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "detalle_receta"
+      ],
+      "nota": "tortitas de avena al microondas, 2 comensales, línea: 1 Huevo; hay 6 huevos",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 8630,
+      "firma": "huevos alcanzan: ('leche',)"
+    },
+    {
+      "id": "dev-018",
+      "pregunta": "De las recetas con huevo y leche, ¿cuál es la más rápida que puedo hacer para 2 comensales sin comprar nada?",
+      "respuesta": "huevos fritos esponjosos",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "id 8646; posición 2 en la búsqueda; las anteriores necesitan comprar algo",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": 8646,
+      "firma": "sin comprar: ('huevo', 'leche', 2)"
+    },
+    {
+      "id": "dev-019",
+      "pregunta": "Quiero usar los dos ingredientes de mi heladera que vencen antes, junto con caldo. ¿Cuál es la receta más rápida que lleva los tres?",
+      "respuesta": "enchiladas mexicanas de pollo",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "facil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas"
+      ],
+      "nota": "vencen antes: ['pollo', 'tomate'] (lo marca el harness en el prompt); id 2645",
+      "en_esquema": true,
+      "usa_vencimiento": true,
+      "receta_id": 2645,
+      "firma": "los que vencen: (('caldo',),)"
+    },
+    {
+      "id": "dev-020",
+      "pregunta": "Para la receta más rápida que lleva huevo y lentejas: de los ingredientes que usa y tengo en la heladera, ¿cuál vence primero?",
+      "respuesta": "zanahoria",
+      "tipo": "texto",
+      "tolerancia": 0,
+      "dificultad": "media",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "detalle_receta"
+      ],
+      "nota": "id 4231 hamburguesas vegetarianas de arroz; del inventario usa [('zanahoria', 6), ('cebolla', 10), ('huevo', 12), ('arroz', 60), ('lenteja', 90)]",
+      "en_esquema": false,
+      "usa_vencimiento": true,
+      "receta_id": 4231,
+      "firma": "vence primero de la receta: ('huevo', 'lenteja')"
+    },
+    {
+      "id": "dev-021",
+      "pregunta": "El pollo me vence en 2 días y no quiero comprar más. De las recetas con pollo y limón, ¿cuántas puedo hacer para 4 porciones con el pollo que tengo?",
+      "respuesta": 2,
+      "tipo": "numero",
+      "tolerancia": 0,
+      "dificultad": "dificil",
+      "respondible": true,
+      "cadena_esperada": [
+        "buscar_recetas",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes",
+        "faltantes"
+      ],
+      "nota": "6 candidatas; alcanzan [1353, 2023]; gramos de pollo por candidata: [500, 1000, 680, 800, 600, 500] (hay 500)",
+      "en_esquema": false,
+      "usa_vencimiento": false,
+      "receta_id": null,
+      "firma": "pollo alcanza: ('limon', 4)"
     }
   ]
 }

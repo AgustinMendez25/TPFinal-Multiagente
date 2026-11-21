@@ -1,0 +1,201 @@
+[
+  {
+    "id": "dev-001",
+    "pregunta": "¿Cuántas recetas del corpus llevan espinaca?",
+    "respuesta": 88,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-002",
+    "pregunta": "¿Cuál es la receta más rápida que lleva huevo y maíz?",
+    "respuesta": "crema pastelera al microondas",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-003",
+    "pregunta": "¿La receta 2176 es apta para veganos? Respondé sí o no.",
+    "respuesta": "no",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-004",
+    "pregunta": "¿Cuántos gramos de arroz lleva la receta 4057 si la hago para 6 comensales?",
+    "respuesta": 480,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-005",
+    "pregunta": "¿Cuál es la receta más rápida que lleva huevo y el ingrediente de mi inventario que vence primero?",
+    "respuesta": "pizza keto de pollo",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-006",
+    "pregunta": "¿Cuál es la receta más rápida que lleva queso y morrón y no lleva carne ni pescado?",
+    "respuesta": "ensalada de pimientos con queso",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-007",
+    "pregunta": "¿Cuál es la receta más rápida que lleva huevo y vino y es apta para vegetarianos?",
+    "respuesta": "empanada de verduras facil",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-008",
+    "pregunta": "Para la receta más rápida que lleva pollo y limón y no lleva queso, ¿cuántos gramos de pollo necesito para 6 porciones?",
+    "respuesta": 1200,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-009",
+    "pregunta": "Si hago para diez personas la receta más rápida que lleva vino y huevo, ¿cuántos huevos me faltan con lo que tengo?",
+    "respuesta": 4,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-010",
+    "pregunta": "De las recetas con queso y morrón que no llevan huevo, tomá la más rápida que sea apta para celíacos: ¿qué me falta comprar para hacerla para 4 personas?",
+    "respuesta": [
+      "cerdo",
+      "chorizo",
+      "morron",
+      "queso"
+    ],
+    "tipo": "lista",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "dev-011",
+    "pregunta": "De las recetas con tomate y leche que no llevan huevo, tomá la más rápida que no lleve gluten: ¿qué me falta comprar para hacerla para 4 comensales?",
+    "respuesta": [
+      "caldo",
+      "crema de leche",
+      "tomate",
+      "vino"
+    ],
+    "tipo": "lista",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "dev-012",
+    "pregunta": "No tengo manteca. De las recetas sin carne ni pescado con huevo y pan que no llevan manteca, tomá la más rápida: ¿cuántos ingredientes me faltan comprar para hacerla para 8 porciones?",
+    "respuesta": 2,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "dev-013",
+    "pregunta": "¿Cuántos gramos de proteína tiene una porción de la receta 7105?",
+    "respuesta": null,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": false
+  },
+  {
+    "id": "dev-014",
+    "pregunta": "Quiero una receta que lleve arroz, frutillas y cerdo a la vez: ¿cuál es la más rápida?",
+    "respuesta": null,
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": false
+  },
+  {
+    "id": "dev-015",
+    "pregunta": "¿En qué supermercado me conviene comprar lo que me falta para la receta 7105 para dos personas?",
+    "respuesta": null,
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": false
+  },
+  {
+    "id": "dev-016",
+    "pregunta": "De las recetas con pollo y maíz, ¿cuál me deja menos ingredientes por comprar para hacerla para 2 personas?",
+    "respuesta": "empanadas de pollo colombianas",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "dev-017",
+    "pregunta": "¿Para cuántas personas como máximo me alcanzan los huevos que tengo si hago la receta 8630?",
+    "respuesta": 12,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-018",
+    "pregunta": "De las recetas con huevo y leche, ¿cuál es la más rápida que puedo hacer para 2 comensales sin comprar nada?",
+    "respuesta": "huevos fritos esponjosos",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  },
+  {
+    "id": "dev-019",
+    "pregunta": "Quiero usar los dos ingredientes de mi heladera que vencen antes, junto con caldo. ¿Cuál es la receta más rápida que lleva los tres?",
+    "respuesta": "enchiladas mexicanas de pollo",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "facil",
+    "respondible": true
+  },
+  {
+    "id": "dev-020",
+    "pregunta": "Para la receta más rápida que lleva huevo y lentejas: de los ingredientes que usa y tengo en la heladera, ¿cuál vence primero?",
+    "respuesta": "zanahoria",
+    "tipo": "texto",
+    "tolerancia": 0,
+    "dificultad": "media",
+    "respondible": true
+  },
+  {
+    "id": "dev-021",
+    "pregunta": "El pollo me vence en 2 días y no quiero comprar más. De las recetas con pollo y limón, ¿cuántas puedo hacer para 4 porciones con el pollo que tengo?",
+    "respuesta": 2,
+    "tipo": "numero",
+    "tolerancia": 0,
+    "dificultad": "dificil",
+    "respondible": true
+  }
+]
