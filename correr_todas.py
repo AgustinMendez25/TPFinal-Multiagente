@@ -41,11 +41,13 @@ def _cerrar_si_falta(ruta: Path, motivo: str) -> bool:
 
 
 def correr_tarea(tarea: dict, carpeta: Path, agente: Path, python: str, timeout_s: float,
-                 config: Path | None = None) -> dict:
+                 config: Path | None = None, dominio: str | None = None) -> dict:
     carpeta.mkdir(parents=True, exist_ok=True)
     orden = [python, str(agente), "-p", pregunta_con_formato(tarea), "--tarea", tarea["id"], "--log", str(carpeta)]
     if config:
         orden += ["--config", str(config)]
+    if dominio:
+        orden += ["--dominio", dominio]
     inicio = time.perf_counter()
     motivo = None
     with open(carpeta / f"{tarea['id']}.salida.txt", "w", encoding="utf-8") as salida:
@@ -71,6 +73,7 @@ def main() -> None:
     parser.add_argument("--tareas", type=Path, default=TAREAS)
     parser.add_argument("--agente", type=Path, default=RAIZ / "agente.py")
     parser.add_argument("--config", type=Path, help="config.toml alternativo, que se le pasa al agente")
+    parser.add_argument("--dominio", help="dominio del agente (por defecto, el de agente.py)")
     parser.add_argument("--python", default=sys.executable)
     parser.add_argument("--timeout", type=float, default=600, help="segundos por tarea")
     parser.add_argument("--solo", help="ids separados por coma")
@@ -90,7 +93,7 @@ def main() -> None:
             print(f"{tarea['id']}  ya tiene traza válida, se saltea")
             continue
         resultado = correr_tarea(tarea, argumentos.corrida, argumentos.agente, argumentos.python, argumentos.timeout,
-                                  argumentos.config)
+                                  argumentos.config, argumentos.dominio)
         resultados.append(resultado)
         print(f"{resultado['tarea']}  {resultado['estado']:<9} {resultado['segundos']:>6} s")
     fallas = [r for r in resultados if r["estado"] != "ok"]
