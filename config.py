@@ -8,8 +8,8 @@ NUMERO = (int, float)
 OBLIGATORIAS = {
     "modelo": {"nombre": str, "num_ctx": int, "temperatura": NUMERO, "semilla": int, "think": bool,
                "num_predict": int, "timeout_s": NUMERO},
-    "frenos": {"max_pasos": int, "max_tokens": int},
-    "contexto": {"tope_resultado_caracteres": int},
+    "frenos": {"max_pasos": int, "max_tokens": int, "reintentos": int, "espera_reintento_s": NUMERO},
+    "contexto": {"tope_resultado_caracteres": int, "herramienta_timeout_s": NUMERO},
 }
 
 

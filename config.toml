@@ -14,6 +14,9 @@ timeout_s = 300       # por llamada al modelo
 max_pasos = 14        # el enunciado exige un tope de pasos...
 max_tokens = 80000    # ...y uno de tokens (entrada más salida, sumados sobre todas las llamadas)
 max_seg = 240         # opcional
+reintentos = 3            # reintentos ante un error del servidor del modelo (sin contar el primer intento)
+espera_reintento_s = 2.0  # espera antes del primer reintento; se duplica en cada uno
 
 [contexto]
 tope_resultado_caracteres = 4000   # un resultado de herramienta más largo se recorta antes de volver al modelo
+herramienta_timeout_s = 30         # una herramienta que tarda más se corta y vuelve como error

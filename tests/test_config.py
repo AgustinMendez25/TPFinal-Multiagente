@@ -17,7 +17,10 @@ def test_el_config_del_kit_es_valido(base):
 
 
 @pytest.mark.parametrize("seccion, clave", [("modelo", "num_ctx"), ("modelo", "think"), ("frenos", "max_pasos"),
-                                            ("frenos", "max_tokens"), ("contexto", "tope_resultado_caracteres")])
+                                            ("frenos", "max_tokens"), ("frenos", "reintentos"),
+                                            ("frenos", "espera_reintento_s"),
+                                            ("contexto", "tope_resultado_caracteres"),
+                                            ("contexto", "herramienta_timeout_s")])
 def test_falta_una_clave_obligatoria(base, seccion, clave):
     roto = copy.deepcopy(base)
     del roto[seccion][clave]
