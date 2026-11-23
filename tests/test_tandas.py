@@ -46,3 +46,7 @@ def test_correr_y_puntuar_con_un_corredor_falso(tmp_path, monkeypatch):
     assert destino.name == corridas.nombre_corrida("dev", "base", 0, 1337) and resumen["completa"]
     filas, resumen = tandas.puntuar("dev", destino, rutas["resultados"])
     assert resumen["imposibles_negadas"] == 3 and (rutas["resultados"] / f"{destino.name}.csv").exists()
+
+
+def test_etiqueta_de_las_vueltas_de_desarrollo():
+    assert tandas.etiqueta_dev(1) == "dev" and tandas.etiqueta_dev(2) == "dev-v2"

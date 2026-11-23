@@ -50,10 +50,13 @@ def corredor(variante: str, config: dict, trabajo: Path):
 
 
 def correr(conjunto: str, variante: str, temperatura: float, semilla: int, *, quien: str, rutas: dict,
-           manifiesto, antes_de_cada=None) -> tuple[Path, dict]:
-    """Corre (o retoma) la tanda y devuelve su carpeta en Drive y el resumen de la corrida."""
+           manifiesto, antes_de_cada=None, etiqueta: str | None = None) -> tuple[Path, dict]:
+    """Corre (o retoma) la tanda y devuelve su carpeta en Drive y el resumen de la corrida.
+
+    `etiqueta` reemplaza al conjunto en el nombre de la carpeta: las vueltas de desarrollo se llaman
+    dev, dev-v2, dev-v3… para que una vuelta nueva (con otro commit) no choque con la anterior."""
     lista = tareas(conjunto)
-    nombre = corridas.nombre_corrida(conjunto, variante, temperatura, semilla)
+    nombre = corridas.nombre_corrida(etiqueta or conjunto, variante, temperatura, semilla)
     config = config_de(variante, temperatura, semilla)
     trabajo = rutas["trabajo"] / nombre
     destino = rutas["corridas"] / nombre
@@ -61,6 +64,11 @@ def correr(conjunto: str, variante: str, temperatura: float, semilla: int, *, qu
                                     manifiesto=manifiesto(nombre, conjunto, config | {"variante": variante}, lista),
                                     quien=quien, antes_de_cada=antes_de_cada)
     return destino, resumen
+
+
+def etiqueta_dev(vuelta: int) -> str:
+    """La vuelta 1 se llama «dev» (así quedó en Drive); las siguientes, «dev-v2», «dev-v3»…"""
+    return "dev" if vuelta == 1 else f"dev-v{vuelta}"
 
 
 def puntuar(conjunto: str, destino: Path, resultados: Path) -> tuple[list[dict], dict]:

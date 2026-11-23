@@ -189,3 +189,41 @@ por persona», «120 tazas de harina». Buscamos las cantidades normalizadas fue
 - *Pendiente de revisar:* comparando cada ingrediente con su mediana por comensal aparecen 66 recetas con
   más de 15 veces la mediana. La mayoría tiene `comensales = 1` con cantidades de torta o conserva
   (500 g de manteca, 1 kg de azúcar): parece un `comensales` mal cargado, no una cantidad rota. No se tocó.
+
+## 2026-11-23 · Desarrollo, vuelta 1 → vuelta 2 (solo tareas `dev-*`)
+
+**Vuelta 1** (commit `7048ef9`, temperatura 0, semilla 1337; corridas `dev__<variante>__t0__s1337`):
+
+| Variante | Aciertos | Imposibles inventadas |
+|---|---|---|
+| libro-cerrado | 4/21 | 0 |
+| camino-fijo | 4/21 | 2 |
+| base | 11/21 | 2 |
+| plan | 9/21 | 1 |
+| verif | 13/21 | 0 |
+| ambas | 9/21 | 1 |
+
+**Qué falló primero, según las trazas, y qué cambiamos:**
+
+- **El modelo tenía la respuesta y la escribió como texto** (`dev-010` en base y verif, `dev-011` en plan y ambas). La forma fue `terminar({"cerdo;chorizo;morron;queso"}, "...")`, repetida hasta el tope de 16 pasos. El rescate del Bloque 1 no la reconocía, porque esperaba un objeto JSON después de `terminar(`. Ahora lee las llaves como un conjunto de Python y sigue con la lectura posicional.
+- **"carne" en `excluye`** (`dev-006`, `dev-012`). «Sin carne ni pescado» se tradujo a `excluye=["carne"]`. La herramienta sugirió nombres parecidos (condimento, crema de leche…) y el modelo se rindió. Ahora `buscar_recetas` reconoce las categorías de dieta (carne, gluten, lácteos, origen animal) y explica que hay que usar `es_apta`.
+- **Reglas nuevas en el prompt del agente**, que valen para las cuatro variantes:
+  - «la más rápida» es la primera de la lista que cumple, sin usar `faltantes` para elegirla (`dev-005`);
+  - las cantidades de `detalle_receta`/`faltantes` ya vienen escaladas, así que no hay que volver a multiplicar (`dev-008`: 750 → 1125);
+  - una receta nombrada por número se usa directo;
+  - si ninguna receta cumple, se responde `null` y no un texto (`dev-006`);
+  - lo que vence antes se mira en la lista de la heladera (`dev-020`).
+- **Plan.** El esquema no tenía `receta_id` (`dev-004` buscó arroz en vez de usar la receta 4057), inventaba porciones y mandaba a revisar todas las candidatas aunque la pregunta pidiera la más rápida. Agregamos `receta_id` y la regla de cuándo comparar varias candidatas.
+- **Camino fijo.** La llamada de traducción le ponía una dieta a preguntas que no la piden (`dev-001` → vegetariana) y dejaba `contiene` vacío. Le agregamos instrucciones más precisas y dos ejemplos que no son tareas de ningún conjunto. Una línea de base floja haría parecer mejor al agente sin que lo sea.
+- **Verificación.** El mensaje para un número que no aparece ahora explica que las cantidades ya vienen escaladas (`dev-008` reintentó el mismo número).
+
+**Lo que no tocamos, a propósito:**
+
+- `dev-017` («¿para cuántas personas alcanzan los huevos?»): el modelo no hace la división. Agregar una herramienta de cálculo cambiaría el diseño de la propuesta.
+- `dev-021` («cuántas alcanzan»): en la base, el modelo excluyó el limón en lugar de incluirlo.
+
+Estas dos quedan como fallas del modelo, para comparar las variantes.
+
+**Organización.** La vuelta 2 se guarda en `dev-v2__<variante>__t0__s1337`, con otro commit. La vuelta 1 queda en Drive como evidencia.
+
+**Infraestructura.** Las tandas de libro-cerrado y ambas de la vuelta 1 se escribieron primero en la carpeta `TPFinal-heladera` propia de cada cuenta, no en la compartida, porque faltaba el acceso directo. Las copiamos a mano a la compartida. Antes del 04, todas las cuentas tienen que ver la carpeta compartida.

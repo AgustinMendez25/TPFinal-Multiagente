@@ -58,13 +58,18 @@ print(inspect.getsource(verificacion.verificar))
 ## 2 · Qué tandas de desarrollo hay
 
 Cada fila es una variante sobre `dev-*` (temperatura 0, semilla 1337). Elegí una que esté **pendiente**. Si dice «tomada», la está corriendo otra persona.
+
+**Vueltas.** Después de cada vuelta analizamos las trazas y ajustamos el harness (con un commit nuevo). La vuelta siguiente se guarda en otra carpeta (`dev-v2__…`), así la anterior queda como evidencia de qué cambió y por qué. Usá la vuelta que te digan.
 """),
     ("code", """
 from harness import corridas
 RUTAS = entorno.rutas()
 TEMPERATURA, SEMILLA = 0, 1337
+VUELTA = 2   # <- la vuelta de desarrollo que estamos corriendo
+ETIQUETA = tandas.etiqueta_dev(VUELTA)
+print("Vuelta", VUELTA, "· carpetas", ETIQUETA + "__<variante>__t0__s1337")
 for variante in tandas.VARIANTES:
-    nombre = corridas.nombre_corrida("dev", variante, TEMPERATURA, SEMILLA)
+    nombre = corridas.nombre_corrida(ETIQUETA, variante, TEMPERATURA, SEMILLA)
     estado = corridas.estado(RUTAS["corridas"] / nombre, tandas.tareas("dev"))
     tomada = f"tomada por {estado['tomada_por']} hace {estado['hace_min']} min" if estado["tomada_por"] else ""
     print(f"{variante:<14} {estado['en_drive']:>2}/{estado['total']} en Drive  {tomada}")
@@ -78,7 +83,8 @@ Cambiá `VARIANTE` y corré la celda. Cada tarea se copia a Drive apenas termina
 VARIANTE = "base"   # <- libro-cerrado, camino-fijo, base, plan, verif o ambas
 
 destino, resumen = tandas.correr("dev", VARIANTE, TEMPERATURA, SEMILLA, quien=QUIEN, rutas=RUTAS,
-                                 manifiesto=entorno.manifiesto, antes_de_cada=entorno.asegurar_ollama)
+                                 manifiesto=entorno.manifiesto, antes_de_cada=entorno.asegurar_ollama,
+                                 etiqueta=ETIQUETA)
 print(resumen)
 """),
     ("code", """
@@ -103,23 +109,26 @@ for f in fallidas[:3]:
     ("md", """
 ## 5 · Todas las variantes de desarrollo juntas
 
-Cuando las otras personas terminen sus variantes, esta celda junta los resultados que haya en Drive.
+Cuando las otras personas terminen sus variantes, esta celda junta los resultados de **todas las vueltas** que haya en Drive, para ver qué cambió de una a otra.
 """),
     ("code", """
 import csv
-for variante in tandas.VARIANTES:
-    archivo = RUTAS["resultados"] / f"{corridas.nombre_corrida('dev', variante, TEMPERATURA, SEMILLA)}.csv"
-    if not archivo.exists():
-        print(f"{variante:<14} (todavía no está)")
-        continue
-    filas_v = list(csv.DictReader(open(archivo, encoding="utf-8")))
-    aciertos = sum(f["resultado"] == "acierto" for f in filas_v)
-    inventos = sum(f["resultado"] == "invento" for f in filas_v)
-    print(f"{variante:<14} {aciertos:>2}/{len(filas_v)} aciertos · {inventos} imposibles con respuesta inventada")
+for vuelta in range(1, VUELTA + 1):
+    print(f"--- vuelta {vuelta}")
+    for variante in tandas.VARIANTES:
+        nombre = corridas.nombre_corrida(tandas.etiqueta_dev(vuelta), variante, TEMPERATURA, SEMILLA)
+        archivo = RUTAS["resultados"] / f"{nombre}.csv"
+        if not archivo.exists():
+            print(f"{variante:<14} (todavía no está)")
+            continue
+        filas_v = list(csv.DictReader(open(archivo, encoding="utf-8")))
+        aciertos = sum(f["resultado"] == "acierto" for f in filas_v)
+        inventos = sum(f["resultado"] == "invento" for f in filas_v)
+        print(f"{variante:<14} {aciertos:>2}/{len(filas_v)} aciertos · {inventos} imposibles con respuesta inventada")
 """),
     ("md", """
 ## Cierre
 
-Avisá que terminó tu variante. Las trazas se analizan desde Drive para escritorio y, si hace falta, se ajusta el harness y se hace otra vuelta (con un commit nuevo: la tanda nueva va a tener otro manifiesto, así que antes hay que borrar o renombrar en Drive la carpeta de la tanda anterior).
+Avisá que terminó tu variante. Las trazas se analizan desde Drive para escritorio y, si hace falta, se ajusta el harness y se hace otra vuelta: con un commit nuevo y `VUELTA` + 1, en carpetas nuevas.
 """),
 ]
