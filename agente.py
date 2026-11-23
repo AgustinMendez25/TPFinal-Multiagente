@@ -22,7 +22,7 @@ RAIZ = Path(__file__).resolve().parent
 
 
 def bucle(pregunta: str, config: dict, registro, dominio: str = "mundial") -> harness_bucle.Fin:
-    return harness_bucle.bucle(pregunta, config, registro, dominios.construir(dominio))
+    return harness_bucle.bucle(pregunta, config, registro, dominios.construir(dominio, config))
 
 
 def entorno_del_servidor(modelo: str) -> dict:

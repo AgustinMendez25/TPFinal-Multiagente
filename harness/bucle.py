@@ -15,7 +15,7 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FuturoVencido
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable
 
 import llm
@@ -34,6 +34,22 @@ class Dominio:
     sistema: str                         # el prompt de sistema
     fichas: list[dict]                   # los esquemas JSON, incluida la de `terminar`
     herramientas: dict[str, Callable]    # nombre -> función; `terminar` no está: la atiende el loop
+    # Enganches opcionales (Bloque 2). Sin ellos, el loop es el del Bloque 1.
+    #   antes_del_loop(pregunta, config, registro, chat) -> (mensajes que se agregan, tokens que usó)
+    #   antes_de_terminar(pregunta, respuesta, historial) -> None si puede terminar, o qué le falta
+    antes_del_loop: Callable | None = None
+    antes_de_terminar: Callable | None = None
+
+
+@dataclass
+class _Estado:
+    """Lo que el loop recuerda durante una corrida."""
+    pregunta: str
+    max_rechazos: int
+    tokens: int = 0
+    rechazos: int = 0
+    vistos: set = field(default_factory=set)        # ids de llamadas ya usados en la traza
+    historial: list = field(default_factory=list)   # herramientas ejecutadas: nombre, argumentos, datos, ok
 
 
 @dataclass
@@ -134,14 +150,14 @@ def _llamar_modelo(mensajes, dominio, config, registro, paso, chat, dormir) -> l
 
 
 def _atender(llamada: dict, indice: int, paso: int, dominio: Dominio, fichas: dict, config: dict, registro,
-             mensajes: list, vistos: set) -> Fin | None:
+             mensajes: list, estado: "_Estado") -> Fin | None:
     """Ejecuta una llamada a herramienta y agrega su resultado. Devuelve un Fin si fue `terminar`."""
     funcion = llamada.get("function") or {}
     nombre = funcion.get("name") or "(sin nombre)"
     ident = llamada.get("id")
-    if not ident or ident in vistos:          # el id tiene que ser único en toda la traza
+    if not ident or ident in estado.vistos:   # el id tiene que ser único en toda la traza
         ident = f"p{paso}-{indice + 1}"
-    vistos.add(ident)
+    estado.vistos.add(ident)
     crudos = funcion.get("arguments", {})
     argumentos, error = _parsear(crudos)
     registro.evento("llamada_herramienta", paso=paso, id=ident, nombre=nombre,
@@ -155,16 +171,40 @@ def _atender(llamada: dict, indice: int, paso: int, dominio: Dominio, fichas: di
         error = validar_argumentos(fichas[nombre], argumentos)
     tope = config["contexto"]["tope_resultado_caracteres"]
     if error is None and nombre == "terminar":
+        respuesta = argumentos["respuesta"]
+        problema = _verificar(dominio, estado, respuesta, registro, paso)
+        if problema is not None:
+            texto, truncado, caracteres = _texto_resultado(
+                {"error": f"Todavía no podés terminar: {problema} Corregilo y volvé a llamar a terminar."}, tope)
+            _registrar(registro, mensajes, paso, ident, nombre, False, texto, truncado, caracteres, inicio)
+            return None
         texto, truncado, caracteres = _texto_resultado({"ok": "respuesta registrada"}, tope)
         _registrar(registro, mensajes, paso, ident, nombre, True, texto, truncado, caracteres, inicio)
-        respuesta = argumentos["respuesta"]
         return Fin("respondida" if respuesta is not None else "negada", respuesta, paso, argumentos.get("motivo"))
     datos = {"error": error} if error is not None else \
         _ejecutar(dominio.herramientas[nombre], argumentos, config["contexto"]["herramienta_timeout_s"])
     ok = not (isinstance(datos, dict) and "error" in datos)
+    if error is None:
+        estado.historial.append({"nombre": nombre, "argumentos": argumentos, "datos": datos, "ok": ok})
     texto, truncado, caracteres = _texto_resultado(datos, tope)
     _registrar(registro, mensajes, paso, ident, nombre, ok, texto, truncado, caracteres, inicio)
     return None
+
+
+def _verificar(dominio: Dominio, estado: "_Estado", respuesta, registro, paso: int) -> str | None:
+    """Corre la verificación antes de terminar. Negarse no se verifica, y se rechaza hasta max_rechazos."""
+    if dominio.antes_de_terminar is None or respuesta is None:
+        return None
+    problema = dominio.antes_de_terminar(estado.pregunta, respuesta, estado.historial)
+    if problema is not None and estado.rechazos >= estado.max_rechazos:
+        registro.evento("verificacion", paso=paso, ok=False, problema=problema, rechazada=False,
+                        nota="se llegó al máximo de rechazos: termina igual")
+        return None
+    registro.evento("verificacion", paso=paso, ok=problema is None, problema=problema,
+                    rechazada=problema is not None)
+    if problema is not None:
+        estado.rechazos += 1
+    return problema
 
 
 def _registrar(registro, mensajes, paso, ident, nombre, ok, texto, truncado, caracteres, inicio):
@@ -178,12 +218,16 @@ def bucle(pregunta: str, config: dict, registro, dominio: Dominio, *, chat=llm.c
     frenos = config["frenos"]
     fichas = {f["function"]["name"]: f for f in dominio.fichas}
     mensajes = [{"role": "system", "content": dominio.sistema}, {"role": "user", "content": pregunta}]
-    tokens = 0
-    vistos: set[str] = set()
+    estado = _Estado(pregunta, config.get("agente", {}).get("max_rechazos", 1))
     inicio = time.monotonic()
+    if dominio.antes_del_loop is not None:
+        extra, usados = dominio.antes_del_loop(pregunta, config, registro, chat)
+        mensajes += extra
+        estado.tokens += usados
     for paso in range(1, frenos["max_pasos"] + 1):
-        if tokens >= frenos["max_tokens"]:
-            return Fin("tope_tokens", None, paso - 1, f"se usaron {tokens} tokens (tope {frenos['max_tokens']})")
+        if estado.tokens >= frenos["max_tokens"]:
+            return Fin("tope_tokens", None, paso - 1,
+                       f"se usaron {estado.tokens} tokens (tope {frenos['max_tokens']})")
         if frenos.get("max_seg") and time.monotonic() - inicio > frenos["max_seg"]:
             return Fin("error", None, paso - 1, f"se pasó el tope de {frenos['max_seg']} s")
         try:
@@ -199,7 +243,7 @@ def bucle(pregunta: str, config: dict, registro, dominio: Dominio, *, chat=llm.c
                         num_ctx=config["modelo"]["num_ctx"], tokens_entrada=respuesta.tokens_entrada,
                         tokens_salida=respuesta.tokens_salida, duracion_ms=respuesta.duracion_ms,
                         razon_fin=respuesta.razon_fin, texto=contenido[:500])
-        tokens += respuesta.tokens_entrada + respuesta.tokens_salida
+        estado.tokens += respuesta.tokens_entrada + respuesta.tokens_salida
         llamadas = mensaje.get("tool_calls") or []
         mensajes.append({"role": "assistant", "content": contenido, **({"tool_calls": llamadas} if llamadas else {})})
         if not llamadas:
@@ -207,7 +251,7 @@ def bucle(pregunta: str, config: dict, registro, dominio: Dominio, *, chat=llm.c
             mensajes.append({"role": "user", "content": RECORDATORIO})
             continue
         for indice, llamada in enumerate(llamadas):
-            fin = _atender(llamada, indice, paso, dominio, fichas, config, registro, mensajes, vistos)
+            fin = _atender(llamada, indice, paso, dominio, fichas, config, registro, mensajes, estado)
             if fin is not None:
                 return fin
     return Fin("tope_pasos", None, frenos["max_pasos"], f"se llegó al tope de {frenos['max_pasos']} pasos")

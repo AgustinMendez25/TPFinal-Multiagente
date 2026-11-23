@@ -1,0 +1,28 @@
+# Agente de recetas, variante «verif». Igual a config.toml salvo max_pasos y la sección [agente].
+# Configuración del harness. Se copia entera en `corrida_inicio.config` de cada traza.
+# Podés agregar claves; las que están acá son las que el kit lee.
+
+[modelo]
+nombre = "qwen3:8b"   # el tag va siempre explícito: sin tag, Ollama usa "latest"
+num_ctx = 8192        # obligatorio y se manda en cada llamada. Ollama usa 4096 por defecto en una T4
+temperatura = 0
+semilla = 1337
+think = false         # el razonamiento interno de Qwen3 cambia mucho los tokens: si lo prendés, declaralo
+num_predict = 800     # tope de tokens que escribe el modelo por llamada
+timeout_s = 300       # por llamada al modelo
+
+[frenos]
+max_pasos = 16        # recetas: hasta 9 herramientas encadenadas, más el plan y una verificación
+max_tokens = 80000    # ...y uno de tokens (entrada más salida, sumados sobre todas las llamadas)
+max_seg = 240         # opcional
+reintentos = 3            # reintentos ante un error del servidor del modelo (sin contar el primer intento)
+espera_reintento_s = 2.0  # espera antes del primer reintento; se duplica en cada uno
+
+[contexto]
+tope_resultado_caracteres = 4000   # un resultado de herramienta más largo se recorta antes de volver al modelo
+herramienta_timeout_s = 30         # una herramienta que tarda más se corta y vuelve como error
+
+[agente]
+planificacion = false   # decisión 1: un plan antes del loop (harness/planificacion.py)
+verificacion = true   # decisión 2: verificación en código antes de terminar (harness/verificacion.py)
+max_rechazos = 1        # cuántas veces puede la verificación devolver al modelo antes de dejarlo terminar

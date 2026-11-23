@@ -187,3 +187,59 @@ def test_validar_argumentos():
     assert "tiene que ser integer" in validar_argumentos(ficha, {"n": True})
     assert "no existen" in validar_argumentos(ficha, {"n": 1, "x": 2})
     assert "objeto" in validar_argumentos(ficha, [1])
+
+
+# --- enganches: plan antes del loop y verificación antes de terminar --------------------------------
+
+def _con_enganches(antes_del_loop=None, antes_de_terminar=None):
+    dominio = _dominio()
+    dominio.antes_del_loop = antes_del_loop
+    dominio.antes_de_terminar = antes_de_terminar
+    return dominio
+
+
+def _correr_con(tmp_path, dominio, guion, config=CONFIG):
+    registro = Registro(tmp_path, "t-1")
+    registro.evento("corrida_inicio", modelo="qwen3:8b", config=config)
+    chat = LLMFalso(guion)
+    fin = bucle("¿Cuánto es 2 + 3?", config, registro, dominio, chat=chat, dormir=lambda s: None)
+    registro.evento("corrida_fin", estado=fin.estado, respuesta=fin.respuesta, pasos=fin.pasos)
+    assert esquema.validar_archivo(registro.ruta) == []
+    return fin, [json.loads(l) for l in registro.ruta.read_text(encoding="utf-8").splitlines()], chat
+
+
+def test_el_plan_entra_antes_del_loop_y_suma_tokens(tmp_path):
+    def planificar(pregunta, config, registro, chat):
+        return [{"role": "user", "content": "PLAN: sumar y terminar"}], 140
+    config = {**CONFIG, "frenos": {**CONFIG["frenos"], "max_tokens": 150}}
+    fin, _, chat = _correr_con(tmp_path, _con_enganches(antes_del_loop=planificar),
+                               [llamada(("sumar", {"a": 2, "b": 3}))], config)
+    assert chat.pedidos[0]["mensajes"][-1]["content"] == "PLAN: sumar y terminar"
+    assert fin.estado == "tope_tokens"          # 140 del plan + 120 de la llamada pasan el tope de 150
+
+
+def test_la_verificacion_rechaza_una_vez_y_el_historial_llega(tmp_path):
+    vistos = []
+
+    def verificar(pregunta, respuesta, historial):
+        vistos.append([h["nombre"] for h in historial])
+        return "no usaste sumar" if not historial else None
+    guion = [llamada(("terminar", {"respuesta": "5", "motivo": "m"})), llamada(("sumar", {"a": 2, "b": 3})),
+             llamada(("terminar", {"respuesta": "5", "motivo": "m"}))]
+    fin, eventos, chat = _correr_con(tmp_path, _con_enganches(antes_de_terminar=verificar), guion)
+    assert (fin.estado, fin.respuesta, fin.pasos) == ("respondida", "5", 3)
+    assert vistos == [[], ["sumar"]]
+    assert "no usaste sumar" in chat.pedidos[1]["mensajes"][-1]["content"]
+    assert [e["ok"] for e in eventos if e["evento"] == "verificacion"] == [False, True]
+
+
+def test_la_verificacion_no_rechaza_mas_de_max_rechazos(tmp_path):
+    guion = [llamada(("terminar", {"respuesta": "9", "motivo": "m"}))] * 2
+    fin, _, _ = _correr_con(tmp_path, _con_enganches(antes_de_terminar=lambda p, r, h: "mal"), guion)
+    assert (fin.estado, fin.respuesta, fin.pasos) == ("respondida", "9", 2)
+
+
+def test_negarse_no_se_verifica(tmp_path):
+    fin, _, _ = _correr_con(tmp_path, _con_enganches(antes_de_terminar=lambda p, r, h: "mal"),
+                            [llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
+    assert fin.estado == "negada" and fin.pasos == 1
