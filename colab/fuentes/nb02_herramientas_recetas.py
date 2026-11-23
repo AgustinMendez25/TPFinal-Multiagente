@@ -100,7 +100,7 @@ subprocess.run([sys.executable, "-m", "pip", "install", "-q", "pytest"], check=T
 salida = subprocess.run([sys.executable, "-m", "pytest", "-q", "tests/test_recetas.py", "tests/test_detector.py",
                          "tests/test_verificacion.py", "tests/test_dominio_recetas.py"], capture_output=True, text=True)
 print(salida.stdout[-3000:])
-(entorno.rutas()["registros"] / "pytest_02.txt").write_text(salida.stdout, encoding="utf-8")
+_ = (entorno.rutas()["registros"] / "pytest_02.txt").write_text(salida.stdout, encoding="utf-8")
 """),
     ("md", """
 ## Cierre
