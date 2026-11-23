@@ -38,7 +38,8 @@ INSTRUCCION = """Antes de usar las herramientas, escribí un plan para responder
 Las herramientas son: buscar_recetas(contiene, excluye), detalle_receta(receta_id, porciones), es_apta(receta_id, dieta) y faltantes(receta_id, porciones). El recetario tiene ingredientes, cantidades, duración y comensales; no tiene calorías, precios ni comercios.
 
 Decí:
-- qué ingredientes buscar y excluir (solo ingredientes: una dieta como «sin carne» o «sin gluten» va en dieta, no en excluir);
+- qué ingredientes buscar (todos los que la pregunta dice que la receta lleva) y cuáles excluir (solo los que dice que NO lleva);
+- la dieta va en dieta, nunca en excluir: «sin carne ni pescado» o «para vegetarianos» = vegetariana; «sin nada de origen animal» o «para veganos» = vegana; «sin gluten» o «para celíacos» = sin_gluten; «sin lácteos» o «sin lactosa» = sin_lactosa;
 - qué dieta y cuántas porciones pide la pregunta: null si la pregunta no lo dice, no los inventes;
 - receta_id: el número de receta si la pregunta lo nombra (entonces no hace falta buscar), o null;
 - qué candidatas hay que mirar. Si pide «la más rápida», recorrelas en orden y pará en la primera que cumpla. Solo si la pregunta pide comparar (la que deja menos por comprar, cuántas alcanzan, cuál se hace sin comprar nada) hay que revisar todas;

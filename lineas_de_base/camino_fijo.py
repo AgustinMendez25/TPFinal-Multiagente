@@ -36,8 +36,8 @@ ESQUEMA = {
     "required": ["contiene", "excluye", "dieta", "porciones", "que_pide", "ingrediente", "receta_id"],
 }
 INSTRUCCION = """Traducí la pregunta a estos campos, sin responderla. Poné solo lo que la pregunta dice; lo que no dice va vacío o null.
-- contiene: los ingredientes que la receta tiene que llevar, en singular (pollo, papa, queso). Si la pregunta habla de un ingrediente de la heladera por su vencimiento («el que vence primero»), usá el nombre que figura arriba.
-- excluye: ingredientes que la receta no puede llevar. Una dieta («sin carne», «sin gluten», «sin lácteos») no va acá: va en dieta.
+- contiene: TODOS los ingredientes que la pregunta dice que la receta lleva, en singular (si dice «con X e Y», van los dos: [X, Y]). Si la pregunta habla de un ingrediente de la heladera por su vencimiento («el que vence primero»), usá el nombre que figura arriba.
+- excluye: ingredientes que la receta no puede llevar. Una dieta no va acá: va en dieta («sin carne ni pescado» = vegetariana, «para veganos» = vegana, «para celíacos» = sin_gluten, «sin lácteos» = sin_lactosa).
 - dieta: vegetariana, vegana, sin_gluten o sin_lactosa SOLO si la pregunta pide una dieta; si no, null.
 - porciones: para cuántas personas, comensales o porciones, si la pregunta lo dice; si no, null.
 - que_pide, uno de:
@@ -78,6 +78,19 @@ class _Pipeline:
                              contenido=texto[:4000])
         return datos
 
+    @staticmethod
+    def corregir(campos: dict) -> dict:
+        """Regla fija del pipeline: una categoría de dieta escrita en `excluye` («carne», «gluten») pasa a `dieta`.
+        Vuelta 2: dev-006, dev-011 y dev-012 terminaban en null porque buscar_recetas rechazaba «carne»."""
+        excluye, dieta = [], campos.get("dieta")
+        for nombre in campos.get("excluye") or []:
+            categoria = H.CATEGORIAS.get(H.N.normalizar_texto(str(nombre)).strip())
+            if categoria:
+                dieta = dieta or categoria
+            else:
+                excluye.append(nombre)
+        return campos | {"excluye": excluye, "dieta": dieta}
+
     def elegir(self, campos: dict) -> dict | None:
         """La receta del pipeline: la nombrada, o la primera candidata apta para la dieta."""
         if campos.get("receta_id"):
@@ -92,6 +105,7 @@ class _Pipeline:
         return candidatas[0] if candidatas else None
 
     def responder(self, campos: dict):
+        campos = self.corregir(campos)
         que_pide = campos.get("que_pide", "otro")
         if que_pide == "otro":
             return None

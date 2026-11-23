@@ -68,3 +68,11 @@ def test_libro_cerrado_de_recetas_ve_el_inventario(tmp_path):
                                            sistema=dominios.sistema_libro_cerrado_recetas())
     assert estado == "negada"
     assert "pollo: 500 g" in chat.pedidos[0]["mensajes"][0]["content"]
+
+
+def test_una_categoria_en_excluye_pasa_a_ser_la_dieta(tmp_path):
+    candidatas = H.buscar_recetas(["queso", "morron"])["recetas"]
+    esperada = next(c for c in candidatas if H.es_apta(c["id"], "vegetariana")["apta"])
+    _, respuesta, _ = _correr(tmp_path, _campos(contiene=["queso", "morron"], excluye=["carne"],
+                                                que_pide="receta_mas_rapida"))
+    assert respuesta == esperada["nombre"]
