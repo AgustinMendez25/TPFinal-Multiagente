@@ -129,7 +129,8 @@ def test_faltantes_trae_vencimiento_porciones_y_cuenta():
             if por_porcion > 0:
                 assert fila["alcanza_para_porciones"] == int(inventario["cantidad"] / por_porcion + 1e-9)
         else:
-            assert fila["vence_en_dias"] is None and fila["alcanza_para_porciones"] == 0
+            assert set(fila) == {"ingrediente", "necesita", "unidad", "alcanza", "falta"}   # sin campos vacíos
+            assert fila["alcanza"] is False and fila["falta"] == fila["necesita"]
 
 
 def test_alcanza_para_porciones_caso_conocido():
@@ -147,5 +148,5 @@ def test_buscar_numera_las_candidatas():
 def test_faltantes_dice_cuanto_falta_comprar_de_cada_ingrediente():
     for receta in list(H._corpus().values())[:200]:
         for fila in H.faltantes(receta["id"], 10)["ingredientes"]:
-            assert fila["falta"] == H._redondear(max(0.0, fila["necesita"] - fila["hay"])) or                 abs(fila["falta"] - max(0.0, fila["necesita"] - fila["hay"])) < 0.02
-            assert (fila["falta"] == 0) == fila["alcanza"] or fila["hay"] == 0
+            assert fila["falta"] == H._redondear(max(0.0, fila["necesita"] - fila.get("hay", 0))) or                 abs(fila["falta"] - max(0.0, fila["necesita"] - fila.get("hay", 0))) < 0.02
+            assert (fila["falta"] == 0) == fila["alcanza"] or "hay" not in fila

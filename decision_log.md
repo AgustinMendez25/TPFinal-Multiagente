@@ -313,6 +313,32 @@ Las dos reglas son de la verificación, así que solo afectan a verif y a ambas.
 
 **Organización.** La vuelta 4 se guarda en `dev-v4__<variante>__t0__s1337` y se corren las 6 variantes: el cambio de `faltantes` afecta a todas menos libro-cerrado, y lo corremos igual para tener la tanda completa con el mismo commit.
 
+## 2026-11-23 · Desarrollo, vuelta 4 → vuelta 5 (solo tareas `dev-*`)
+
+**Vuelta 4** (commit `7175e6d`; corridas `dev-v4__<variante>__t0__s1337`):
+
+| Variante | Vuelta 3 | Vuelta 4 | Inventadas (v4) |
+|---|---|---|---|
+| libro-cerrado | 4/21 | 4/21 | 0 |
+| camino-fijo | 12/21 | 12/21 | 1 |
+| base | 14/21 | 13/21 | 2 |
+| plan | 15/21 | 17/21 | 3 |
+| verif | 15/21 | 15/21 | 0 |
+| ambas | 15/21 | 20/21 | 0 |
+
+**Lo que se ve en las trazas:**
+
+- `dev-009` lo aciertan las cuatro variantes del agente: con `falta`, el modelo ya no tiene que restar.
+- En verif y ambas, la verificación rechazó el «20» de proteínas (`dev-013`) y la frase del supermercado (`dev-015`). En el segundo intento, el modelo respondió `null` y quedaron 0 inventadas.
+- `dev-008` en verif: la verificación lo rechazó y el modelo cambió de receta, pero respondió 1125 sin consultarla. Como ya había usado el único rechazo (`max_rechazos = 1`), la respuesta pasó. Es el diseño: un solo rechazo por tarea.
+- `dev-021` en ambas acierta («2»), pero el motivo habla de una sola receta. Lo contamos como acierto porque así puntúa la evaluación, pero no lo presentamos como un razonamiento correcto.
+
+**Qué cambiamos: la salida de `faltantes` desbordaba el contexto.** `dev-011` terminó en `error` en base y en verif: «request (8724 tokens) exceeds the available context size (8192 tokens)». El modelo recorre 10 recetas con `faltantes`, y el campo `falta` de la vuelta 4 empujó la conversación por encima del límite. Ahora los ingredientes que no están en la heladera traen solo `ingrediente`, `necesita`, `unidad`, `alcanza` y `falta`. Ya no traen `hay: 0`, `vence_en_dias: null` ni `alcanza_para_porciones: 0`, que no aportan nada. Con las 9 recetas que consultó `dev-011`, los resultados pasan de 13.660 a 11.180 caracteres (−18%), menos que en la vuelta 3, antes de `falta`. La línea de base de camino fijo ahora usa `falta` en lugar de calcular `necesita − hay`, que da lo mismo.
+
+No subimos `num_ctx`: 8192 es el valor fijado para todas las corridas y cambiarlo ahora movería todas las variantes.
+
+**Organización.** La vuelta 5 se guarda en `dev-v5__<variante>__t0__s1337`, con las 6 variantes. El cambio de `faltantes` afecta a todas menos libro-cerrado.
+
 ## 2026-11-23 · Plan de la medición congelada (escrito antes de correr ninguna tarea `rec-*`)
 
 **Qué se corre** (notebook 04, `colab/tandas.py`). Hay 25 tandas sobre las 21 tareas congeladas, en orden de prioridad:

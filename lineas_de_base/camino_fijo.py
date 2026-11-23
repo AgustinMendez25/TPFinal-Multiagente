@@ -144,7 +144,7 @@ class _Pipeline:
             return str(len(datos["faltan"]))
         if que_pide == "faltan_cantidad_ingrediente":
             fila = next((f for f in datos["ingredientes"] if f["ingrediente"] == ingrediente), None)
-            return None if fila is None else str(_redondear(max(fila["necesita"] - fila["hay"], 0)))
+            return None if fila is None else str(fila["falta"])
         return None
 
 
