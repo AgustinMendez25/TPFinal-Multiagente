@@ -25,7 +25,7 @@ def test_buscar_ordena_como_el_generador():
         obtenido = H.buscar_recetas(con, sin)
         assert obtenido["total"] == len(esperado)
         assert [r["id"] for r in obtenido["recetas"]] == [r["id"] for r in esperado[:10]]
-        assert set(obtenido["recetas"][0]) == {"id", "nombre", "minutos", "comensales"}
+        assert set(obtenido["recetas"][0]) == {"posicion", "id", "nombre", "minutos", "comensales"}
 
 
 def test_buscar_acepta_sinonimos_y_plurales():
@@ -112,3 +112,33 @@ def test_una_categoria_de_dieta_explica_que_hay_que_usar_es_apta(nombre, dieta):
 
 def test_pescado_sigue_siendo_un_ingrediente():
     assert "error" not in H.buscar_recetas(["queso"], ["pescado"])
+
+
+def test_faltantes_trae_vencimiento_porciones_y_cuenta():
+    """Vuelta 2: dev-020 (qué vence primero), dev-017 (para cuántas personas alcanza) y dev-012 (cuántos faltan)."""
+    # una receta con huevo (está en la heladera) y con algo que no está en la heladera
+    r = next(r for r in G.CORPUS if "huevo" in G.ingredientes(r)
+             and G.ingredientes(r) - set(H._inventario()) - G.N.BASICOS)
+    datos = H.faltantes(r["id"], 4)
+    assert datos["cuantos_faltan"] == len(datos["faltan"])
+    for fila in datos["ingredientes"]:
+        if fila["ingrediente"] in H._inventario():
+            inventario = H._inventario()[fila["ingrediente"]]
+            assert fila["vence_en_dias"] == inventario["vence_en_dias"]
+            por_porcion = fila["necesita"] / 4
+            if por_porcion > 0:
+                assert fila["alcanza_para_porciones"] == int(inventario["cantidad"] / por_porcion + 1e-9)
+        else:
+            assert fila["vence_en_dias"] is None and fila["alcanza_para_porciones"] == 0
+
+
+def test_alcanza_para_porciones_caso_conocido():
+    receta = next(r for r in G.CORPUS if r["comensales"] == 2
+                  and [i["cantidad"] for i in G.lineas_de(r, "huevo")] == [1.0])     # 1 huevo para 2 personas
+    fila = next(f for f in H.faltantes(receta["id"], 2)["ingredientes"] if f["ingrediente"] == "huevo")
+    assert fila["alcanza_para_porciones"] == 12                                    # 6 huevos alcanzan para 12
+
+
+def test_buscar_numera_las_candidatas():
+    recetas = H.buscar_recetas(["papa", "cebolla"])["recetas"]
+    assert [r["posicion"] for r in recetas] == list(range(1, len(recetas) + 1))

@@ -125,9 +125,10 @@ def buscar_recetas(contiene: list[str], excluye: list[str] | None = None) -> dic
                 if set(con) <= _ingredientes(r) and not set(sin) & _ingredientes(r)]
     hallados.sort(key=lambda r: (r["minutos"], r["id"]))
     return {"total": len(hallados), "contiene": con, "excluye": sin,
-            "recetas": [{"id": r["id"], "nombre": r["nombre"], "minutos": r["minutos"], "comensales": r["comensales"]}
-                        for r in hallados[:MAX_RECETAS]],
-            **({"nota": f"se muestran las {MAX_RECETAS} más rápidas"} if len(hallados) > MAX_RECETAS else {})}
+            "recetas": [{"posicion": i, "id": r["id"], "nombre": r["nombre"], "minutos": r["minutos"],
+                         "comensales": r["comensales"]} for i, r in enumerate(hallados[:MAX_RECETAS], start=1)],
+            "nota": "ordenadas por duración: la posición 1 es la más rápida"
+                    + (f"; se muestran las {MAX_RECETAS} más rápidas" if len(hallados) > MAX_RECETAS else "")}
 
 
 def detalle_receta(receta_id: int, porciones: int | None = None) -> dict:
@@ -175,10 +176,16 @@ def faltantes(receta_id: int, porciones: int) -> dict:
     for ing in sorted(necesita):
         en_heladera = ing in _inventario()          # lo que no está en la heladera falta siempre
         hay = _inventario()[ing]["cantidad"] if en_heladera else 0
+        por_porcion = necesita[ing] / porciones
         filas.append({"ingrediente": ing, "necesita": _redondear(necesita[ing]), "hay": hay,
-                      "unidad": unidades[ing], "alcanza": en_heladera and necesita[ing] <= hay + 1e-9})
+                      "unidad": unidades[ing], "alcanza": en_heladera and necesita[ing] <= hay + 1e-9,
+                      # lo que la heladera ya sabe: cuándo vence y para cuántas porciones alcanza lo que hay
+                      "vence_en_dias": _inventario()[ing]["vence_en_dias"] if en_heladera else None,
+                      "alcanza_para_porciones": int(hay / por_porcion + 1e-9) if en_heladera and por_porcion > 0
+                      else 0})
+    faltan = [f["ingrediente"] for f in filas if not f["alcanza"]]
     return {"id": receta["id"], "nombre": receta["nombre"], "porciones": porciones, "ingredientes": filas,
-            "faltan": [f["ingrediente"] for f in filas if not f["alcanza"]],
+            "faltan": faltan, "cuantos_faltan": len(faltan),
             "nota": "sal, pimienta, aceite, agua, condimentos y hierbas se suponen disponibles"}
 
 
