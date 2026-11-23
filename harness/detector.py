@@ -1,4 +1,5 @@
-"""Detecta en el texto de la pregunta si pide una dieta y para cuántas porciones.
+"""Detecta en el texto de la pregunta si pide una dieta, para cuántas porciones y si pide un dato que el
+recetario no tiene (información nutricional, precios, comercios).
 
 Lo usa la verificación antes de `terminar`: si la pregunta pide una dieta, el agente tiene que haber
 pasado por `es_apta`; si pide porciones, por `faltantes` o `detalle_receta` con esas porciones.
@@ -16,6 +17,14 @@ DIETAS = [
     ("vegetariana", [r"\bvegetarian[oa]s?\b", r"sin carne ni pescado", r"\bno llev[ae]n? carne ni pescado"]),
     ("sin_gluten", [r"\bsin gluten\b", r"\bceliac[oa]s?\b", r"\bno llev[ae]n? gluten\b"]),
     ("sin_lactosa", [r"\blactosa\b", r"\bsin lacteos\b", r"\bno llev[ae]n? lacteos\b"]),
+]
+# datos que el recetario no tiene: si la pregunta pide uno de estos, la única respuesta correcta es null
+SIN_DATOS = [
+    ("información nutricional", r"\bproteinas?\b|\bcalorias?\b|\bkcal\b|\bnutricional|\bcarbohidratos?\b|"
+                                r"\bgrasas? (saturadas?|totales)\b|\bvitaminas?\b"),
+    ("precios", r"\bprecios?\b|\bcuestan?\b|\bcuanto sale\b|\bcostos?\b|\bcuanto gasto\b"),
+    ("comercios", r"\bsupermercados?\b|\bcomercios?\b|\btiendas?\b|\bverduleria\b|\bcarniceria\b|"
+                  r"\bdonde (lo |la |los |las )?compr"),
 ]
 NUMEROS = {"un": 1, "una": 1, "uno": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6, "siete": 7,
            "ocho": 8, "nueve": 9, "diez": 10, "once": 11, "doce": 12}
@@ -42,4 +51,5 @@ def detectar(pregunta: str) -> dict:
         if hallado:
             porciones = _numero(hallado.group(1))
             break
-    return {"dieta": dieta, "porciones": porciones}
+    sin_datos = next((nombre for nombre, patron in SIN_DATOS if re.search(patron, texto)), None)
+    return {"dieta": dieta, "porciones": porciones, "sin_datos": sin_datos}

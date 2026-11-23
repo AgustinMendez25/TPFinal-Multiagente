@@ -282,6 +282,37 @@ Las dos reglas son de la verificación, así que solo afectan a verif y a ambas.
 
 **Vuelta 3:** las 6 variantes, en `dev-v3__<variante>__t0__s1337`. Después de esta vuelta congelamos con el tag `medicion-v1`.
 
+## 2026-11-23 · Desarrollo, vuelta 3 → vuelta 4 (solo tareas `dev-*`)
+
+**Vuelta 3** (commit `375c6a5`; corridas `dev-v3__<variante>__t0__s1337`):
+
+| Variante | Vuelta 2 | Vuelta 3 | Inventadas (v3) |
+|---|---|---|---|
+| libro-cerrado | 4/21 | 4/21 | 0 |
+| camino-fijo | 6/21 | 12/21 | 1 |
+| base | 11/21 | 14/21 | 2 |
+| plan | 16/21 | 15/21 | 2 |
+| verif | 11/21 | 15/21 | 1 |
+| ambas | 16/21 | 15/21 | 2 |
+
+**Fallas que se repiten en las variantes del agente, según las trazas, y qué cambiamos:**
+
+- **La cuenta de cuánto falta comprar** (`dev-009`, en las 4 variantes). El motivo dice «se necesitan 10 huevos, hay 6» y la respuesta es 5. Ahora `faltantes` devuelve también `falta` por ingrediente (lo que hay que comprar: necesita − hay), igual que ya devuelve el vencimiento y las porciones que alcanzan. Vale para todas las variantes que usan la herramienta.
+- **Preguntas por datos que el recetario no tiene** (`dev-013` proteínas en las 4; `dev-015` supermercado en base, plan y ambas). El «20» de proteínas pasaba la verificación por ser un número chico. Le agregamos al detector qué datos no tiene el recetario (información nutricional, precios, comercios), con expresiones ajustadas solo con `dev-*`. Si la pregunta pide uno de esos, la verificación solo acepta `null` (regla 8).
+- **Negarse con una frase que no empieza con «No…»** (`dev-015`: «El recetario no tiene información sobre supermercados»). La regla 7 ahora busca la negativa en cualquier parte de la respuesta («no tiene», «no incluye», «sin datos»…), siempre que la respuesta no sea el nombre de una receta.
+- **La más rápida con respuesta numérica** (`dev-008`, en base y verif). Respondió los gramos de la segunda receta de la lista. La regla del orden de la vuelta 2 solo miraba respuestas que fueran el nombre de una receta. Ahora también mira la última receta consultada con `faltantes` o `detalle_receta`, pero solo cuando la pregunta no pide dieta ni «sin comprar». Con esos filtros, el modelo descarta candidatas sin pasar siempre por `es_apta`: en `dev-011` y `dev-012` lo hizo y acertó, y la regla completa los habría rechazado.
+
+**Cómo lo comprobamos sin correr el modelo.** Pasamos la verificación nueva sobre la respuesta final de cada tarea de la vuelta 3, en base, plan, verif y ambas, rehaciendo las llamadas a herramientas de la traza. No rechaza ninguna respuesta que fue acierto. Rechaza `dev-008` (750), `dev-013` (20 y 22), `dev-015` (las frases) y `dev-005` en base, que eran todas fallas. Lo que el modelo haga después del rechazo se ve recién en la vuelta 4.
+
+**Lo que no tocamos, a propósito:**
+
+- `dev-020` («de los ingredientes que usa, ¿cuál vence primero?»): responde pollo o huevo, que no están en la receta, aunque `faltantes` trae `vence_en_dias`.
+- `dev-021` («¿cuántas puedo hacer?»): tiene que contar en cuántas de las 6 recetas alcanza el pollo, y confunde `alcanza_para_porciones` con esa cuenta.
+- `dev-018` en plan y ambas: el plan le pide recorrer las candidatas y no para al encontrar la primera que alcanza, hasta el tope de 16 pasos.
+- `dev-006` en camino-fijo: la traducción pidió «morro» en lugar de «morrón». Es una falla de esa línea de base.
+
+**Organización.** La vuelta 4 se guarda en `dev-v4__<variante>__t0__s1337` y se corren las 6 variantes: el cambio de `faltantes` afecta a todas menos libro-cerrado, y lo corremos igual para tener la tanda completa con el mismo commit.
+
 ## 2026-11-23 · Plan de la medición congelada (escrito antes de correr ninguna tarea `rec-*`)
 
 **Qué se corre** (notebook 04, `colab/tandas.py`). Hay 25 tandas sobre las 21 tareas congeladas, en orden de prioridad:

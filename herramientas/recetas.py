@@ -179,6 +179,7 @@ def faltantes(receta_id: int, porciones: int) -> dict:
         por_porcion = necesita[ing] / porciones
         filas.append({"ingrediente": ing, "necesita": _redondear(necesita[ing]), "hay": hay,
                       "unidad": unidades[ing], "alcanza": en_heladera and necesita[ing] <= hay + 1e-9,
+                      "falta": _redondear(max(0.0, necesita[ing] - hay)),   # cuánto hay que comprar de este
                       # lo que la heladera ya sabe: cuándo vence y para cuántas porciones alcanza lo que hay
                       "vence_en_dias": _inventario()[ing]["vence_en_dias"] if en_heladera else None,
                       "alcanza_para_porciones": int(hay / por_porcion + 1e-9) if en_heladera and por_porcion > 0
@@ -225,7 +226,8 @@ FICHAS_POR_NOMBRE = {
     "faltantes": _ficha(
         "faltantes",
         "Compara la receta, escalada a `porciones`, con el inventario de la heladera. Devuelve, por "
-        "ingrediente, cuánto necesita, cuánto hay y si alcanza, y la lista de lo que falta comprar.",
+        "ingrediente, cuánto necesita, cuánto hay, cuánto falta comprar (`falta`), si alcanza, cuándo vence y "
+        "para cuántas porciones alcanza lo que hay; y la lista de ingredientes que faltan.",
         {"receta_id": {"type": "integer", "description": "id de la receta"},
          "porciones": {"type": "integer", "description": "Para cuántas personas"}},
         ("receta_id", "porciones")),

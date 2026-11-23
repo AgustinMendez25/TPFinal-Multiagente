@@ -30,7 +30,16 @@ def test_cubre_todas_las_de_desarrollo():
 @pytest.mark.parametrize("tarea", sorted(ESPERADO))
 def test_detecta_dieta_y_porciones(tarea):
     dieta, porciones = ESPERADO[tarea]
-    assert detectar(DEV[tarea]) == {"dieta": dieta, "porciones": porciones}
+    detectado = detectar(DEV[tarea])
+    assert (detectado["dieta"], detectado["porciones"]) == (dieta, porciones)
+
+
+SIN_DATOS = {"dev-013": "información nutricional", "dev-015": "comercios"}   # el resto: None
+
+
+@pytest.mark.parametrize("tarea", sorted(ESPERADO))
+def test_detecta_los_datos_que_el_recetario_no_tiene(tarea):
+    assert detectar(DEV[tarea])["sin_datos"] == SIN_DATOS.get(tarea)
 
 
 @pytest.mark.parametrize("pregunta, esperado", [
@@ -40,4 +49,14 @@ def test_detecta_dieta_y_porciones(tarea):
     ("Respondé solo con el número.", {"dieta": None, "porciones": None}),
 ])
 def test_otras_redacciones(pregunta, esperado):
-    assert detectar(pregunta) == esperado
+    assert detectar(pregunta) == {**esperado, "sin_datos": None}
+
+
+@pytest.mark.parametrize("pregunta, esperado", [
+    ("¿Cuántas calorías tiene la receta 100?", "información nutricional"),
+    ("¿Cuánto cuesta hacer la receta 100?", "precios"),
+    ("¿Dónde compro lo que me falta?", "comercios"),
+    ("¿Cuántas recetas llevan carne y caldo?", None),
+])
+def test_otros_datos_que_no_hay(pregunta, esperado):
+    assert detectar(pregunta)["sin_datos"] == esperado

@@ -46,7 +46,7 @@ def test_porciones_pedidas_sin_usarlas():
 
 def test_numero_grande_inventado_y_numero_chico_permitido():
     historial = [_h("detalle_receta", receta_id=RECETA["id"])]
-    assert "350" in verificar(f"¿Cuántas calorías tiene la receta {RECETA['id']}?", "350", historial)
+    assert "350" in verificar(f"¿Cuántos gramos lleva la receta {RECETA['id']} en total?", "350", historial)
     assert verificar(f"¿Cuántos ingredientes tiene la receta {RECETA['id']}?", "4", historial) is None
 
 
@@ -62,7 +62,7 @@ def test_lista_con_un_elemento_que_no_aparecio():
 def test_un_numero_dentro_de_un_decimal_no_cuenta_como_visto():
     historial = [_h("detalle_receta", receta_id=7105, porciones=1)]      # trae «"cantidad": 0.25»
     assert "0.25" in str(historial[0]["datos"])
-    assert "25" in verificar("¿Cuántos gramos de proteína tiene una porción de la receta 7105?", "25", historial)
+    assert "25" in verificar("¿Cuántos gramos de arroz lleva una porción de la receta 7105?", "25", historial)
 
 
 def test_una_negativa_escrita_como_frase_tiene_que_ser_null():
@@ -114,3 +114,24 @@ def test_si_no_pide_la_mas_rapida_no_se_mira_el_orden():
     historial += [_h("faltantes", receta_id=segunda["id"], porciones=2)]
     assert verificar("De las recetas con pollo y maíz, ¿cuál me deja menos ingredientes por comprar para 2 personas?",
                      segunda["nombre"], historial) is None
+
+
+def test_una_negativa_en_el_medio_de_la_frase_tambien_tiene_que_ser_null():
+    historial = [_h("faltantes", receta_id=RECETA["id"], porciones=2)]
+    problema = verificar("¿Cuál receta me conviene?", "El recetario no tiene información sobre eso.", historial)
+    assert "null" in problema
+
+
+def test_un_dato_que_el_recetario_no_tiene_solo_admite_null():
+    historial = [_h("detalle_receta", receta_id=7105, porciones=1)]
+    problema = verificar("¿Cuántos gramos de proteína tiene una porción de la receta 7105?", "20", historial)
+    assert "null" in problema and "nutricional" in problema
+
+
+def test_la_mas_rapida_tambien_cuando_la_respuesta_es_un_numero():
+    busqueda = _h("buscar_recetas", contiene=["papa", "huevo"])
+    primera, segunda = busqueda["datos"]["recetas"][:2]
+    pregunta = "Para la receta más rápida que lleva papa y huevo, ¿cuántos huevos necesito para 4 porciones?"
+    mal = verificar(pregunta, "3", [busqueda, _h("detalle_receta", receta_id=segunda["id"], porciones=4)])
+    assert mal is not None and str(primera["id"]) in mal
+    assert verificar(pregunta, "3", [busqueda, _h("detalle_receta", receta_id=primera["id"], porciones=4)]) is None
