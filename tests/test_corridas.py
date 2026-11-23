@@ -69,6 +69,27 @@ def test_no_mezcla_commits(tmp_path):
         corridas.preparar(destino, {**MANIFIESTO, "commit": "bbbb2222"})
 
 
+
+def test_una_tanda_completa_no_mira_el_commit(tmp_path):
+    destino = tmp_path / "drive" / "c"
+    corridas.correr_tanda(TAREAS, destino, tmp_path / "local", _corredor(), manifiesto=MANIFIESTO, quien="ana",
+                          al_avanzar=lambda m: None)
+    llamadas = []
+    resumen = corridas.correr_tanda(TAREAS, destino, tmp_path / "local", _corredor(llamadas=llamadas),
+                                    manifiesto={**MANIFIESTO, "commit": "bbbb2222"}, quien="beto",
+                                    al_avanzar=lambda m: None)
+    assert resumen == {"tareas": 3, "en_drive": 3, "corridas_ahora": 0, "completa": True}
+    assert llamadas == [] and not (destino / "tomada.json").exists()
+
+
+def test_una_tanda_incompleta_si_mira_el_commit(tmp_path):
+    destino = tmp_path / "drive" / "c"
+    corridas.correr_tanda(TAREAS[:2], destino, tmp_path / "local", _corredor(), manifiesto=MANIFIESTO, quien="ana",
+                          al_avanzar=lambda m: None)
+    with pytest.raises(corridas.CommitDistinto):
+        corridas.correr_tanda(TAREAS, destino, tmp_path / "local", _corredor(),
+                              manifiesto={**MANIFIESTO, "commit": "bbbb2222"}, quien="ana", al_avanzar=lambda m: None)
+
 def test_tanda_tomada_por_otro(tmp_path):
     corridas.tomar(tmp_path, "ana", ahora=1000)
     with pytest.raises(corridas.TandaTomada, match="ana"):

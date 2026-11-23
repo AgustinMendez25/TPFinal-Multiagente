@@ -80,7 +80,7 @@ Decisiones que no salen del enunciado, cada una con su motivo:
 
 ## 2026-11-23 · Arreglos del Bloque 1 (después de la corrida "antes")
 
-**Corrida "antes"** (`mundial__agente-antes__t0__s1337`, commit `30067f5`): 17/30 aciertos. El libro
+**Corrida "antes"** (`mundial__agente-antes__t0__s1337`, commit `30067f5`): 16/30 aciertos. El libro
 cerrado sacó 5/30. Las trazas muestran dos fallas del harness, cada una visible en el **primer** paso
 donde la corrida se tuerce:
 
@@ -128,6 +128,41 @@ y mun-013 y mun-022 (inventa respuestas en lugar de negarse). Quedan para el an�
 **Qué se espera en la corrida "después":** mun-007, mun-008 y mun-012 deberían pasar a acertar por el
 arreglo 1, y mun-018 y mun-027 por el arreglo 2. mun-009 debería terminar, pero con la respuesta
 equivocada. Se compara en la sección 5 del notebook `01`.
+
+**Resultado de la corrida "después"** (`mundial__agente-despues__t0__s1337`, commit `ef58d97`, misma
+configuración: temperatura 0, semilla 1337):
+
+| | Antes | Después |
+|---|---|---|
+| Aciertos | 16/30 | **21/30** |
+| Llamadas al modelo | 169 | 112 |
+| Tokens de entrada | 355.110 | 185.715 |
+| Tiempo total | 288 s | 190 s |
+| Tareas que terminan en `tope_pasos` o `error` | 8 | 0 |
+
+- *Lo que se predijo y pasó:* mun-007 y mun-008 (arreglo 1) y mun-018 (arreglo 2) pasan a acertar.
+  En mun-007, la llamada rescatada termina en el paso 2 en lugar de dar 12 vueltas. mun-009 termina,
+  pero con la respuesta equivocada (18).
+- *Lo que mejoró sin estar predicho:* mun-010 acierta (antes llegaba al tope de pasos). mun-022 y
+  mun-023 se niegan bien: sin las llamadas repetidas, el modelo llega a `terminar(null)`.
+- *Lo que se predijo y no pasó:* mun-027 usa los filtros nuevos, pero cuenta solo las eliminatorias
+  (6 en vez de 15). mun-012 se rescata, pero esta vez el modelo escribe `terminar("Argentina", ...)`
+  con un motivo que admite que no hay datos de 2026: el rescate es fiel a lo que escribió el modelo,
+  y el modelo inventó.
+- *Lo que empeoró:* **mun-004** ("¿cuántos partidos se jugaron en 1986?") pasa de 52 a 32. El modelo
+  filtra por `eliminatorias=true` sin que la pregunta lo pida. Es un costo del arreglo 2: la ficha de
+  `partidos` ahora dice "filtrá cuando puedas", y eso empuja a filtrar también cuando no hace falta.
+  mun-024 sigue mal, con otro error (usa a Messi en lugar del goleador de 1978).
+- *Cuidado al leer la tabla:* cambiar la ficha de `partidos` cambia el prompt de todas las tareas, así
+  que a temperatura 0 algunas diferencias son ruido de la generación y no efecto del arreglo (mun-012
+  y mun-024 lo muestran). Con una sola corrida por lado no se puede separar una cosa de la otra.
+- *Lo que no hacemos:* volver a ajustar la ficha mirando mun-004. Sería ajustar el harness a las
+  tareas públicas, que son las que puntúan.
+
+**Corridas completas y commit.** Volver a correr la sección 2 del notebook después de un push trababa
+el libro cerrado con `CommitDistinto`, aunque la tanda estaba completa y no se iba a correr nada.
+`correr_tanda` ahora devuelve el resumen sin revisar el commit cuando todas las tareas ya están en
+Drive. Si falta alguna, el chequeo sigue igual.
 
 ## 2026-11-23 · Recetas con cantidades absurdas (D20)
 

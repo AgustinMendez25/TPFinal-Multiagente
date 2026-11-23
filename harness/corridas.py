@@ -134,6 +134,10 @@ def estado(destino: Path, tareas: list[dict], *, ahora: float | None = None) -> 
 def correr_tanda(tareas: list[dict], destino: Path, trabajo: Path, correr_una: Callable[[dict, Path], None], *,
                  manifiesto: dict, quien: str, antes_de_cada: Callable[[], None] | None = None,
                  al_avanzar: Callable[[str], None] = print) -> dict:
+    # Una tanda completa no corre nada, así que no importa con qué commit está el código ahora: sin
+    # este atajo, volver a abrir un notebook después de un push trababa las celdas de corridas ya hechas.
+    if all(hecha(destino, t["id"]) for t in tareas):
+        return {"tareas": len(tareas), "en_drive": len(tareas), "corridas_ahora": 0, "completa": True}
     preparar(destino, manifiesto)
     tomar(destino, quien)
     trabajo.mkdir(parents=True, exist_ok=True)
