@@ -242,3 +242,42 @@ Estas dos quedan como fallas del modelo, para comparar las variantes.
 - **Negarse con una frase** (`dev-014`, `dev-015`). El modelo escribió «No hay recetas que incluyan arroz, frutilla y cerdo» como respuesta de `terminar` en vez de `null`, y la evaluación lo cuenta como respuesta inventada. Regla nueva (7): si la respuesta es una frase que empieza diciendo que no hay, no existe o no se puede, se rechaza y se le pide `null` con el motivo. Un «No» suelto (las preguntas de sí o no) sigue pasando.
 
 Las dos reglas son de la verificación, así que solo afectan a verif y a ambas. Ambas de la vuelta 2 se está corriendo con el commit anterior, por eso la vuelta 3 tiene que volver a correr al menos verif y ambas.
+
+## 2026-11-23 · Desarrollo, vuelta 2 → vuelta 3 (solo tareas `dev-*`)
+
+**Vuelta 2** (commit `69e6fc3`; corridas `dev-v2__<variante>__t0__s1337`):
+
+| Variante | Vuelta 1 | Vuelta 2 | Imposibles inventadas (v2) |
+|---|---|---|---|
+| libro-cerrado | 4/21 | 4/21 | 0 |
+| camino-fijo | 4/21 | 6/21 | 1 |
+| base | 11/21 | 11/21 | 3 |
+| plan | 9/21 | 16/21 | 1 |
+| verif | 13/21 | 11/21 | 3 |
+| ambas | 9/21 | 16/21 | 1 |
+
+**Lectura.**
+
+- **El plan subió de 9 a 16** con el ajuste del esquema.
+- **La verificación casi no actuó:** rechazó una sola vez en 21 tareas, y verif dio exactamente lo mismo que base.
+  - Dos agujeros ya los cerró el commit `640179a`: un número que aparece dentro de un decimal se daba por visto, y las negativas escritas como frase pasaban.
+  - Lo que sigue explica el resto.
+
+**Qué falló primero en las trazas, y qué cambiamos:**
+
+1. **No se respeta el orden de la búsqueda.** En `dev-008` y `dev-019` (base) eligió una receta del medio de la lista.
+   - La verificación ahora exige que, si la pregunta pide «la más rápida», cada candidata anterior a la respondida haya quedado descartada: con `es_apta` en falso para la dieta pedida, o con faltantes si pide no comprar.
+   - Es el «no saltearse filtros» que le asignamos en la propuesta, y le da algo concreto que medir.
+   - `buscar_recetas` ahora numera las candidatas (`posicion`) y dice que la 1 es la más rápida.
+2. **«Con X» terminaba en `excluye`** (`dev-016`, `dev-021`). Agregamos una regla en el prompt: lo que la receta lleva va en `contiene`.
+3. **Vencimientos** (`dev-005` y `dev-020` fallaban en todas las variantes).
+   - El harness ahora escribe cuál vence primero y cuáles dos vencen antes.
+   - `faltantes` trae `vence_en_dias` de cada ingrediente de la heladera.
+   - Las líneas de base ven la misma tabla de la heladera.
+4. **Cuentas** (`dev-012`: «faltan 2 huevos» pero respondió `1`; `dev-017`: 6 huevos «alcanzan para 6» cuando son 12). `faltantes` ahora trae `cuantos_faltan` y, por ingrediente de la heladera, `alcanza_para_porciones`. El modelo lee el número en lugar de calcularlo.
+5. **Frases de dieta.** El plan puso `sin_gluten` para «sin carne ni pescado» (`dev-006`). Agregamos la misma tabla de frases → dieta en el prompt, en el plan y en el camino fijo.
+6. **Camino fijo.**
+   - La traducción perdía el segundo ingrediente («huevo y maíz» → `[huevo]`, en 6 tareas). La instrucción ahora pide todos los ingredientes.
+   - Si en `excluye` aparece una categoría («carne», «gluten»), el pipeline la pasa a `dieta`. Es una regla fija del pipeline, no del modelo.
+
+**Vuelta 3:** las 6 variantes, en `dev-v3__<variante>__t0__s1337`. Después de esta vuelta congelamos con el tag `medicion-v1`.

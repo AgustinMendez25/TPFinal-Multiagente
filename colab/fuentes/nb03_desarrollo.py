@@ -65,7 +65,7 @@ Cada fila es una variante sobre `dev-*` (temperatura 0, semilla 1337). Elegí un
 from harness import corridas
 RUTAS = entorno.rutas()
 TEMPERATURA, SEMILLA = 0, 1337
-VUELTA = 2   # <- la vuelta de desarrollo que estamos corriendo
+VUELTA = 3   # <- la vuelta de desarrollo que estamos corriendo
 ETIQUETA = tandas.etiqueta_dev(VUELTA)
 print("Vuelta", VUELTA, "· carpetas", ETIQUETA + "__<variante>__t0__s1337")
 for variante in tandas.VARIANTES:
