@@ -9,7 +9,9 @@ Qué comprueba:
   2. si la pregunta pide una dieta (lo dice el detector), que haya un `es_apta` con esa dieta, y si la
      respuesta es una receta, que sea apta;
   3. si la pregunta pide porciones, que haya un `faltantes` o un `detalle_receta` con esas porciones;
-  4. si la respuesta es el nombre de una receta del corpus, que esa receta haya salido en algún resultado;
+  4. si la respuesta es el nombre de una receta del corpus, que esa receta haya salido en algún resultado, y
+     si la pregunta pide «la más rápida», que todas las candidatas anteriores de la búsqueda hayan quedado
+     descartadas (con es_apta, o con faltantes si pide no comprar);
   5. que los números grandes de la respuesta (más de 20) aparezcan en algún resultado o en la pregunta.
      Los chicos se dejan pasar porque pueden ser cuentas legítimas (cuántos faltan, cuántas alcanzan);
   6. si la respuesta es una lista, que cada elemento haya aparecido en algún resultado;
@@ -48,6 +50,47 @@ def _texto_de(historial: list[dict]) -> str:
     return _normalizar(" ".join(json.dumps(h["datos"], ensure_ascii=False) for h in historial))
 
 
+MAS_RAPIDA = re.compile(r"\bmas rapid[ao]s?\b")
+SIN_COMPRAR = re.compile(r"\bsin comprar\b|\bno (quiero )?comprar\b")
+
+
+def _orden(pregunta: str, dieta: str | None, receta: int | None, historial: list[dict]) -> str | None:
+    """Si la pregunta pide «la más rápida», la receta respondida tiene que ser la primera de la búsqueda que no
+    quedó descartada. Una candidata anterior cuenta como descartada si es_apta dijo que no cumple la dieta
+    pedida, o (si la pregunta pide no comprar) si faltantes dijo que falta algo. Sin dieta ni «sin comprar»,
+    tiene que ser la primera. Vuelta 2: dev-008 y dev-019 eligieron una receta del medio de la lista."""
+    texto = _normalizar(pregunta)
+    if receta is None or not MAS_RAPIDA.search(texto):
+        return None
+    busquedas = [h for h in historial if h["nombre"] == "buscar_recetas"
+                 and any(c["id"] == receta for c in h["datos"].get("recetas", []))]
+    if not busquedas:
+        return None
+    candidatas = busquedas[-1]["datos"]["recetas"]
+    sin_comprar = bool(SIN_COMPRAR.search(texto))
+
+    def descartada(c: dict) -> bool:
+        for h in historial:
+            if h["argumentos"].get("receta_id") != c["id"]:
+                continue
+            if dieta and h["nombre"] == "es_apta" and h["argumentos"].get("dieta") == dieta \
+                    and h["datos"].get("apta") is False:
+                return True
+            if sin_comprar and h["nombre"] == "faltantes" and h["datos"].get("faltan"):
+                return True
+        return False
+
+    for c in candidatas:
+        if c["id"] == receta:
+            return None
+        if not descartada(c):
+            como = (f"comprobala con es_apta(receta_id, \"{dieta}\")" if dieta else
+                    "comprobala con faltantes" if sin_comprar else "es la primera de la lista: la más rápida es esa")
+            return (f"la pregunta pide la más rápida, y en la búsqueda «{c['nombre']}» (id {c['id']}, posición "
+                    f"{c.get('posicion', '?')}) está antes que tu respuesta y no la descartaste: {como}.")
+    return None
+
+
 def verificar(pregunta: str, respuesta: str, historial: list[dict]) -> str | None:
     problemas = []
     if NEGATIVA.search(_normalizar(respuesta)) and len(respuesta.split()) >= 3:
@@ -79,6 +122,10 @@ def verificar(pregunta: str, respuesta: str, historial: list[dict]) -> str | Non
         if not con_porciones:
             problemas.append(f"la pregunta es para {pedido['porciones']} personas y no usaste faltantes ni "
                              f"detalle_receta con porciones={pedido['porciones']}.")
+
+    orden = _orden(pregunta, pedido["dieta"], receta, historial)
+    if orden:
+        problemas.append(orden)
 
     if receta is not None and _normalizar(respuesta) not in resultados:
         problemas.append("la receta de tu respuesta no apareció en ningún resultado de herramienta.")
