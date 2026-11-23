@@ -57,3 +57,17 @@ def test_lista_con_un_elemento_que_no_aparecio():
     assert verificar(pregunta, "; ".join(faltan + ["azafran"]), historial) is not None
     if len(faltan) > 1:
         assert verificar(pregunta, "; ".join(faltan), historial) is None
+
+
+def test_un_numero_dentro_de_un_decimal_no_cuenta_como_visto():
+    historial = [_h("detalle_receta", receta_id=7105, porciones=1)]      # trae «"cantidad": 0.25»
+    assert "0.25" in str(historial[0]["datos"])
+    assert "25" in verificar("¿Cuántos gramos de proteína tiene una porción de la receta 7105?", "25", historial)
+
+
+def test_una_negativa_escrita_como_frase_tiene_que_ser_null():
+    historial = [_h("buscar_recetas", contiene=["arroz", "frutilla", "cerdo"])]
+    problema = verificar("¿Cuál es la más rápida con arroz, frutillas y cerdo?",
+                         "No hay recetas que incluyan arroz, frutilla y cerdo.", historial)
+    assert "null" in problema
+    assert verificar("¿La receta lleva queso?", "No", [_h("detalle_receta", receta_id=RECETA["id"])]) is None

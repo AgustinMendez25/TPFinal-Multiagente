@@ -12,7 +12,9 @@ Qué comprueba:
   4. si la respuesta es el nombre de una receta del corpus, que esa receta haya salido en algún resultado;
   5. que los números grandes de la respuesta (más de 20) aparezcan en algún resultado o en la pregunta.
      Los chicos se dejan pasar porque pueden ser cuentas legítimas (cuántos faltan, cuántas alcanzan);
-  6. si la respuesta es una lista, que cada elemento haya aparecido en algún resultado.
+  6. si la respuesta es una lista, que cada elemento haya aparecido en algún resultado;
+  7. que la respuesta no sea una frase que dice que no se puede responder («No hay recetas que…»): eso
+     es negarse, y se hace con respuesta null.
 
 Negarse (`respuesta = null`) no se verifica: decir que los datos no alcanzan siempre está permitido.
 """
@@ -25,6 +27,7 @@ from herramientas import recetas
 
 NUMERO = re.compile(r"\d+(?:[.,]\d+)?")
 TOPE_NUMEROS_CHICOS = 20
+NEGATIVA = re.compile(r"^(no (hay|existe|existen|se puede|es posible|tengo|encontre|se encontr)|ninguna?)")
 
 
 def _normalizar(texto: str) -> str:
@@ -37,12 +40,20 @@ def _id_de_receta(respuesta: str) -> int | None:
     return next((r["id"] for r in recetas._corpus().values() if _normalizar(r["nombre"]) == buscado), None)
 
 
+def _numeros(texto: str) -> set[float]:
+    return {float(n.replace(",", ".")) for n in NUMERO.findall(texto)}
+
+
 def _texto_de(historial: list[dict]) -> str:
     return _normalizar(" ".join(json.dumps(h["datos"], ensure_ascii=False) for h in historial))
 
 
 def verificar(pregunta: str, respuesta: str, historial: list[dict]) -> str | None:
     problemas = []
+    if NEGATIVA.search(_normalizar(respuesta)) and len(respuesta.split()) >= 3:
+        return ("tu respuesta es una frase que dice que no se puede responder. Si es así, terminá con respuesta "
+                "null y explicá en el motivo qué dato falta; si sí se puede, respondé solo el dato que pide la "
+                "pregunta.")
     if not historial:
         return ("respondiste sin consultar ninguna herramienta. La respuesta tiene que salir de los datos del "
                 "recetario; si no se puede saber con las herramientas, terminá con respuesta null.")
@@ -72,10 +83,10 @@ def verificar(pregunta: str, respuesta: str, historial: list[dict]) -> str | Non
     if receta is not None and _normalizar(respuesta) not in resultados:
         problemas.append("la receta de tu respuesta no apareció en ningún resultado de herramienta.")
 
-    texto_pregunta = _normalizar(pregunta)
+    vistos = _numeros(resultados) | _numeros(_normalizar(pregunta))   # números enteros: 0.25 no cuenta como 25
     for numero in NUMERO.findall(respuesta):
         valor = float(numero.replace(",", "."))
-        if valor > TOPE_NUMEROS_CHICOS and numero not in resultados and numero not in texto_pregunta:
+        if valor > TOPE_NUMEROS_CHICOS and valor not in vistos:
             problemas.append(f"el número {numero} no aparece en ningún resultado de herramienta: no lo inventes. Si "
                              f"usaste detalle_receta o faltantes con las porciones de la pregunta, las cantidades "
                              f"ya vienen escaladas: respondé con el número tal como aparece ahí.")
