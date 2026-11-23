@@ -73,7 +73,25 @@ def _canonico(nombre: str) -> str | None:
     return None
 
 
+# Palabras que nombran una categoría de dieta, no un ingrediente. Visto en dev-006 y dev-012: «sin carne ni
+# pescado» se tradujo a excluye=["carne"], la sugerencia de nombres parecidos confundió al modelo y se rindió.
+CATEGORIAS = {"carne": "vegetariana", "carnes": "vegetariana", "gluten": "sin_gluten", "lacteo": "sin_lactosa",
+              "lacteos": "sin_lactosa", "lactosa": "sin_lactosa", "origen animal": "vegana",
+              "productos de origen animal": "vegana", "animal": "vegana"}
+
+
+def _error_categoria(nombre: str) -> dict | None:
+    dieta = CATEGORIAS.get(N.normalizar_texto(str(nombre)).strip())
+    if dieta is None:
+        return None
+    return {"error": f"«{nombre}» es una categoría de dieta, no un ingrediente. Buscá sin ella y comprobá cada "
+                     f"candidata, en orden, con es_apta(receta_id, \"{dieta}\")."}
+
+
 def _error_nombre(nombre: str) -> dict:
+    categoria = _error_categoria(nombre)
+    if categoria is not None:
+        return categoria
     parecidos = difflib.get_close_matches(N.normalizar_texto(str(nombre)).strip(), list(_nombres()), n=5, cutoff=0.6)
     sugeridos = sorted({_nombres()[p] for p in parecidos})
     texto = f"«{nombre}» no es un ingrediente del corpus."

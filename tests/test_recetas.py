@@ -99,3 +99,16 @@ def test_inventario_ordenado_por_vencimiento():
     inv = H.inventario()
     assert [i["ingrediente"] for i in inv][:2] == ["pollo", "tomate"]
     assert all(a["vence_en_dias"] <= b["vence_en_dias"] for a, b in zip(inv, inv[1:]))
+
+
+@pytest.mark.parametrize("nombre, dieta", [("carne", "vegetariana"), ("carnes", "vegetariana"),
+                                           ("gluten", "sin_gluten"), ("lácteos", "sin_lactosa"),
+                                           ("productos de origen animal", "vegana")])
+def test_una_categoria_de_dieta_explica_que_hay_que_usar_es_apta(nombre, dieta):
+    """Visto en dev-006 y dev-012: «sin carne ni pescado» se tradujo a excluye=["carne"] y el modelo se rindió."""
+    error = H.buscar_recetas(["queso"], [nombre])["error"]
+    assert "es_apta" in error and dieta in error
+
+
+def test_pescado_sigue_siendo_un_ingrediente():
+    assert "error" not in H.buscar_recetas(["queso"], ["pescado"])

@@ -149,7 +149,7 @@ def _literal(nodo):
     """Como ast.literal_eval, pero acepta null/true/false de JSON."""
     if isinstance(nodo, ast.Name) and nodo.id in _LITERALES:
         return _LITERALES[nodo.id]
-    if isinstance(nodo, ast.List):
+    if isinstance(nodo, (ast.List, ast.Set)):          # {"a", "b"}: un conjunto se lee como lista
         return [_literal(n) for n in nodo.elts]
     if isinstance(nodo, ast.Dict):
         return {_literal(k): _literal(v) for k, v in zip(nodo.keys, nodo.values)}
@@ -190,7 +190,12 @@ def rescatar_llamada(texto: str, fichas: dict) -> dict | None:
     llave = texto.find("{", inicio)
     if texto[inicio] == "{" or texto[inicio + 1:].lstrip().startswith("{"):
         objeto = _objeto_json(texto, llave)
-        return {"function": {"name": nombre, "arguments": objeto}} if objeto is not None else None
+        if objeto is not None:
+            return {"function": {"name": nombre, "arguments": objeto}}
+        if texto[inicio] == "{":
+            return None
+        # terminar({"a;b"}, "motivo"): no es un objeto JSON sino un conjunto de Python (dev-010, dev-011);
+        # se sigue con la lectura posicional de abajo
     cierre = texto.rfind(")")
     if cierre < inicio:
         return None

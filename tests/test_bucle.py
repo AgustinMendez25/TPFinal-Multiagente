@@ -254,6 +254,9 @@ def test_negarse_no_se_verifica(tmp_path):
     ('terminar(null, "falta el dato")', None),
     ('<tool_call>\n{"name": "terminar", "arguments": {"respuesta": 5, "motivo": "m"}}\n</tool_call>', "5"),
     ('```json\n{"name": "terminar", "arguments": {"respuesta": "5", "motivo": "m"}}\n```', "5"),
+    # vistas en dev-010 y dev-011 (recetas): la respuesta entre llaves, como un conjunto de Python
+    ('terminar({"cerdo;chorizo;morron;queso"}, "Los ingredientes que faltan son esos")', "cerdo;chorizo;morron;queso"),
+    ('terminar({"a", "b"}, "m")', "a; b"),
 ])
 def test_terminar_escrito_como_texto_se_rescata(tmp_path, contenido, respuesta):
     fin, eventos, chat = _correr(tmp_path, [texto(contenido)])
