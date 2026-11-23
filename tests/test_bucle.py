@@ -243,3 +243,70 @@ def test_negarse_no_se_verifica(tmp_path):
     fin, _, _ = _correr_con(tmp_path, _con_enganches(antes_de_terminar=lambda p, r, h: "mal"),
                             [llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
     assert fin.estado == "negada" and fin.pasos == 1
+
+
+# --- arreglo 1 del Bloque 1: llamadas escritas como texto (mun-007, mun-008, mun-009, mun-012) -----
+
+@pytest.mark.parametrize("contenido, respuesta", [
+    ('{"name": "terminar", "arguments": {"respuesta": "United States", "motivo": "m"}}', "United States"),
+    ('terminar{"respuesta": "null", "motivo": "No hay datos sobre el Mundial de 2026."}', None),
+    ('terminar("8", "del resultado de goles de Ronaldo")', "8"),
+    ('terminar(null, "falta el dato")', None),
+    ('<tool_call>\n{"name": "terminar", "arguments": {"respuesta": 5, "motivo": "m"}}\n</tool_call>', "5"),
+    ('```json\n{"name": "terminar", "arguments": {"respuesta": "5", "motivo": "m"}}\n```', "5"),
+])
+def test_terminar_escrito_como_texto_se_rescata(tmp_path, contenido, respuesta):
+    fin, eventos, chat = _correr(tmp_path, [texto(contenido)])
+    assert fin.respuesta == respuesta and fin.estado == ("respondida" if respuesta else "negada")
+    assert fin.pasos == 1 and len(chat.pedidos) == 1
+    assert any(e["evento"] == "llamada_rescatada" for e in eventos)
+    assert not any(e["evento"] == "sin_llamadas" for e in eventos)
+
+
+def test_otra_herramienta_escrita_como_texto_se_ejecuta(tmp_path):
+    fin, _, chat = _correr(tmp_path, [texto('sumar({"a": 2, "b": 3})'),
+                                      llamada(("terminar", {"respuesta": "5", "motivo": "m"}))])
+    assert fin.respuesta == "5"
+    assert _ultimo_resultado(chat)["content"] == '{"total": 5}'
+
+
+@pytest.mark.parametrize("contenido", ["Son 5.", "Podría usar sumar o terminar, no sé.",
+                                       '{"name": "multiplicar", "arguments": {}}', "terminar(", ""])
+def test_texto_sin_una_llamada_clara_recibe_el_recordatorio(tmp_path, contenido):
+    fin, eventos, chat = _correr(tmp_path, [texto(contenido),
+                                            llamada(("terminar", {"respuesta": "5", "motivo": "m"}))])
+    assert chat.pedidos[1]["mensajes"][-1] == {"role": "user", "content": RECORDATORIO}
+    assert not any(e["evento"] == "llamada_rescatada" for e in eventos)
+
+
+def test_argumentos_rescatados_igual_se_validan(tmp_path):
+    _, _, chat = _correr(tmp_path, [texto('sumar("2", 3)'),
+                                    llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
+    assert "«a» tiene que ser integer" in _ultimo_resultado(chat)["content"]
+
+
+# --- arreglo 2 del Bloque 1: llamadas repetidas (mun-018, mun-023, mun-027) ------------------------
+
+def test_llamada_repetida_no_se_vuelve_a_ejecutar(tmp_path):
+    fin, eventos, chat = _correr(tmp_path, [llamada(("larga", {})), llamada(("larga", {})),
+                                            llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
+    resultados = [e for e in eventos if e["evento"] == "resultado_herramienta"]
+    assert resultados[0]["ok"] and resultados[0]["truncado"]
+    assert resultados[1]["ok"] is False and resultados[1]["caracteres"] < 400
+    contenido = chat.pedidos[2]["mensajes"][-1]["content"]
+    assert "ya hiciste esta misma llamada en el paso 1" in contenido and "recortado" in contenido
+
+
+def test_otros_argumentos_no_cuentan_como_repeticion(tmp_path):
+    _, _, chat = _correr(tmp_path, [llamada(("sumar", {"a": 1, "b": 1})), llamada(("sumar", {"b": 2, "a": 1})),
+                                    llamada(("sumar", {"a": 1, "b": 1})),
+                                    llamada(("terminar", {"respuesta": "3", "motivo": "m"}))])
+    contenidos = [p["mensajes"][-1]["content"] for p in chat.pedidos[1:]]
+    assert contenidos[0] == '{"total": 2}' and contenidos[1] == '{"total": 3}'
+    assert "ya hiciste esta misma llamada" in contenidos[2] and "recortado" not in contenidos[2]
+
+
+def test_una_llamada_que_fallo_se_puede_reintentar(tmp_path):
+    _, _, chat = _correr(tmp_path, [llamada(("sumar", {"a": "1", "b": 1})), llamada(("sumar", {"a": "1", "b": 1})),
+                                    llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
+    assert "tiene que ser integer" in chat.pedidos[2]["mensajes"][-1]["content"]

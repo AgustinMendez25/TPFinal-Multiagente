@@ -154,6 +154,31 @@ def test_penales_solo_en_las_definiciones(herramientas_con_db):
     assert final_1978["penales"] is None
 
 
+
+def test_partidos_de_una_seleccion(herramientas_con_db):
+    francia = herramientas_con_db.partidos(1998, seleccion="france")
+    assert len(francia) == 7 and all("France" in (p["local"], p["visitante"]) for p in francia)
+
+
+def test_partidos_de_una_seleccion_que_no_jugo(herramientas_con_db):
+    error = herramientas_con_db.partidos(1998, seleccion="Francia")
+    assert "error" in error and "France" in error["selecciones"]
+
+
+def test_partidos_por_fase(herramientas_con_db):
+    m = herramientas_con_db
+    eliminatorias, grupos = m.partidos(2022, eliminatorias=True), m.partidos(2022, eliminatorias=False)
+    assert (len(eliminatorias), len(grupos)) == (16, 48)
+    assert sum(1 for p in eliminatorias if p["penales"]) == 5
+
+
+def test_los_filtros_hacen_entrar_el_resultado_en_la_ventana(herramientas_con_db):
+    import json
+    tope = 4000   # contexto.tope_resultado_caracteres
+    assert len(json.dumps(herramientas_con_db.partidos(2022), ensure_ascii=False)) > tope
+    assert len(json.dumps(herramientas_con_db.partidos(2022, eliminatorias=True), ensure_ascii=False)) < tope
+    assert len(json.dumps(herramientas_con_db.partidos(1998, seleccion="France"), ensure_ascii=False)) < tope
+
 def test_calcular_suma(herramientas_con_db):
     assert herramientas_con_db.calcular("6 + 6 + 8") == {"resultado": 20}
 

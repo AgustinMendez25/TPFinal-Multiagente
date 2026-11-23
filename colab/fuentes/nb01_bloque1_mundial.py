@@ -186,7 +186,7 @@ Después de la corrida **antes**, analizamos las trazas, elegimos una tarea que 
 Esta celda pone lado a lado las dos trazas de la tarea arreglada. Solo funciona cuando existen las dos corridas.
 """),
     ("code", """
-TAREA_ARREGLADA = "mun-001"   # <- la tarea del arreglo (está en decision_log.md)
+TAREA_ARREGLADA = "mun-007"   # <- la tarea del arreglo 1 (decision_log.md); el 2 se ve en mun-018
 antes = RUTAS["corridas"] / corridas.nombre_corrida("mundial", "agente-antes", 0, 1337) / f"{TAREA_ARREGLADA}.jsonl"
 despues = RUTAS["corridas"] / corridas.nombre_corrida("mundial", "agente-despues", 0, 1337) / f"{TAREA_ARREGLADA}.jsonl"
 if antes.exists() and despues.exists():

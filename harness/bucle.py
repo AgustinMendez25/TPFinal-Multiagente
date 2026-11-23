@@ -1,17 +1,21 @@
 """El loop del agente, compartido por los dominios (Mundial y recetas).
 
 Lo que resuelve, en el orden de la sección 4 del enunciado:
-  1. el ciclo: llamar al modelo, ejecutar cada llamada a herramienta, devolver un resultado por llamada;
+  1. el ciclo: llamar al modelo, ejecutar cada llamada a herramienta, devolver un resultado por llamada
+     (también la llamada que el modelo escribió como texto en vez de mandarla como tool_call);
   2. el contrato: cada herramienta tiene su ficha JSON y los argumentos se validan contra ella;
   3. la salida mal formada: JSON roto, herramienta inexistente o argumentos equivocados vuelven al
      modelo como error, y el loop sigue;
   4. las herramientas que fallan: excepciones, timeouts y resultados vacíos también vuelven como texto;
-  5. el contexto: un resultado más largo que `contexto.tope_resultado_caracteres` se recorta;
+  5. el contexto: un resultado más largo que `contexto.tope_resultado_caracteres` se recorta, y una
+     llamada idéntica a una anterior no se vuelve a ejecutar (devolvería lo mismo y llenaría la ventana);
   6. los reintentos: un error del servidor se reintenta `frenos.reintentos` veces, con espera creciente;
   7. la parada: topes de pasos, de tokens y (opcional) de segundos, y `terminar(respuesta, motivo)`;
   8. las trazas: un evento por cada cosa que pasa.
 """
+import ast
 import json
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FuturoVencido
@@ -50,6 +54,7 @@ class _Estado:
     rechazos: int = 0
     vistos: set = field(default_factory=set)        # ids de llamadas ya usados en la traza
     historial: list = field(default_factory=list)   # herramientas ejecutadas: nombre, argumentos, datos, ok
+    hechas: dict = field(default_factory=dict)      # llamada (nombre + argumentos) -> (paso, vino recortada)
 
 
 @dataclass
@@ -130,6 +135,83 @@ def _texto_resultado(datos, tope: int) -> tuple[str, bool, int]:
     return texto[:tope] + f"\n[…recortado: {resto} caracteres más. Pedí algo más específico.]", True, len(texto)
 
 
+# --- llamadas escritas como texto -------------------------------------------------------------------
+# qwen3:8b a veces escribe la llamada en el contenido en vez de mandarla como tool_call. Vimos tres
+# formas en la corrida "antes" del Bloque 1 (mun-007, mun-008, mun-009, mun-012):
+#   {"name": "terminar", "arguments": {...}}     terminar{"respuesta": ...}     terminar("8", "motivo")
+# Si el texto tiene una sola llamada reconocible a una herramienta que existe, se la atiende como
+# si hubiera llegado bien. Si no, sigue valiendo el recordatorio.
+
+_LITERALES = {"null": None, "None": None, "true": True, "True": True, "false": False, "False": False}
+
+
+def _literal(nodo):
+    """Como ast.literal_eval, pero acepta null/true/false de JSON."""
+    if isinstance(nodo, ast.Name) and nodo.id in _LITERALES:
+        return _LITERALES[nodo.id]
+    if isinstance(nodo, ast.List):
+        return [_literal(n) for n in nodo.elts]
+    if isinstance(nodo, ast.Dict):
+        return {_literal(k): _literal(v) for k, v in zip(nodo.keys, nodo.values)}
+    return ast.literal_eval(nodo)
+
+
+def _sin_envoltorio(texto: str) -> str:
+    texto = re.sub(r"</?tool_call>", "", texto)
+    texto = re.sub(r"^```[a-zA-Z]*\s*|\s*```$", "", texto.strip())
+    return texto.strip()
+
+
+def _objeto_json(texto: str, desde: int):
+    try:
+        valor, _ = json.JSONDecoder().raw_decode(texto, desde)
+    except json.JSONDecodeError:
+        return None
+    return valor if isinstance(valor, dict) else None
+
+
+def rescatar_llamada(texto: str, fichas: dict) -> dict | None:
+    """La llamada a herramienta escrita en el texto, en el formato de tool_calls; None si no hay una clara."""
+    texto = _sin_envoltorio(texto or "")
+    if not texto:
+        return None
+    # 1. {"name": ..., "arguments": {...}}
+    if texto.startswith("{"):
+        objeto = _objeto_json(texto, 0)
+        if objeto and objeto.get("name") in fichas:
+            argumentos = objeto.get("arguments", objeto.get("parameters", {}))
+            return {"function": {"name": objeto["name"], "arguments": argumentos}}
+    # 2. nombre{...} o nombre({...})   3. nombre(arg1, arg2, clave=valor)
+    encontradas = [m for m in re.finditer(r"\b([a-z_]+)\s*([({])", texto) if m.group(1) in fichas]
+    if len(encontradas) != 1:
+        return None
+    nombre = encontradas[0].group(1)
+    inicio = encontradas[0].end() - 1
+    llave = texto.find("{", inicio)
+    if texto[inicio] == "{" or texto[inicio + 1:].lstrip().startswith("{"):
+        objeto = _objeto_json(texto, llave)
+        return {"function": {"name": nombre, "arguments": objeto}} if objeto is not None else None
+    cierre = texto.rfind(")")
+    if cierre < inicio:
+        return None
+    try:
+        llamada = ast.parse(texto[encontradas[0].start():cierre + 1], mode="eval").body
+        if not isinstance(llamada, ast.Call):
+            return None
+        orden = list(fichas[nombre]["function"]["parameters"].get("properties", {}))
+        if len(llamada.args) > len(orden):
+            return None
+        argumentos = {orden[i]: _literal(n) for i, n in enumerate(llamada.args)}
+        argumentos |= {k.arg: _literal(k.value) for k in llamada.keywords if k.arg}
+    except (SyntaxError, ValueError, TypeError):
+        return None
+    return {"function": {"name": nombre, "arguments": argumentos}}
+
+
+def _clave(nombre: str, argumentos) -> str:
+    return nombre + json.dumps(argumentos, sort_keys=True, ensure_ascii=False)
+
+
 def _llamar_modelo(mensajes, dominio, config, registro, paso, chat, dormir) -> llm.Respuesta:
     modelo, frenos = config["modelo"], config["frenos"]
     for intento in range(1, frenos["reintentos"] + 2):
@@ -147,6 +229,14 @@ def _llamar_modelo(mensajes, dominio, config, registro, paso, chat, dormir) -> l
                             intento=intento)
             dormir(frenos["espera_reintento_s"] * 2 ** (intento - 1))
     raise AssertionError("no se llega acá")
+
+
+def _repetida(hecha: tuple[int, bool]) -> str:
+    paso, truncado = hecha
+    consejo = ("Esa vez el resultado vino recortado: pedí menos datos usando los filtros de la herramienta. "
+               if truncado else "")
+    return (f"ya hiciste esta misma llamada en el paso {paso} y el resultado no cambia: está más arriba en la "
+            f"conversación. {consejo}Si con eso no alcanza, probá otra herramienta o llamá a terminar.")
 
 
 def _atender(llamada: dict, indice: int, paso: int, dominio: Dominio, fichas: dict, config: dict, registro,
@@ -181,12 +271,17 @@ def _atender(llamada: dict, indice: int, paso: int, dominio: Dominio, fichas: di
         texto, truncado, caracteres = _texto_resultado({"ok": "respuesta registrada"}, tope)
         _registrar(registro, mensajes, paso, ident, nombre, True, texto, truncado, caracteres, inicio)
         return Fin("respondida" if respuesta is not None else "negada", respuesta, paso, argumentos.get("motivo"))
+    clave = _clave(nombre, argumentos) if error is None else None
+    if clave in estado.hechas:            # las herramientas son deterministas: repetir solo llena el contexto
+        error = _repetida(estado.hechas[clave])
     datos = {"error": error} if error is not None else \
         _ejecutar(dominio.herramientas[nombre], argumentos, config["contexto"]["herramienta_timeout_s"])
     ok = not (isinstance(datos, dict) and "error" in datos)
     if error is None:
         estado.historial.append({"nombre": nombre, "argumentos": argumentos, "datos": datos, "ok": ok})
     texto, truncado, caracteres = _texto_resultado(datos, tope)
+    if error is None:
+        estado.hechas[clave] = (paso, truncado)
     _registrar(registro, mensajes, paso, ident, nombre, ok, texto, truncado, caracteres, inicio)
     return None
 
@@ -245,6 +340,9 @@ def bucle(pregunta: str, config: dict, registro, dominio: Dominio, *, chat=llm.c
                         razon_fin=respuesta.razon_fin, texto=contenido[:500])
         estado.tokens += respuesta.tokens_entrada + respuesta.tokens_salida
         llamadas = mensaje.get("tool_calls") or []
+        if not llamadas and (rescatada := rescatar_llamada(contenido, fichas)):
+            registro.evento("llamada_rescatada", paso=paso, texto=contenido[:500])
+            llamadas = [rescatada]
         mensajes.append({"role": "assistant", "content": contenido, **({"tool_calls": llamadas} if llamadas else {})})
         if not llamadas:
             registro.evento("sin_llamadas", paso=paso, texto=contenido[:500])

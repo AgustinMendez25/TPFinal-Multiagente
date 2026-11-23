@@ -151,16 +151,30 @@ def goleadores(torneo: int, n: int = 5):
     return {"torneo": int(torneo), "goleadores": ranking[:n], "empate_en_el_corte": empate}
 
 
-def partidos(torneo: int):
+def partidos(torneo: int, seleccion: str | None = None, eliminatorias: bool | None = None):
+    # Los filtros existen porque un Mundial de 64 partidos ocupa ~12.000 caracteres y no entra entero en
+    # la ventana: sin ellos, el modelo recibe la lista recortada y no puede contar (Bloque 1, arreglo 2).
     id_torneo = _id_torneo(torneo)
     if id_torneo is None:
         return _error_torneo(torneo)
     filas = _sql(
         "SELECT m.match_date, m.stage_name, h.team_name AS local, a.team_name AS visitante, m.score, "
-        "m.penalty_shootout, m.score_penalties, s.stadium_name, s.city_name "
+        "m.penalty_shootout, m.score_penalties, m.knockout_stage, s.stadium_name, s.city_name "
         "FROM matches m JOIN teams h ON h.team_id = m.home_team_id "
         "JOIN teams a ON a.team_id = m.away_team_id JOIN stadiums s ON s.stadium_id = m.stadium_id "
         "WHERE m.tournament_id = ? ORDER BY m.match_date, m.match_id", id_torneo)
+    if seleccion is not None:
+        buscada = _normalizar(seleccion)
+        filas = [f for f in filas if buscada in (_normalizar(f["local"]), _normalizar(f["visitante"]))]
+        if not filas:
+            equipos = sorted({f["local"] for f in _sql(
+                "SELECT h.team_name AS local FROM matches m JOIN teams h ON h.team_id = m.home_team_id "
+                "WHERE m.tournament_id = ? UNION SELECT a.team_name FROM matches m "
+                "JOIN teams a ON a.team_id = m.away_team_id WHERE m.tournament_id = ?", id_torneo, id_torneo)})
+            return {"error": f"«{seleccion}» no jugó el Mundial {torneo}. Los nombres van en inglés.",
+                    "selecciones": equipos}
+    if eliminatorias is not None:
+        filas = [f for f in filas if bool(int(f["knockout_stage"])) == bool(eliminatorias)]
     return [{"fecha": f["match_date"], "etapa": f["stage_name"], "local": f["local"],
              "visitante": f["visitante"], "resultado": f["score"],
              "penales": f["score_penalties"] if int(f["penalty_shootout"]) else None,
@@ -295,8 +309,15 @@ FICHAS_POR_NOMBRE = {
         ("jugador",)),
     "partidos": _ficha(
         "partidos",
-        "Lista los partidos de un Mundial: fecha, etapa, equipos, resultado y estadio.",
-        {"torneo": {"type": "integer", "description": "Año del torneo. Ejemplo: 1986"}},
+        "Lista los partidos de un Mundial: fecha, etapa, equipos, resultado, penales (el resultado de "
+        "la definición por penales, o null) y estadio. Un Mundial entero es largo y se recorta: filtrá "
+        "por selección o por fase cuando puedas.",
+        {"torneo": {"type": "integer", "description": "Año del torneo. Ejemplo: 1986"},
+         "seleccion": {"type": "string",
+                       "description": "Solo los partidos de esta selección, en inglés. Ejemplo: France"},
+         "eliminatorias": {"type": "boolean",
+                           "description": "true: solo los partidos de eliminación directa (octavos en "
+                                          "adelante); false: solo los de la fase de grupos"}},
         ("torneo",)),
     "calcular": _ficha(
         "calcular",
