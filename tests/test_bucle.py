@@ -313,3 +313,11 @@ def test_una_llamada_que_fallo_se_puede_reintentar(tmp_path):
     _, _, chat = _correr(tmp_path, [llamada(("sumar", {"a": "1", "b": 1})), llamada(("sumar", {"a": "1", "b": 1})),
                                     llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
     assert "tiene que ser integer" in chat.pedidos[2]["mensajes"][-1]["content"]
+
+
+def test_repetir_una_llamada_que_fallo_devuelve_el_mismo_error_y_pide_cambiar_argumentos(tmp_path):
+    _, _, chat = _correr(tmp_path, [llamada(("explota", {})), llamada(("explota", {})),
+                                    llamada(("terminar", {"respuesta": None, "motivo": "m"}))])
+    contenido = chat.pedidos[2]["mensajes"][-1]["content"]
+    assert "ya hiciste esta misma llamada en el paso 1 y falló" in contenido
+    assert "se rompió" in contenido and "cambiá los argumentos" in contenido

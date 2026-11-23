@@ -236,8 +236,11 @@ def _llamar_modelo(mensajes, dominio, config, registro, paso, chat, dormir) -> l
     raise AssertionError("no se llega acá")
 
 
-def _repetida(hecha: tuple[int, bool]) -> str:
-    paso, truncado = hecha
+def _repetida(hecha: tuple) -> str:
+    paso, truncado, fallo = (*hecha, None)[:3]
+    if fallo:                             # repetir una llamada que falló da el mismo error: hay que cambiar algo
+        return (f"ya hiciste esta misma llamada en el paso {paso} y falló con: «{fallo}». Con los mismos "
+                f"argumentos va a volver a fallar: cambiá los argumentos, probá otra herramienta o llamá a terminar.")
     consejo = ("Esa vez el resultado vino recortado: pedí menos datos usando los filtros de la herramienta. "
                if truncado else "")
     return (f"ya hiciste esta misma llamada en el paso {paso} y el resultado no cambia: está más arriba en la "
@@ -286,7 +289,7 @@ def _atender(llamada: dict, indice: int, paso: int, dominio: Dominio, fichas: di
         estado.historial.append({"nombre": nombre, "argumentos": argumentos, "datos": datos, "ok": ok})
     texto, truncado, caracteres = _texto_resultado(datos, tope)
     if error is None:
-        estado.hechas[clave] = (paso, truncado)
+        estado.hechas[clave] = (paso, truncado, None if ok else str(datos["error"]))
     _registrar(registro, mensajes, paso, ident, nombre, ok, texto, truncado, caracteres, inicio)
     return None
 

@@ -227,3 +227,7 @@ Estas dos quedan como fallas del modelo, para comparar las variantes.
 **Organización.** La vuelta 2 se guarda en `dev-v2__<variante>__t0__s1337`, con otro commit. La vuelta 1 queda en Drive como evidencia.
 
 **Infraestructura.** Las tandas de libro-cerrado y ambas de la vuelta 1 se escribieron primero en la carpeta `TPFinal-heladera` propia de cada cuenta, no en la compartida, porque faltaba el acceso directo. Las copiamos a mano a la compartida. Antes del 04, todas las cuentas tienen que ver la carpeta compartida.
+
+**Un cambio más antes de la vuelta 2: repetir una llamada que falló.** Cuando el modelo repetía exactamente una llamada que había devuelto error, el freno de repeticiones del Bloque 1 le contestaba «el resultado no cambia, está más arriba» y le sugería terminar. Para una llamada fallida ese consejo es malo: no le recuerda qué falló ni que lo que tiene que cambiar son los argumentos. Ahora el bucle guarda el error de cada llamada hecha y, si se repite, lo vuelve a mostrar y pide cambiar los argumentos, probar otra herramienta o terminar. Las llamadas con argumentos inválidos se siguen pudiendo reintentar como antes. No cambia nada cuando la llamada anterior salió bien. El Bloque 1 ya está medido con el commit anterior, así que no lo afecta.
+
+**Lo que dejamos como estaba:** no le agregamos a `faltantes` ni el vencimiento ni «para cuántas porciones alcanza» por ingrediente. Eso resolvería `dev-017` y `dev-020` con la herramienta en lugar del modelo, y contradice lo que decidimos arriba.
