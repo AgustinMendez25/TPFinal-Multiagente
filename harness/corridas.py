@@ -163,10 +163,20 @@ def corredor_agente(config_path: Path, dominio: str, timeout_s: float = 600) -> 
     return correr
 
 
-def corredor_libro_cerrado(config: dict) -> Callable[[dict, Path], None]:
+def corredor_libro_cerrado(config: dict, sistema: str | None = None) -> Callable[[dict, Path], None]:
+    """`sistema`: el prompt de sistema; por defecto, el del Mundial (libro_cerrado.SISTEMA)."""
     modelo = config["modelo"]
 
     def correr(tarea: dict, trabajo: Path) -> None:
         libro_cerrado.responder_tarea(tarea, trabajo, modelo=modelo["nombre"], num_ctx=modelo["num_ctx"],
-                                      temperatura=modelo["temperatura"], semilla=modelo["semilla"])
+                                      temperatura=modelo["temperatura"], semilla=modelo["semilla"],
+                                      sistema=sistema or libro_cerrado.SISTEMA)
+    return correr
+
+
+def corredor_camino_fijo(config: dict) -> Callable[[dict, Path], None]:
+    from lineas_de_base import camino_fijo
+
+    def correr(tarea: dict, trabajo: Path) -> None:
+        camino_fijo.responder_tarea(tarea, trabajo, config=config)
     return correr

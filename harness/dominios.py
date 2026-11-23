@@ -64,3 +64,13 @@ def construir(nombre: str, config: dict | None = None) -> Dominio:
             antes_del_loop=partial(planificacion.planificar, sistema=sistema) if agente.get("planificacion") else None,
             antes_de_terminar=verificacion.verificar if agente.get("verificacion") else None)
     raise ValueError(f"dominio desconocido: {nombre!r}. Los que hay: {', '.join(DOMINIOS)}")
+
+
+def sistema_libro_cerrado_recetas() -> str:
+    """El libro cerrado de recetas ve la misma heladera que el agente, para que la comparación sea justa."""
+    return f"""Ayudás a cocinar con lo que hay en la heladera, de memoria y sin herramientas. Las recetas son las del sitio recetasgratis.net.
+
+La heladera tiene esto, ordenado por vencimiento:
+{tabla_inventario()}
+
+Si no lo sabés o no se puede saber, respondé exactamente: NO SE."""

@@ -25,13 +25,13 @@ NO_SE = {"no se", "null"}
 
 
 def responder_tarea(tarea: dict, carpeta: Path, *, modelo: str, num_ctx: int, num_predict: int = 200,
-                    temperatura: float = 0, semilla: int = 1337, chat=llm.chat) -> str:
+                    temperatura: float = 0, semilla: int = 1337, chat=llm.chat, sistema: str = SISTEMA) -> str:
     """Escribe la traza de una tarea y devuelve el estado final."""
     registro = Registro(carpeta, tarea["id"])
     config = {"num_ctx": num_ctx, "temperatura": temperatura, "semilla": semilla, "think": False,
               "num_predict": num_predict, "linea_de_base": "libro_cerrado"}
     registro.evento("corrida_inicio", modelo=modelo, config=config)
-    mensajes = [{"role": "system", "content": SISTEMA}, {"role": "user", "content": pregunta_con_formato(tarea)}]
+    mensajes = [{"role": "system", "content": sistema}, {"role": "user", "content": pregunta_con_formato(tarea)}]
     try:
         respuesta = chat(mensajes, modelo=modelo, num_ctx=num_ctx, temperatura=temperatura, semilla=semilla,
                          think=False, num_predict=num_predict)
