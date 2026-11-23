@@ -8,6 +8,7 @@ Se usa después de la primera celda de cada notebook (que monta Drive y clona el
 import datetime as dt
 import os
 import shutil
+import socket
 import subprocess
 import time
 import urllib.request
@@ -19,6 +20,10 @@ import llm
 DRIVE = Path(os.environ.get("TPFINAL_DRIVE", "/content/drive/MyDrive/TPFinal-heladera"))
 OLLAMA_VERSION = "0.40.10"
 RAIZ = Path(__file__).resolve().parent.parent
+
+# Esta sesión de Colab: la máquina, cuándo arrancó y el estado de la GPU que midió `preparar`. Va en el
+# manifiesto de cada tanda y en un archivo por sesión dentro de la tanda, para saber con qué GPU corrió.
+SESION: dict = {"host": socket.gethostname(), "inicio": dt.datetime.now().strftime("%Y-%m-%d_%H%M%S")}
 
 
 def rutas() -> dict[str, Path]:
@@ -54,7 +59,8 @@ def asegurar_ollama() -> None:
     if ollama_vivo():
         return
     os.environ.update({"OLLAMA_HOST": "127.0.0.1:11434", "OLLAMA_MAX_LOADED_MODELS": "1", "OLLAMA_NUM_PARALLEL": "1"})
-    log = open(rutas()["registros"] / f"ollama_{dt.date.today()}.log", "a")
+    # Un log por sesión: si todas las cuentas escriben el mismo archivo de Drive, se pisan entre sí.
+    log = open(rutas()["registros"] / f"ollama_{SESION['inicio']}_{SESION['host']}.log", "a")
     subprocess.Popen(["ollama", "serve"], start_new_session=True, stdout=log, stderr=subprocess.STDOUT)
     for _ in range(60):
         if ollama_vivo():
@@ -86,7 +92,8 @@ def preparar(gpu: bool = True) -> dict:
         ps = subprocess.run(["ollama", "ps"], capture_output=True, text=True).stdout
         informe |= {"ollama": llm.version(), "ollama_esperada": OLLAMA_VERSION, "modelo": modelo,
                     "digest": llm.digest(modelo), "prueba": respuesta.mensaje.get("content", "").strip(),
-                    "gpu_100": "100% GPU" in ps}
+                    "gpu": _nombre_gpu(), "gpu_100": "100% GPU" in ps}
+        SESION.update({"gpu": informe["gpu"], "gpu_100": informe["gpu_100"], "ollama_ps": ps.strip()})
     for clave, valor in informe.items():
         print(f"{clave:>18}: {valor}")
     if informe["cambios_sin_commit"]:
@@ -98,6 +105,15 @@ def preparar(gpu: bool = True) -> dict:
     return informe
 
 
+def _nombre_gpu() -> str | None:
+    try:
+        salida = subprocess.run(["nvidia-smi", "--query-gpu=name", "--format=csv,noheader"],
+                                capture_output=True, text=True, timeout=20)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return salida.stdout.strip() or None
+
+
 def manifiesto(corrida: str, conjunto: str, config: dict, tareas: list[dict]) -> dict:
     modelo = config["modelo"]["nombre"]
     try:
@@ -105,4 +121,5 @@ def manifiesto(corrida: str, conjunto: str, config: dict, tareas: list[dict]) ->
     except llm.LLMError:
         servidor = {"ollama": None, "digest": None}
     return {"corrida": corrida, "conjunto": conjunto, "commit": commit_actual(), "config": config,
-            "tareas": [t["id"] for t in tareas], "creada": dt.datetime.now(dt.timezone.utc).isoformat(), **servidor}
+            "tareas": [t["id"] for t in tareas], "creada": dt.datetime.now(dt.timezone.utc).isoformat(), **servidor,
+            "sesion": dict(SESION)}

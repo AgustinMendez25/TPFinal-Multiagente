@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 import time
+import uuid
 from pathlib import Path
 from typing import Callable
 
@@ -92,7 +93,14 @@ def hecha(destino: Path, tarea_id: str) -> bool:
     return ruta.exists() and not esquema.validar_archivo(ruta)
 
 
-def tomar(destino: Path, quien: str, *, ahora: float | None = None, vigencia_h: float = 2.0) -> None:
+def tomar(destino: Path, quien: str, *, ahora: float | None = None, vigencia_h: float = 2.0,
+          confirmar_tras_s: float = 0.0) -> None:
+    """Marca la tanda como tomada por `quien`.
+
+    Drive tarda en mostrarle a una máquina lo que escribió otra: dos sesiones que arrancan juntas pueden ver
+    la tanda libre y tomarla las dos. Con `confirmar_tras_s`, después de escribir se espera ese tiempo y se
+    vuelve a leer: si la marca ya no es la nuestra, otra sesión la tomó después y esta se retira. La marca es
+    única por llamada, así que también separa a dos sesiones que pusieron el mismo nombre."""
     ahora = time.time() if ahora is None else ahora
     destino.mkdir(parents=True, exist_ok=True)
     ruta = destino / "tomada.json"
@@ -102,7 +110,14 @@ def tomar(destino: Path, quien: str, *, ahora: float | None = None, vigencia_h: 
         if previa["quien"] != quien and hace < vigencia_h * 3600:
             raise TandaTomada(f"La tanda {destino.name} la está corriendo {previa['quien']} (último avance hace "
                               f"{hace / 60:.0f} min). Elegí otra.")
-    _escribir_atomico(ruta, json.dumps({"quien": quien, "inicio": ahora, "latido": ahora}))
+    marca = uuid.uuid4().hex
+    _escribir_atomico(ruta, json.dumps({"quien": quien, "inicio": ahora, "latido": ahora, "marca": marca}))
+    if confirmar_tras_s:
+        time.sleep(confirmar_tras_s)
+        actual = _leer_json(ruta) if ruta.exists() else {}
+        if actual.get("marca") != marca:
+            raise TandaTomada(f"La tanda {destino.name} la tomó {actual.get('quien', 'otra sesión')} al mismo "
+                              f"tiempo que esta sesión. Queda para esa sesión.")
 
 
 def latido(destino: Path, quien: str, *, ahora: float | None = None) -> None:
@@ -133,13 +148,18 @@ def estado(destino: Path, tareas: list[dict], *, ahora: float | None = None) -> 
 
 def correr_tanda(tareas: list[dict], destino: Path, trabajo: Path, correr_una: Callable[[dict, Path], None], *,
                  manifiesto: dict, quien: str, antes_de_cada: Callable[[], None] | None = None,
-                 al_avanzar: Callable[[str], None] = print) -> dict:
+                 al_avanzar: Callable[[str], None] = print, sesion: dict | None = None,
+                 confirmar_tras_s: float = 0.0) -> dict:
     # Una tanda completa no corre nada, así que no importa con qué commit está el código ahora: sin
     # este atajo, volver a abrir un notebook después de un push trababa las celdas de corridas ya hechas.
     if all(hecha(destino, t["id"]) for t in tareas):
         return {"tareas": len(tareas), "en_drive": len(tareas), "corridas_ahora": 0, "completa": True}
     preparar(destino, manifiesto)
-    tomar(destino, quien)
+    tomar(destino, quien, confirmar_tras_s=confirmar_tras_s)
+    if sesion:
+        # el manifiesto lo escribe la primera sesión; si otra retoma la tanda, su GPU queda registrada acá
+        _escribir_atomico(destino / f"sesion_{sesion.get('host', 'local')}_{sesion.get('inicio', '')}.json",
+                          json.dumps(sesion | {"quien": quien, "tomada": time.time()}, ensure_ascii=False, indent=2))
     trabajo.mkdir(parents=True, exist_ok=True)
     corridas_ahora = 0
     for tarea in tareas:

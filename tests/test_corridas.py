@@ -101,6 +101,24 @@ def test_tanda_tomada_por_otro(tmp_path):
     corridas.tomar(tmp_path, "beto", ahora=5000 + 2 * 3600 + 1)     # pasaron 2 horas sin latido: abandonada
 
 
+def test_dos_sesiones_que_toman_a_la_vez(tmp_path, monkeypatch):
+    """La otra sesión escribe su toma mientras esta espera la confirmación: esta se retira."""
+    ruta = tmp_path / "tomada.json"
+
+    def otra_sesion_escribe(_segundos):
+        ruta.write_text(json.dumps({"quien": "beto", "inicio": 1, "latido": 1, "marca": "de-beto"}), encoding="utf-8")
+    monkeypatch.setattr(corridas.time, "sleep", otra_sesion_escribe)
+    with pytest.raises(corridas.TandaTomada, match="beto"):
+        corridas.tomar(tmp_path, "ana", confirmar_tras_s=30)
+
+
+def test_la_confirmacion_pasa_si_nadie_mas_la_tomo(tmp_path, monkeypatch):
+    monkeypatch.setattr(corridas.time, "sleep", lambda s: None)
+    corridas.tomar(tmp_path, "ana", confirmar_tras_s=30)
+    corridas.latido(tmp_path, "ana")
+    assert json.loads((tmp_path / "tomada.json").read_text(encoding="utf-8"))["quien"] == "ana"
+
+
 def test_estado(tmp_path):
     destino = tmp_path / "c"
     assert corridas.estado(destino, TAREAS)["en_drive"] == 0

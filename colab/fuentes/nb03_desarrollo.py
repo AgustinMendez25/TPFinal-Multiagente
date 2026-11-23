@@ -84,7 +84,7 @@ VARIANTE = "base"   # <- libro-cerrado, camino-fijo, base, plan, verif o ambas
 
 destino, resumen = tandas.correr("dev", VARIANTE, TEMPERATURA, SEMILLA, quien=QUIEN, rutas=RUTAS,
                                  manifiesto=entorno.manifiesto, antes_de_cada=entorno.asegurar_ollama,
-                                 etiqueta=ETIQUETA)
+                                 etiqueta=ETIQUETA, sesion=entorno.SESION)
 print(resumen)
 """),
     ("code", """

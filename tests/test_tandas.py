@@ -42,8 +42,10 @@ def test_correr_y_puntuar_con_un_corredor_falso(tmp_path, monkeypatch):
     rutas = {"trabajo": tmp_path / "local", "corridas": tmp_path / "drive", "resultados": tmp_path / "res"}
     rutas["resultados"].mkdir()
     destino, resumen = tandas.correr("dev", "base", 0, 1337, quien="ana", rutas=rutas,
-                                     manifiesto=lambda n, c, cfg, t: {"commit": "x", "corrida": n})
+                                     manifiesto=lambda n, c, cfg, t: {"commit": "x", "corrida": n},
+                                     sesion={"host": "vm1", "inicio": "hoy", "gpu_100": True}, confirmar_tras_s=0)
     assert destino.name == corridas.nombre_corrida("dev", "base", 0, 1337) and resumen["completa"]
+    assert (destino / "sesion_vm1_hoy.json").exists()       # qué máquina y qué GPU corrió la tanda
     filas, resumen = tandas.puntuar("dev", destino, rutas["resultados"])
     assert resumen["imposibles_negadas"] == 3 and (rutas["resultados"] / f"{destino.name}.csv").exists()
 

@@ -381,3 +381,44 @@ Todo corre con el código del tag `medicion-v1`, que el notebook 04 fija antes d
 **Lo que sabemos de antemano sobre la potencia.** Con 21 tareas, una mejora moderada puede no distinguirse del azar. Si el resultado es «no se distingue», en el informe lo decimos así, sin afirmar que no hay efecto. Emparejar por semilla da 63 pares, pero no son independientes: las tres semillas de una misma tarea tienden a acertar o fallar juntas. Lo declaramos como limitación.
 
 **Límite conocido de la verificación.** Igual que el verificador de la clase, chequea la coherencia con lo que devolvieron las herramientas, no la verdad. Una receta equivocada con números que salen de `faltantes` pasa. El chequeo del orden de las candidatas cubre una parte de eso.
+
+## 2026-11-23 · Cierre del desarrollo (vuelta 5) y ajustes antes del tag `medicion-v1`
+
+**Vuelta 5** (commit `1709bd1`; corridas `dev-v5__<variante>__t0__s1337`, las 6 con el mismo commit):
+
+| Variante | Vuelta 4 | Vuelta 5 | Inventadas (v5) | Tokens (21 tareas) |
+|---|---|---|---|---|
+| libro-cerrado | 4/21 | 4/21 | 0 | 7.457 |
+| camino-fijo | 12/21 | 12/21 | 1 | 20.174 |
+| base | 13/21 | 15/21 | 2 | 273.906 |
+| plan | 17/21 | 17/21 | 3 | 287.935 |
+| verif | 15/21 | 17/21 | 0 | 287.690 |
+| ambas | 20/21 | 20/21 | 0 | 298.420 |
+
+- El cambio de `faltantes` cumplió: `dev-011` ya no desborda `num_ctx` y lo aciertan las cuatro variantes del agente.
+  Ninguna tarea terminó en `error` por contexto.
+- Las dos decisiones arreglan fallas distintas, como esperábamos. El **plan** resuelve las que piden comparar
+  candidatas (`dev-005`, `dev-008`, `dev-021`), que base y verif fallan. La **verificación** resuelve los
+  inventos en las imposibles (`dev-013`, `dev-014`), que base y plan inventan. Ambas junta las dos cosas.
+- `dev-020` (el ingrediente que vence primero, respuesta «zanahoria») lo fallan las seis variantes. No lo
+  seguimos ajustando: queda como falla conocida.
+
+**Decisión: el desarrollo termina acá.** Cinco vueltas sobre las mismas 21 tareas `dev-*` ya ajustan el
+harness a ellas; otra vuelta para `dev-020` sería ajustar a una tarea. Lo que vale es lo que salga en las
+tareas congeladas. En el informe va como limitación que el `dev` quedó sobreajustado (20/21 en ambas).
+
+**Ajustes antes del tag, que no cambian cómo responde el agente:**
+
+- *Una tanda corrida por dos sesiones a la vez.* En `dev-v2__base` aparecieron copias de Drive
+  (`dev-005 (1).jsonl`, `dev-008 (1).jsonl`, `dev-009 (1).jsonl`): dos sesiones vieron la tanda libre y la
+  corrieron juntas, porque Drive tarda en mostrarle a una máquina lo que escribió otra. Ahora `tomar` escribe
+  una marca única y, a los 30 segundos, la vuelve a leer: si otra sesión la pisó, esta se retira y sigue con
+  la próxima tanda. La marca también separa a dos sesiones que pusieron el mismo nombre. No lo hace imposible
+  (si Drive tarda más de 30 segundos), así que el notebook 04 pide además arrancar con uno o dos minutos de
+  diferencia.
+- *Evidencia de GPU en cada tanda.* El chequeo de «100% GPU» solo se imprimía. Ahora `preparar` lo guarda,
+  junto con el nombre de la GPU y la salida de `ollama ps`, en el manifiesto de la tanda y en un
+  `sesion_<máquina>_<inicio>.json` por cada sesión que corre la tanda (si una tanda la retoma otra cuenta,
+  queda la GPU de las dos).
+- *Un log de Ollama por sesión.* Era uno por fecha, compartido por todas las cuentas, y se pisaban. Ahora es
+  `registros/ollama_<inicio>_<máquina>.log`.

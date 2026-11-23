@@ -16,7 +16,9 @@ CELDAS = [
 - **Las trazas de `rec-*` no se usan para ajustar nada.** Se miran recién en el análisis (notebook 05).
 - **Lo que se compara quedó declarado antes de medir**, en `decision_log.md`.
 
-**Para correr entre varias cuentas.** Cada integrante abre este notebook en su cuenta y corre la sección 3: toma sola la siguiente tanda libre, la marca como tomada en Drive y, al terminar, sigue con la próxima. Dos cuentas nunca corren la misma tanda.
+**Para correr entre varias cuentas.** Cada integrante abre este notebook en su cuenta y corre la sección 3: toma sola la siguiente tanda libre, la marca como tomada en Drive y, al terminar, sigue con la próxima. Usá un nombre distinto en cada cuenta (por ejemplo `agus-1`, `agus-2`).
+
+Drive tarda en mostrarle a una cuenta lo que escribió otra, así que después de tomar una tanda la sesión espera 30 segundos y vuelve a mirar: si otra cuenta la tomó al mismo tiempo, se retira y sigue con la próxima. Igual conviene arrancar la sección 3 con uno o dos minutos de diferencia entre cuentas.
 
 **Qué necesitás.** Colab con GPU **T4**, la carpeta compartida `TPFinal-heladera` (el acceso directo en *Mi unidad*, no una carpeta propia) y el token de GitHub de solo lectura.
 
@@ -101,7 +103,7 @@ def correr_tanda(tanda):
     print(f"\\n=== {tandas.nombre_de(tanda)} · {time.strftime('%H:%M')}")
     destino, resumen = tandas.correr("congelado", variante, temperatura, semilla, quien=QUIEN, rutas=RUTAS,
                                      manifiesto=entorno.manifiesto, antes_de_cada=entorno.asegurar_ollama,
-                                     etiqueta=etiqueta)
+                                     etiqueta=etiqueta, sesion=entorno.SESION)
     if resumen["completa"]:
         _, puntaje = tandas.puntuar("congelado", destino, RUTAS["resultados"])
         print(f"→ {puntaje['aciertos']}/{puntaje['tareas']} aciertos · imposibles bien: "
