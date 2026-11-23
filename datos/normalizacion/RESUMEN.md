@@ -9,7 +9,9 @@ Generado por `factibilidad/preparar_dataset.py`. No editar a mano.
 | recetasgratis.net | 18187 |
 | con comensales, duración y al menos 3 líneas | 12473 |
 | con todas las líneas reconocidas por el léxico (corpus base) | 5197 |
-| **dataset final** (sin problema + corregidas) | **3198** |
+| sin problema o corregidas | 3198 |
+| menos las excluidas por cantidad absurda (D20) | 3184 |
+| **dataset final** | **3184** |
 
 ## Recetas del corpus base
 

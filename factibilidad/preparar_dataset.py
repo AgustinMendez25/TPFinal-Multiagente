@@ -29,6 +29,27 @@ DIR = REPO / "datos" / "normalizacion"
 SALIDA = REPO / "datos" / "recetas_final.csv"
 NO_CONVERTIBLES = {"pizca", "chorro", "puñado", "gota"}   # no son una cantidad: no se pueden convertir
 
+# Recetas con una cantidad absurda (400 kg de nueces, 100 pechugas por persona, 500 botes de garbanzos...),
+# detectadas mirando las cantidades normalizadas fuera de rango. Se sacan del dataset final; siguen en lineas.csv.
+EXCLUIDAS = {
+    # el texto original ya trae la cantidad absurda y la normalización la convierte tal cual
+    3447: "«400 kilogramos de nueces»",
+    3960: "«100 pechugas de pollo por persona»",
+    8890: "«500 botes de garbanzos cocidos»",
+    6104: "«400 granos de carne picada»",
+    10182: "«120 tazas de harina»",
+    4976: "«250 cucharadas soperas de leche»",
+    18527: "«500 unidades de patatas»",
+    8617: "«300 hebras de chorizo»",
+    18250: "«100 unidades de cebolla»",
+    19003: "«50 unidades de cebollas pequeñas»",
+    # el texto es razonable y la conversión a la unidad elegida da un número absurdo
+    2560: "«1 kilo de aceitunas» da 250 unidades",
+    7597: "«200 gramos de aceitunas negras» da 50 unidades",
+    18985: "«1 kilogramo de chiles jalapeños» da 66,67 unidades",
+    16891: "«3 tazas de chile de árbol seco» da 48 unidades",
+}
+
 
 # --- equivalencias -------------------------------------------------------------------------------
 
@@ -160,6 +181,7 @@ def main():
     # 2. decidir cada línea y cada receta
     filas_lineas, finales, dudosas = [], [], []
     c_lineas, c_recetas = collections.Counter(), collections.Counter()
+    c_excluidas = 0
     motivos, uso_reglas = collections.Counter(), collections.defaultdict(set)
     bloquea = collections.Counter()   # recetas que se destrabarían si se aprueba la regla (es lo único dudoso)
     for r in base:
@@ -189,7 +211,9 @@ def main():
                             "reglas_dudosas": " ".join(reglas_dudosas),
                             "lineas_dudosas": " | ".join(f"{i['texto']} [{' '.join(d['reglas'])}]"
                                                          for i, d in decisiones if d["estado"] == "dudosa")})
-        if estado in ("sin_problema", "corregida"):
+        if estado in ("sin_problema", "corregida") and r["id"] in EXCLUIDAS:
+            c_excluidas += 1
+        elif estado in ("sin_problema", "corregida"):
             finales.append({"id": r["id"], "nombre": r["nombre"], "url": r["url"], "comensales": r["comensales"],
                             "minutos": r["minutos"], "categoria": r["categoria"], "estado": estado,
                             "ingredientes": json.dumps(
@@ -236,7 +260,9 @@ def main():
         f"| recetasgratis.net | {total_rg} |",
         f"| con comensales, duración y al menos 3 líneas | {len(trabajo)} |",
         f"| con todas las líneas reconocidas por el léxico (corpus base) | {len(base)} |",
-        f"| **dataset final** (sin problema + corregidas) | **{len(finales)}** |",
+        f"| sin problema o corregidas | {len(finales) + c_excluidas} |",
+        f"| menos las excluidas por cantidad absurda (D20) | {len(finales)} |",
+        f"| **dataset final** | **{len(finales)}** |",
         "",
         "## Recetas del corpus base",
         "",
@@ -332,6 +358,10 @@ def main():
          "Se leían como maíz, harina o leche: «9 tortillas de maíz» daba 9 choclos y la leche de coco figuraba "
          "como lácteo", f"{sum(contar(lambda i, c=c: i['ingrediente'] == c) for c in ('tortilla de maiz', 'tortilla de harina', 'leche condensada', 'leche evaporada', 'leche de coco'))} líneas",
          "aplicada"),
+        ("D20", "filtro", "Se excluyen las recetas con una cantidad absurda (EXCLUIDAS en este script)",
+         "Hay cantidades como 400 kg de nueces o 100 pechugas por persona, ya sea porque la receta original las trae "
+         "o porque la conversión de unidades falla; se detectaron mirando cantidades fuera de rango y se revisaron a mano",
+         f"{len(EXCLUIDAS)} recetas", "aplicada"),
     ]
     escribir(DIR / "decisiones.csv",
              [dict(zip(["id", "tema", "decision", "motivo", "alcance", "estado"], d)) for d in decisiones],

@@ -128,3 +128,29 @@ y mun-013 y mun-022 (inventa respuestas en lugar de negarse). Quedan para el an�
 **Qué se espera en la corrida "después":** mun-007, mun-008 y mun-012 deberían pasar a acertar por el
 arreglo 1, y mun-018 y mun-027 por el arreglo 2. mun-009 debería terminar, pero con la respuesta
 equivocada. Se compara en la sección 5 del notebook `01`.
+
+## 2026-11-23 · Recetas con cantidades absurdas (D20)
+
+Revisando el corpus aparecieron cantidades imposibles: «400 kilogramos de nueces», «100 pechugas de pollo
+por persona», «120 tazas de harina». Buscamos las cantidades normalizadas fuera de rango (más de 3 kg o
+3 l, más de 40 unidades, más de 20 dientes): salieron **17 recetas de 3.198**. Las revisamos a mano:
+
+- **10 traen la cantidad absurda en el texto original** y la normalización la convierte tal cual
+  (400 kg de nueces, 500 botes de garbanzos, 500 patatas, 100 cebollas...).
+- **4 tienen un texto razonable y la conversión falla**: «1 kilo de aceitunas» da 250 unidades,
+  «3 tazas de chile de árbol» da 48 unidades.
+- **3 son plausibles** y se quedan: 5,6 kg de codillo para 8, 4 l de leche para 5, 25 dientes de ajo para 5.
+
+- *Decisión:* excluir las 14 del dataset final (`EXCLUIDAS` en `factibilidad/preparar_dataset.py`, decisión
+  D20 en `datos/normalizacion/decisiones.csv`). Siguen en `lineas.csv` para que se vea qué tenían.
+  El dataset pasa de 3.198 a 3.184 recetas.
+- *Descartado:* corregir las 14 a mano. Habría que inventar la cantidad buena en 10 de ellas (¿400 g de
+  nueces?) y son el 0,4 % del corpus.
+- *Descartado por ahora:* arreglar las reglas de aceitunas y chiles. Afectan a esas 4 recetas con
+  cantidades grandes; si aparecen más casos, se corrige la regla en `equivalencias.csv`.
+- *Efecto en las tareas:* ninguno. Volvimos a correr `factibilidad/borrador_respuestas.py` y las 21
+  congeladas, las 21 de desarrollo y el inventario salieron idénticos (ninguna tarea usaba esas recetas
+  ni las tiene en sus conteos). Los tests siguen en verde.
+- *Pendiente de revisar:* comparando cada ingrediente con su mediana por comensal aparecen 66 recetas con
+  más de 15 veces la mediana. La mayoría tiene `comensales = 1` con cantidades de torta o conserva
+  (500 g de manteca, 1 kg de azúcar): parece un `comensales` mal cargado, no una cantidad rota. No se tocó.
