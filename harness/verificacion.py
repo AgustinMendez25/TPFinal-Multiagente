@@ -76,7 +76,9 @@ def verificar(pregunta: str, respuesta: str, historial: list[dict]) -> str | Non
     for numero in NUMERO.findall(respuesta):
         valor = float(numero.replace(",", "."))
         if valor > TOPE_NUMEROS_CHICOS and numero not in resultados and numero not in texto_pregunta:
-            problemas.append(f"el número {numero} no aparece en ningún resultado de herramienta: no lo inventes.")
+            problemas.append(f"el número {numero} no aparece en ningún resultado de herramienta: no lo inventes. Si "
+                             f"usaste detalle_receta o faltantes con las porciones de la pregunta, las cantidades "
+                             f"ya vienen escaladas: respondé con el número tal como aparece ahí.")
 
     if ";" in respuesta:
         for elemento in (e for e in respuesta.split(";") if e.strip()):

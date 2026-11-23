@@ -35,11 +35,11 @@ ESQUEMA = {
     },
     "required": ["contiene", "excluye", "dieta", "porciones", "que_pide", "ingrediente", "receta_id"],
 }
-INSTRUCCION = """Traducí la pregunta a estos campos, sin responderla:
-- contiene: ingredientes que la receta tiene que llevar, en singular (pollo, papa, queso). Si la pregunta habla del ingrediente de la heladera que vence primero, usá el nombre que figura arriba.
-- excluye: ingredientes que la receta no puede llevar.
-- dieta: vegetariana, vegana, sin_gluten, sin_lactosa, o null.
-- porciones: para cuántas personas, o null.
+INSTRUCCION = """Traducí la pregunta a estos campos, sin responderla. Poné solo lo que la pregunta dice; lo que no dice va vacío o null.
+- contiene: los ingredientes que la receta tiene que llevar, en singular (pollo, papa, queso). Si la pregunta habla de un ingrediente de la heladera por su vencimiento («el que vence primero»), usá el nombre que figura arriba.
+- excluye: ingredientes que la receta no puede llevar. Una dieta («sin carne», «sin gluten», «sin lácteos») no va acá: va en dieta.
+- dieta: vegetariana, vegana, sin_gluten o sin_lactosa SOLO si la pregunta pide una dieta; si no, null.
+- porciones: para cuántas personas, comensales o porciones, si la pregunta lo dice; si no, null.
 - que_pide, uno de:
   conteo (cuántas recetas hay), receta_mas_rapida (el nombre de la receta más rápida que cumple todo),
   apta_si_no (si una receta cumple una dieta), cantidad_ingrediente (cuánto de un ingrediente lleva la receta),
@@ -47,6 +47,10 @@ INSTRUCCION = """Traducí la pregunta a estos campos, sin responderla:
   faltan_cantidad_ingrediente (cuánto falta de un ingrediente), otro (cualquier otra cosa).
 - ingrediente: el ingrediente por el que pregunta (para cantidad_ingrediente o faltan_cantidad_ingrediente), o null.
 - receta_id: el número de receta si la pregunta lo nombra, o null.
+
+Ejemplos:
+«¿Cuál es la receta más rápida que lleva arroz y zanahoria?» → {"contiene": ["arroz", "zanahoria"], "excluye": [], "dieta": null, "porciones": null, "que_pide": "receta_mas_rapida", "ingrediente": null, "receta_id": null}
+«Somos 3: ¿qué me falta comprar para la receta más rápida con papa que no lleve cebolla y sea vegana?» → {"contiene": ["papa"], "excluye": ["cebolla"], "dieta": "vegana", "porciones": 3, "que_pide": "faltan_lista", "ingrediente": null, "receta_id": null}
 
 Pregunta: """
 

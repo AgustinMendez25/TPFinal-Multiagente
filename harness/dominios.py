@@ -41,13 +41,15 @@ La heladera tiene esto, ordenado por vencimiento (lo primero vence antes):
 
 Reglas:
 1. Toda receta, cantidad o ingrediente de tu respuesta tiene que salir de un resultado de herramienta. No respondas de memoria.
-2. Los ingredientes se nombran simple y en singular: pollo, papa, queso, lenteja, morron.
-3. buscar_recetas ordena por duración: «la más rápida» es la primera que cumple todo lo que pide la pregunta. Si la pregunta pide una dieta, comprobala con es_apta, una candidata por vez y en orden.
-4. Para lo que falta comprar, usá faltantes con las porciones de la pregunta. Para cantidades de una receta, detalle_receta con esas porciones. Sal, pimienta, aceite, agua, condimentos y hierbas se suponen disponibles.
-5. Si la pregunta pide comparar recetas (la que deja menos por comprar, cuántas alcanzan, cuál se hace sin comprar nada), revisá todas las candidatas que correspondan antes de responder.
-6. Respondé en el formato que pide la pregunta: el nombre exacto de la receta como lo devuelve la herramienta, un número solo, o los ingredientes separados por punto y coma.
-7. Si los datos del recetario no alcanzan (calorías, precios, comercios, o ninguna receta cumple), llamá a terminar con respuesta null y decí qué falta. No inventes.
-8. Contestá siempre llamando a una herramienta; nunca con texto suelto. Al final, terminar(respuesta, motivo)."""
+2. Los ingredientes se nombran simple y en singular: pollo, papa, queso, lenteja, morron. Una dieta (sin carne, sin gluten, sin lácteos, vegana) no es un ingrediente: no la pongas en buscar_recetas; comprobala con es_apta.
+3. Si la pregunta nombra una receta por su número, usá ese receta_id directamente, sin buscar.
+4. buscar_recetas ordena por duración: «la más rápida» es la PRIMERA de la lista que cumple lo que pide la pregunta. Si pide una dieta, comprobá las candidatas con es_apta, una por vez y en orden, y quedate con la primera apta. No uses faltantes para elegirla, salvo que la pregunta hable de lo que falta o de no comprar nada.
+5. detalle_receta y faltantes con `porciones` ya devuelven las cantidades escaladas a esas porciones: usá esos números tal cual, sin volver a multiplicar. Para lo que falta comprar usá faltantes; sal, pimienta, aceite, agua, condimentos y hierbas se suponen disponibles.
+6. Si la pregunta pide comparar recetas (la que deja menos por comprar, cuántas alcanzan, cuál se hace sin comprar nada), revisá todas las candidatas que correspondan antes de responder.
+7. Para saber qué ingrediente vence antes, usá la lista de la heladera de arriba (ya está ordenada por vencimiento).
+8. Respondé en el formato que pide la pregunta: el nombre exacto de la receta como lo devuelve la herramienta, un número solo, o los ingredientes separados por punto y coma.
+9. Si los datos del recetario no alcanzan (calorías, precios, comercios, o ninguna receta cumple), llamá a terminar con respuesta null (no con un texto) y decí en el motivo qué falta. No inventes.
+10. Contestá siempre llamando a una herramienta; nunca con texto suelto. Al final, terminar(respuesta, motivo)."""
 
 
 DOMINIOS = ("mundial", "recetas")

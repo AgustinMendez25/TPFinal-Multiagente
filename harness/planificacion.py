@@ -22,13 +22,14 @@ ESQUEMA = {
         "excluir": {"type": "array", "items": {"type": "string"}},
         "dieta": {"type": ["string", "null"], "enum": ["vegetariana", "vegana", "sin_gluten", "sin_lactosa", None]},
         "porciones": {"type": ["integer", "null"]},
+        "receta_id": {"type": ["integer", "null"], "description": "el número de receta si la pregunta lo nombra"},
         "candidatas": {"type": "string", "description": "qué recetas hay que mirar: la primera, todas, hasta encontrar una que cumpla"},
         "criterio": {"type": "string", "description": "cómo se elige o se calcula la respuesta"},
         "pasos": {"type": "array", "items": {"type": "string"}},
         "cuando_parar": {"type": "string"},
         "se_puede_responder": {"type": "boolean", "description": "false si la pregunta pide datos que el recetario no tiene"},
     },
-    "required": ["buscar", "excluir", "dieta", "porciones", "candidatas", "criterio", "pasos", "cuando_parar",
+    "required": ["buscar", "excluir", "dieta", "porciones", "receta_id", "candidatas", "criterio", "pasos", "cuando_parar",
                  "se_puede_responder"],
 }
 
@@ -36,7 +37,13 @@ INSTRUCCION = """Antes de usar las herramientas, escribí un plan para responder
 
 Las herramientas son: buscar_recetas(contiene, excluye), detalle_receta(receta_id, porciones), es_apta(receta_id, dieta) y faltantes(receta_id, porciones). El recetario tiene ingredientes, cantidades, duración y comensales; no tiene calorías, precios ni comercios.
 
-Decí qué ingredientes buscar y excluir, qué dieta y cuántas porciones pide la pregunta (null si no pide), qué candidatas hay que mirar (por ejemplo: la primera de la búsqueda; todas las de la búsqueda para compararlas; o recorrerlas en orden hasta la primera que cumpla), con qué criterio se elige o se calcula la respuesta, los pasos en orden y cuándo parar. Si la pregunta pide un dato que el recetario no tiene, poné se_puede_responder en false.
+Decí:
+- qué ingredientes buscar y excluir (solo ingredientes: una dieta como «sin carne» o «sin gluten» va en dieta, no en excluir);
+- qué dieta y cuántas porciones pide la pregunta: null si la pregunta no lo dice, no los inventes;
+- receta_id: el número de receta si la pregunta lo nombra (entonces no hace falta buscar), o null;
+- qué candidatas hay que mirar. Si pide «la más rápida», recorrelas en orden y pará en la primera que cumpla. Solo si la pregunta pide comparar (la que deja menos por comprar, cuántas alcanzan, cuál se hace sin comprar nada) hay que revisar todas;
+- con qué criterio se elige o se calcula la respuesta, los pasos en orden y cuándo parar.
+Si la pregunta pide un dato que el recetario no tiene, poné se_puede_responder en false.
 
 Pregunta: """
 
