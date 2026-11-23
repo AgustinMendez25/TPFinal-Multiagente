@@ -165,3 +165,15 @@ def grupos_de(tareas_borrador: list[dict]) -> dict[str, set[str]]:
 
 def filtrar(filas: list[dict], ids: set[str]) -> list[dict]:
     return [f for f in filas if f["tarea"].split("@")[0] in ids]
+
+
+# --- trazas ------------------------------------------------------------------------------------
+
+def rechazos(carpeta: Path) -> dict[str, int]:
+    """Cuántas veces la verificación devolvió al modelo, por tarea, leído de las trazas de una corrida."""
+    import json
+    cuenta = {}
+    for ruta in sorted(Path(carpeta).glob("*.jsonl")):
+        eventos = [json.loads(l) for l in ruta.read_text(encoding="utf-8").splitlines() if l.strip()]
+        cuenta[ruta.stem] = sum(e.get("evento") == "verificacion" and bool(e.get("rechazada")) for e in eventos)
+    return cuenta

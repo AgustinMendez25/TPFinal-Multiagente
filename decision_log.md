@@ -281,3 +281,46 @@ Las dos reglas son de la verificación, así que solo afectan a verif y a ambas.
    - Si en `excluye` aparece una categoría («carne», «gluten»), el pipeline la pasa a `dieta`. Es una regla fija del pipeline, no del modelo.
 
 **Vuelta 3:** las 6 variantes, en `dev-v3__<variante>__t0__s1337`. Después de esta vuelta congelamos con el tag `medicion-v1`.
+
+## 2026-11-23 · Plan de la medición congelada (escrito antes de correr ninguna tarea `rec-*`)
+
+**Qué se corre** (notebook 04, `colab/tandas.py`). Hay 25 tandas sobre las 21 tareas congeladas, en orden de prioridad:
+
+1. base, plan y verif a temperatura 0,7 con las semillas 1337, 1338 y 1339;
+2. libro cerrado y camino fijo a 0,7, con las mismas semillas;
+3. la referencia a temperatura 0 (semilla 1337) de esas cinco variantes;
+4. ambas, a 0,7 con las 3 semillas y a temperatura 0;
+5. la repetición de la referencia de base a temperatura 0 (`congelado-bis`), para medir el no determinismo.
+
+Todo corre con el código del tag `medicion-v1`, que el notebook 04 fija antes de importar nada. Si hay que recortar, se recorta desde el final de la lista.
+
+**Comparaciones declaradas.** Cada una se hace de a pares, por tarea y semilla (63 pares), con el test de signo exacto (dos colas, p < 0,05). Al lado va el criterio de la propuesta: la diferencia de medias tiene que superar el rango de las semillas.
+
+| Comparación | Pregunta |
+|---|---|
+| base → plan | decisión 1: ¿el plan mejora al agente? |
+| base → verif | decisión 2: ¿la verificación mejora al agente? |
+| base → ambas | las dos juntas |
+| plan → ambas | ¿la verificación suma sobre el plan? |
+| verif → ambas | ¿el plan suma sobre la verificación? |
+| camino fijo → base | ¿el agente le gana al camino fijo? |
+| libro cerrado → base | ¿las herramientas le ganan a la memoria? |
+
+**Por grupo**, solo para mirar, porque quedan muy pocas tareas en cada grupo:
+
+- base → plan en las 5 tareas fuera del esquema;
+- base → verif en las 3 imposibles (inventos);
+- camino fijo → base en las 13 tareas dentro del esquema;
+- base → plan en las 3 de vencimiento.
+
+**Lo que sumamos de la Clase 12 (Notebook B, §2).** Todo sale de las mismas tandas, sin llamadas extra al modelo, salvo la repetición a temperatura 0:
+
+- **Intervalo de Wilson** del 95% para cada variante.
+- **Frontera acierto/costo**, con tokens por tarea.
+- **pass@3 y pass^3** con las 3 semillas.
+- **Control «mismo gasto».** Es el voto de mayoría de las 3 corridas de base, comparado contra plan, verif y ambas: las tres gastan más llamadas que base, así que ganarle a base no alcanza.
+- **No determinismo a temperatura 0**, con la repetición de base.
+
+**Lo que sabemos de antemano sobre la potencia.** Con 21 tareas, una mejora moderada puede no distinguirse del azar. Si el resultado es «no se distingue», en el informe lo decimos así, sin afirmar que no hay efecto. Emparejar por semilla da 63 pares, pero no son independientes: las tres semillas de una misma tarea tienden a acertar o fallar juntas. Lo declaramos como limitación.
+
+**Límite conocido de la verificación.** Igual que el verificador de la clase, chequea la coherencia con lo que devolvieron las herramientas, no la verdad. Una receta equivocada con números que salen de `faltantes` pasa. El chequeo del orden de las candidatas cubre una parte de eso.

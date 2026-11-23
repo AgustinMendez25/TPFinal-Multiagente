@@ -72,3 +72,13 @@ def test_resumen_y_grupos():
     grupos = A.grupos_de(borrador)
     assert grupos["dentro del esquema"] == {"rec-001"} and grupos["imposibles"] == {"rec-013"}
     assert [f["tarea"] for f in A.filtrar(A.juntar_semillas({"s": filas}), {"rec-013"})] == ["rec-013@s"]
+
+
+def test_rechazos_leidos_de_las_trazas(tmp_path):
+    from trazas.registro import Registro
+    r = Registro(tmp_path, "rec-001")
+    r.evento("corrida_inicio", modelo="qwen3:8b", config={"num_ctx": 8192})
+    r.evento("verificacion", paso=2, ok=False, problema="x", rechazada=True)
+    r.evento("verificacion", paso=3, ok=True, problema=None, rechazada=False)
+    r.evento("corrida_fin", estado="respondida", respuesta="1", pasos=3)
+    assert A.rechazos(tmp_path) == {"rec-001": 1}
