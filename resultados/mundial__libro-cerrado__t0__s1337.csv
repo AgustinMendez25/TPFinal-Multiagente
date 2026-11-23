@@ -1,0 +1,31 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+mun-001,facil,True,1930; 1950,1930; 1934; 1970; 1974; 1990; 2010,respondida,error_respuesta,,1,88,35,123.0,1.24,1.24
+mun-002,facil,True,United States,USA,respondida,error_respuesta,,1,99,2,101.0,0.107,0.107
+mun-003,facil,True,4,3,respondida,error_respuesta,,1,88,2,90.0,0.087,0.087
+mun-004,facil,True,52,64,respondida,error_respuesta,,1,88,3,91.0,0.113,0.112
+mun-005,facil,True,2010-07-11,2010-07-11,respondida,acierto,,1,90,11,101.0,0.357,0.357
+mun-006,facil,True,1960-10-30,1960-10-24,respondida,error_respuesta,,1,84,11,95.0,0.353,0.352
+mun-007,facil,True,United States,USA,respondida,error_respuesta,,1,95,2,97.0,0.088,0.088
+mun-008,facil,True,8,8,respondida,acierto,,1,90,2,92.0,0.086,0.085
+mun-009,facil,True,22,22,respondida,acierto,,1,98,3,101.0,0.116,0.115
+mun-010,facil,True,12,12,respondida,acierto,,1,85,3,88.0,0.107,0.108
+mun-011,facil,True,13,10,respondida,error_respuesta,,1,85,3,88.0,0.108,0.108
+mun-012,facil,False,,,negada,acierto,,1,101,3,104.0,0.13,0.129
+mun-013,facil,False,,USA,respondida,invento,,1,99,2,101.0,0.107,0.107
+mun-014,media,True,1470,1165,respondida,error_respuesta,,1,99,5,104.0,0.191,0.19
+mun-015,media,True,1,,negada,se_nego,,1,95,4,99.0,0.145,0.145
+mun-016,media,True,1,3,respondida,error_respuesta,,1,90,2,92.0,0.083,0.083
+mun-017,media,True,92,82,respondida,error_respuesta,,1,91,3,94.0,0.117,0.116
+mun-018,media,True,5,3,respondida,error_respuesta,,1,90,2,92.0,0.083,0.083
+mun-019,media,True,Paolo Rossi; Karl-Heinz Rummenigge,Marco van Basten; Paolo Rossi,respondida,error_respuesta,,1,104,8,112.0,0.283,0.283
+mun-020,media,True,35,36,respondida,error_respuesta,,1,89,3,92.0,0.127,0.128
+mun-021,media,True,Argentina,Uruguay,respondida,error_respuesta,,1,94,3,97.0,0.119,0.118
+mun-022,media,False,,91000,respondida,invento,,1,90,6,96.0,0.204,0.204
+mun-023,media,False,,43,respondida,invento,,1,95,3,98.0,0.118,0.117
+mun-024,dificil,True,23,31,respondida,error_respuesta,,1,91,3,94.0,0.116,0.116
+mun-025,dificil,True,20,54,respondida,error_respuesta,,1,105,3,108.0,0.127,0.127
+mun-026,dificil,True,9733,143,respondida,error_respuesta,,1,92,4,96.0,0.153,0.153
+mun-027,dificil,True,15,31,respondida,error_respuesta,,1,98,3,101.0,0.119,0.119
+mun-028,dificil,True,1,11,respondida,error_respuesta,,1,100,3,103.0,0.12,0.12
+mun-029,dificil,True,23,25,respondida,error_respuesta,,1,91,3,94.0,0.126,0.125
+mun-030,dificil,True,39,104,respondida,error_respuesta,,1,108,4,112.0,0.158,0.158

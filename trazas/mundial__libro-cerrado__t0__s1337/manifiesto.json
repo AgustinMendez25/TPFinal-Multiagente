@@ -1,0 +1,62 @@
+{
+  "corrida": "mundial__libro-cerrado__t0__s1337",
+  "conjunto": "mundial",
+  "commit": "30067f53f01a0006c01b6e622845463dee1c9cb3",
+  "config": {
+    "modelo": {
+      "nombre": "qwen3:8b",
+      "num_ctx": 8192,
+      "temperatura": 0,
+      "semilla": 1337,
+      "think": false,
+      "num_predict": 800,
+      "timeout_s": 300
+    },
+    "frenos": {
+      "max_pasos": 14,
+      "max_tokens": 80000,
+      "max_seg": 240,
+      "reintentos": 3,
+      "espera_reintento_s": 2.0
+    },
+    "contexto": {
+      "tope_resultado_caracteres": 4000,
+      "herramienta_timeout_s": 30
+    }
+  },
+  "tareas": [
+    "mun-001",
+    "mun-002",
+    "mun-003",
+    "mun-004",
+    "mun-005",
+    "mun-006",
+    "mun-007",
+    "mun-008",
+    "mun-009",
+    "mun-010",
+    "mun-011",
+    "mun-012",
+    "mun-013",
+    "mun-014",
+    "mun-015",
+    "mun-016",
+    "mun-017",
+    "mun-018",
+    "mun-019",
+    "mun-020",
+    "mun-021",
+    "mun-022",
+    "mun-023",
+    "mun-024",
+    "mun-025",
+    "mun-026",
+    "mun-027",
+    "mun-028",
+    "mun-029",
+    "mun-030"
+  ],
+  "creada": "2026-11-23T18:45:09.928890+00:00",
+  "ollama": "0.40.10",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
+}
