@@ -14,6 +14,7 @@ if not os.path.exists(CARPETA):
     subprocess.run(["git", "clone", "-q", url, CARPETA], check=True)
     del url
 os.chdir(CARPETA)
+subprocess.run(["git", "checkout", "-q", "main"], check=True)   # por si el 04 dejó el código fijado en un tag
 subprocess.run(["git", "pull", "-q"], check=True)
 sys.path.insert(0, CARPETA)
 print(subprocess.run(["git", "log", "--oneline", "-1"], capture_output=True, text=True).stdout)

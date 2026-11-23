@@ -50,3 +50,14 @@ def test_correr_y_puntuar_con_un_corredor_falso(tmp_path, monkeypatch):
 
 def test_etiqueta_de_las_vueltas_de_desarrollo():
     assert tandas.etiqueta_dev(1) == "dev" and tandas.etiqueta_dev(2) == "dev-v2"
+
+
+def test_tandas_congeladas_y_siguiente_libre(tmp_path):
+    assert len(tandas.TANDAS_CONGELADAS) == 25 and len(set(tandas.TANDAS_CONGELADAS)) == 25
+    assert tandas.TANDAS_CONGELADAS[0] == ("congelado", "base", 0.7, 1337)
+    assert tandas.TANDAS_CONGELADAS[-1] == ("congelado-bis", "base", 0, 1337)
+    rutas = {"corridas": tmp_path}
+    assert tandas.siguiente_tanda(rutas) == ("congelado", "base", 0.7, 1337)
+    corridas.tomar(tmp_path / tandas.nombre_de(tandas.TANDAS_CONGELADAS[0]), "ana", ahora=1000)
+    assert tandas.siguiente_tanda(rutas, ahora=1000 + 60) == ("congelado", "base", 0.7, 1338)
+    assert tandas.siguiente_tanda(rutas, ahora=1000 + 3 * 3600) == ("congelado", "base", 0.7, 1337)

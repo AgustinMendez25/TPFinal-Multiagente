@@ -75,3 +75,40 @@ def puntuar(conjunto: str, destino: Path, resultados: Path) -> tuple[list[dict],
     filas, resumen = evaluar.evaluar(tareas(conjunto), destino, evaluar.PESOS)
     evaluar.escribir_csv(filas, resultados / f"{destino.name}.csv")
     return filas, resumen
+
+
+# --- la medición congelada (notebook 04) ---------------------------------------------------------
+# 6 variantes × (3 semillas a 0,7 + la referencia a temperatura 0) = 24 tandas, más una repetición de la
+# referencia de base a temperatura 0 para ver cuánto se mueve sola (Clase 12, Notebook B §2.2). En orden de
+# prioridad (spec §4): lo que se recorta primero queda al final.
+SEMILLAS = (1337, 1338, 1339)
+TANDAS_CONGELADAS = (
+    [("congelado", v, 0.7, s) for v in ("base", "plan", "verif") for s in SEMILLAS]
+    + [("congelado", v, 0.7, s) for v in ("libro-cerrado", "camino-fijo") for s in SEMILLAS]
+    + [("congelado", v, 0, 1337) for v in ("base", "plan", "verif", "libro-cerrado", "camino-fijo")]
+    + [("congelado", "ambas", 0.7, s) for s in SEMILLAS] + [("congelado", "ambas", 0, 1337)]
+    + [("congelado-bis", "base", 0, 1337)]
+)
+
+
+def nombre_de(tanda: tuple) -> str:
+    etiqueta, variante, temperatura, semilla = tanda
+    return corridas.nombre_corrida(etiqueta, variante, temperatura, semilla)
+
+
+def estado_tandas(rutas: dict, tandas: list[tuple] = TANDAS_CONGELADAS, *, ahora: float | None = None) -> list[dict]:
+    """Una fila por tanda: cuántas tareas hay en Drive, si alguien la tiene tomada y si está libre."""
+    lista = tareas("congelado")
+    filas = []
+    for i, tanda in enumerate(tandas, start=1):
+        info = corridas.estado(rutas["corridas"] / nombre_de(tanda), lista, ahora=ahora)
+        tomada = info["tomada_por"] is not None and (info["hace_min"] or 0) < 120
+        completa = info["en_drive"] == info["total"]
+        filas.append({"n": i, "tanda": tanda, "nombre": nombre_de(tanda), **info, "completa": completa,
+                      "libre": not completa and not tomada})
+    return filas
+
+
+def siguiente_tanda(rutas: dict, tandas: list[tuple] = TANDAS_CONGELADAS, *, ahora: float | None = None):
+    """La primera tanda, en orden de prioridad, que no está completa ni la tiene otra persona."""
+    return next((f["tanda"] for f in estado_tandas(rutas, tandas, ahora=ahora) if f["libre"]), None)
