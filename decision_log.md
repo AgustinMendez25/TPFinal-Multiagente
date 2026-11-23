@@ -64,3 +64,16 @@ Decisiones que no salen del enunciado, cada una con su motivo:
 - **Reintentos con espera exponencial** (2, 4 y 8 s, 3 reintentos). En Colab, Ollama a veces tarda en cargar el modelo después de un corte.
 - **La traza agrega campos:** el texto del modelo, `razon_fin`, el contenido que vio el modelo de cada resultado y un evento `sin_llamadas`. Sin el contenido no se puede explicar un arreglo desde la traza.
 - **Ids generados `p<paso>-<n>`** cuando Ollama no trae uno o repite uno anterior. El validador exige que sean únicos en toda la traza.
+
+## 2026-11-23 · Agente de recetas (Etapa 3)
+
+- **Herramientas verificadas contra el generador en todo el corpus**, no solo en las tareas. Las comparamos en orden de búsqueda, aptitud, cantidades escaladas y faltantes. Las dos implementaciones comparten solo la capa de datos (`factibilidad/normalizar.py` y `datos/recetas_final.csv`).
+- **"No está en la heladera" significa siempre "falta"**, aunque la cantidad necesaria sea 0. Lo encontró la comparación con el generador: una receta pedía "1,2 gramos de calabacín", que la normalización dejó en 0 unidades.
+- **`buscar_recetas` acepta sinónimos y plurales del léxico.** Ante un nombre desconocido devuelve los parecidos, porque el modelo escribe "lentejas" o "patata".
+- **El detector de dieta y porciones son reglas en código** (`harness/detector.py`), ajustadas solo con las 21 preguntas `dev-*`. Ninguna pregunta congelada pasó por los tests.
+- **La verificación (`harness/verificacion.py`) no rechaza los números chicos** (≤ 20) aunque no aparezcan en ningún resultado. Pueden ser cuentas legítimas ("cuántas alcanzan", "cuántos faltan"). Los números grandes sí tienen que aparecer, que es lo que apunta a calorías o precios inventados.
+- **Negarse no se verifica**, y la verificación rechaza como máximo una vez (`agente.max_rechazos = 1`). Así no se arma un loop entre el modelo y el chequeo.
+- **El plan se registra como `llamada_modelo` del paso 1, más un evento `plan`.** Cuenta para el costo y el tope de tokens. Si el plan sale roto, el agente sigue sin plan, y queda registrado.
+- **`max_pasos = 16` para recetas** (14 en el Mundial). Las tareas que comparan candidatas necesitan hasta 9 herramientas, más el plan y una verificación.
+- **El libro cerrado de recetas ve la heladera en el prompt**, para que la comparación con el agente sea justa.
+- **El camino fijo recorre solo las 10 candidatas visibles** de `buscar_recetas`, igual que el agente.

@@ -34,6 +34,9 @@ def notebook(celdas: list[tuple[str, str]]) -> dict:
 
 
 def _cargar(ruta: Path):
+    import sys
+    if str(ruta.parent) not in sys.path:      # las fuentes importan `comun` (celdas compartidas)
+        sys.path.insert(0, str(ruta.parent))
     spec = importlib.util.spec_from_file_location(ruta.stem, ruta)
     modulo = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(modulo)
