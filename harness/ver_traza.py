@@ -30,6 +30,8 @@ def _linea(e: dict, ancho: int) -> str:
         return f"{pre}reintento {e['intento']}: {_corto(e['motivo'], ancho)}"
     if tipo == "sin_llamadas":
         return f"{pre}sin llamadas, escribió: {_corto(e['texto'], ancho)}"
+    if tipo == "llamada_rescatada":
+        return f"{pre}llamada rescatada del texto: {_corto(e['texto'], ancho)}"
     if tipo == "corrida_fin":
         return f"FIN {e['estado']} · respuesta: {e['respuesta']!r} · motivo: {e.get('motivo')}"
     return f"{pre}{tipo}"

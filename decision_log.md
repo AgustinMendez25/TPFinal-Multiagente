@@ -77,3 +77,54 @@ Decisiones que no salen del enunciado, cada una con su motivo:
 - **`max_pasos = 16` para recetas** (14 en el Mundial). Las tareas que comparan candidatas necesitan hasta 9 herramientas, más el plan y una verificación.
 - **El libro cerrado de recetas ve la heladera en el prompt**, para que la comparación con el agente sea justa.
 - **El camino fijo recorre solo las 10 candidatas visibles** de `buscar_recetas`, igual que el agente.
+
+## 2026-11-23 · Arreglos del Bloque 1 (después de la corrida "antes")
+
+**Corrida "antes"** (`mundial__agente-antes__t0__s1337`, commit `30067f5`): 17/30 aciertos. El libro
+cerrado sacó 5/30. Las trazas muestran dos fallas del harness, cada una visible en el **primer** paso
+donde la corrida se tuerce:
+
+**Arreglo 1: llamadas escritas como texto** (tarea elegida: **mun-007**). En el paso 2 el modelo ya
+tenía la respuesta ("United States"), pero en lugar de mandar un `tool_call` escribió
+`{"name": "terminar", "arguments": {...}}` en el contenido. El loop lo trató como texto suelto, mandó
+el recordatorio y el modelo repitió lo mismo 12 veces hasta `tope_pasos`. La misma falla aparece con
+otras dos formas: `terminar("8", "...")` (mun-008, mun-009) y `terminar{"respuesta": "null", ...}`
+(mun-012, una imposible que el modelo quería negar).
+
+- *Cambio:* `rescatar_llamada` en `harness/bucle.py`. Si el texto tiene **una sola** llamada reconocible
+  a una herramienta que existe (JSON con `name`/`arguments`, `nombre{...}`, `nombre({...})` o
+  `nombre(a, b)` con los argumentos en el orden de la ficha), se atiende como un `tool_call`. Los
+  argumentos rescatados pasan por la misma validación que los demás. La traza lo marca con el evento
+  `llamada_rescatada`.
+- *Por qué en el loop y no en el prompt:* el recordatorio ya le decía que llamara a la herramienta, y
+  el modelo repitió el mismo texto 12 veces. El modelo sabía qué hacer; el contrato con Ollama es lo que falló.
+- *Descartado:* rescatar cualquier texto que parezca una respuesta (por ejemplo "4" o "13"). Eso sería
+  inventarle una llamada a `terminar` al modelo. Esos casos se siguen resolviendo con el recordatorio
+  (mun-003 y mun-011 acertaron así).
+
+**Arreglo 2: resultados que no entran y llamadas repetidas** (tareas: **mun-018**, mun-023 y mun-027).
+`partidos(2022)` devuelve ~12.000 caracteres y se recorta a 4.000. El modelo no puede contar sobre una
+lista cortada y vuelve a pedir **la misma** llamada: cada repetición suma ~1.600 tokens hasta que el
+pedido supera `num_ctx` y la tarea cierra con `error`.
+
+- *Cambio en el loop:* una llamada idéntica (mismo nombre y argumentos) a una anterior que pasó la validación
+  no se vuelve a ejecutar. Vuelve un error corto que dice en qué paso está el resultado y, si había
+  venido recortado, que use los filtros. Las herramientas del Mundial son deterministas: repetir no
+  trae nada nuevo y solo llena la ventana. Una llamada rechazada por argumentos inválidos no cuenta como hecha.
+- *Cambio en la herramienta* (ENUNCIADO §4.2 permite cambiarlas): `partidos` acepta `seleccion` y
+  `eliminatorias`. Con `eliminatorias=true`, 2022 son 16 partidos (~3.000 caracteres); con
+  `seleccion="France"`, 1998 son 7. Sin filtros devuelve lo mismo que antes, así que el contrato de
+  campos y los verificadores no cambian.
+- *Descartado:* subir `tope_resultado_caracteres` o `num_ctx`. Agranda la ventana para un caso y no
+  arregla que el modelo repita llamadas; además, el tope tiene que seguir chico para las recetas.
+- *Descartado:* un filtro `solo_penales`. Resolvería mun-018 de forma directa, pero sería una
+  herramienta hecha para la pregunta. `seleccion` y la fase sirven para cualquier pregunta sobre
+  partidos.
+
+**Lo que no arreglamos** porque son errores de razonamiento del modelo y no del harness: mun-009
+(cuenta años en vez de torneos), mun-016, mun-025 y mun-030 (cuentas mal hechas sobre datos correctos),
+y mun-013 y mun-022 (inventa respuestas en lugar de negarse). Quedan para el análisis del informe.
+
+**Qué se espera en la corrida "después":** mun-007, mun-008 y mun-012 deberían pasar a acertar por el
+arreglo 1, y mun-018 y mun-027 por el arreglo 2. mun-009 debería terminar, pero con la respuesta
+equivocada. Se compara en la sección 5 del notebook `01`.
