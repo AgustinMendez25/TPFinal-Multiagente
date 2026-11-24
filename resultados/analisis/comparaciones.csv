@@ -1,0 +1,8 @@
+a,b,pregunta,pares,gana,pierde,p,azar,diferencia_medias,cota_ruido,supera_cota,t0_gana_pierde
+base,plan,decisión 1: ¿el plan mejora al agente?,63,14,4,0.0309,se distingue,3.33,2,True,3-2 (p=1.00)
+base,verif,decisión 2: ¿la verificación mejora al agente?,63,9,2,0.0654,no se distingue,2.33,2,True,3-2 (p=1.00)
+base,ambas,las dos juntas contra el agente base,63,16,4,0.0118,se distingue,4,2,True,5-1 (p=0.22)
+plan,ambas,¿la verificación suma sobre el plan?,63,6,4,0.7539,no se distingue,0.67,2,False,3-0 (p=0.25)
+verif,ambas,¿el plan suma sobre la verificación?,63,8,3,0.2266,no se distingue,1.67,2,False,4-1 (p=0.38)
+camino-fijo,base,¿el agente le gana al camino fijo?,63,9,12,0.6636,no se distingue,-1,2,False,4-4 (p=1.00)
+libro-cerrado,base,¿las herramientas le ganan a la memoria?,63,38,11,0.0001,se distingue,9,2,True,14-4 (p=0.03)

@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,3,6369,79,6448.0,24.265,24.148
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,3,6407,112,6519.0,4.623,4.427
+rec-003,facil,True,sí,Sí,respondida,acierto,,3,5477,88,5565.0,3.038,2.926
+rec-004,facil,True,300,300,respondida,acierto,,3,6642,90,6732.0,4.261,4.13
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,12,58715,412,59127.0,20.804,20.678
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,9,22409,323,22732.0,14.149,14.024
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,9,29297,316,29613.0,15.774,15.649
+rec-008,media,True,150,150,respondida,acierto,,4,8517,145,8662.0,8.168,8.047
+rec-009,media,True,14,14,respondida,acierto,,5,12767,162,12929.0,9.875,9.753
+rec-010,dificil,True,ajo; banana; cebolla; tomate,aji;ajo;limon;maiz,respondida,error_respuesta,,5,12043,182,12225.0,10.095,9.97
+rec-011,dificil,True,espinaca; queso,espinaca;queso,respondida,acierto,,5,11464,192,11656.0,10.255,10.134
+rec-012,dificil,True,5,4,respondida,error_respuesta,,5,11695,189,11884.0,10.204,9.994
+rec-013,facil,False,,350,respondida,invento,,2,3884,80,3964.0,3.692,3.58
+rec-014,media,False,,"No hay recetas que usen lentejas, frutillas y pescado.",respondida,invento,,2,3604,99,3703.0,4.035,3.917
+rec-015,media,False,,140,respondida,invento,,2,3835,91,3926.0,4.041,3.847
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,espaguetis con pollo y brocoli,respondida,error_respuesta,,13,58481,430,58911.0,23.47,23.344
+rec-017,media,True,6,6,respondida,acierto,,4,8316,125,8441.0,8.168,7.976
+rec-018,dificil,True,revuelto de patatas con thermomix,revuelto de patatas con thermomix,respondida,acierto,,7,20975,244,21219.0,13.919,13.794
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,6,16844,226,17070.0,12.629,12.485
+rec-020,media,True,tomate,pollo,respondida,error_respuesta,,4,10229,146,10375.0,8.199,8.074
+rec-021,dificil,True,2,1,respondida,error_respuesta,,8,27439,277,27716.0,15.528,15.321

@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,5777,244,6021.0,9.452,9.333
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,3,5858,281,6139.0,9.946,9.735
+dev-003,facil,True,no,No,respondida,acierto,,4,7416,245,7661.0,8.723,8.609
+dev-004,facil,True,480,480,respondida,acierto,,4,8143,288,8431.0,10.719,10.596
+dev-005,facil,True,pizza keto de pollo,pizza keto de pollo,respondida,acierto,,5,11810,333,12143.0,12.409,12.219
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,8,19499,474,19973.0,17.563,17.372
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,6,14083,414,14497.0,15.675,15.561
+dev-008,media,True,1200,1200,respondida,acierto,,5,11319,432,11751.0,16.9,16.769
+dev-009,media,True,4,4,respondida,acierto,,5,12184,407,12591.0,17.589,17.463
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,8,20680,579,21259.0,23.381,23.257
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo;crema de leche;tomate;vino,respondida,acierto,,8,21412,597,22009.0,22.179,22.057
+dev-012,dificil,True,2,2,respondida,acierto,,7,17801,472,18273.0,19.007,18.887
+dev-013,facil,False,,,negada,acierto,,4,8127,296,8423.0,12.08,11.968
+dev-014,media,False,,,negada,acierto,,4,7658,339,7997.0,13.078,12.961
+dev-015,media,False,,,negada,acierto,,3,5520,298,5818.0,14.614,14.503
+dev-016,dificil,True,empanadas de pollo colombianas,empanadas de pollo colombianas,respondida,acierto,,9,29166,486,29652.0,36.764,36.65
+dev-017,media,True,12,12,respondida,acierto,,4,7803,347,8150.0,14.492,14.372
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,7,19301,454,19755.0,19.607,19.413
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,5,11938,380,12318.0,15.266,15.153
+dev-020,media,True,zanahoria,tomate,respondida,error_respuesta,,6,15272,477,15749.0,18.234,18.104
+dev-021,dificil,True,2,2,respondida,acierto,,9,29280,530,29810.0,22.704,22.577

@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,3,6369,86,6455.0,6.088,5.952
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,3,6407,112,6519.0,5.548,5.391
+rec-003,facil,True,sí,Sí,respondida,acierto,,3,5477,88,5565.0,3.787,3.662
+rec-004,facil,True,300,300,respondida,acierto,,3,6642,90,6732.0,5.229,5.033
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,12,58770,395,59165.0,25.371,25.239
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,9,22409,323,22732.0,18.132,18.013
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,12,45258,425,45683.0,23.674,23.551
+rec-008,media,True,150,150,respondida,acierto,,4,8517,166,8683.0,9.433,9.242
+rec-009,media,True,14,14,respondida,acierto,,5,12767,162,12929.0,9.822,9.702
+rec-010,dificil,True,ajo; banana; cebolla; tomate,aji;ajo;limon;maiz,respondida,error_respuesta,,7,17532,255,17787.0,14.336,14.194
+rec-011,dificil,True,espinaca; queso,limon;nuez;queso,respondida,error_respuesta,,4,9228,154,9382.0,8.053,7.931
+rec-012,dificil,True,5,5,respondida,acierto,,6,14790,288,15078.0,14.571,14.367
+rec-013,facil,False,,,negada,acierto,,3,6159,125,6284.0,6.306,6.108
+rec-014,media,False,,,negada,acierto,,3,5603,137,5740.0,6.412,6.276
+rec-015,media,False,,,negada,acierto,,3,6059,140,6199.0,6.876,6.678
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,espaguetis con pollo y brocoli,respondida,error_respuesta,,13,58618,427,59045.0,25.47,25.343
+rec-017,media,True,6,6,respondida,acierto,,3,5989,122,6111.0,7.317,7.195
+rec-018,dificil,True,revuelto de patatas con thermomix,revuelto de patatas con thermomix,respondida,acierto,,9,29757,330,30087.0,18.172,18.048
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,6,16844,213,17057.0,12.81,12.593
+rec-020,media,True,tomate,tomate,respondida,acierto,,14,71299,513,71812.0,31.698,31.496
+rec-021,dificil,True,2,1,respondida,error_respuesta,,9,32734,311,33045.0,19.574,19.372

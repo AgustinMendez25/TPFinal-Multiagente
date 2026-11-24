@@ -1,0 +1,66 @@
+{
+  "corrida": "congelado__libro-cerrado__t0.7__s1339",
+  "conjunto": "congelado",
+  "commit": "da315dc2da2a646fd60bb057a3643c3a46b9aa57",
+  "config": {
+    "modelo": {
+      "nombre": "qwen3:8b",
+      "num_ctx": 8192,
+      "temperatura": 0.7,
+      "semilla": 1339,
+      "think": false,
+      "num_predict": 800,
+      "timeout_s": 300
+    },
+    "frenos": {
+      "max_pasos": 16,
+      "max_tokens": 80000,
+      "max_seg": 240,
+      "reintentos": 3,
+      "espera_reintento_s": 2.0
+    },
+    "contexto": {
+      "tope_resultado_caracteres": 4000,
+      "herramienta_timeout_s": 30
+    },
+    "agente": {
+      "planificacion": false,
+      "verificacion": false,
+      "max_rechazos": 1
+    },
+    "variante": "libro-cerrado"
+  },
+  "tareas": [
+    "rec-001",
+    "rec-002",
+    "rec-003",
+    "rec-004",
+    "rec-005",
+    "rec-006",
+    "rec-007",
+    "rec-008",
+    "rec-009",
+    "rec-010",
+    "rec-011",
+    "rec-012",
+    "rec-013",
+    "rec-014",
+    "rec-015",
+    "rec-016",
+    "rec-017",
+    "rec-018",
+    "rec-019",
+    "rec-020",
+    "rec-021"
+  ],
+  "creada": "2026-11-23T23:23:16.761714+00:00",
+  "ollama": "0.40.10",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  "sesion": {
+    "host": "3b4c6a48b9d0",
+    "inicio": "2026-11-23_230407",
+    "gpu": "Tesla T4",
+    "gpu_100": true,
+    "ollama_ps": "NAME        ID              SIZE      PROCESSOR    CONTEXT    RUNNER      UNTIL              \nqwen3:8b    500a1f067a9f    6.3 GB    100% GPU     8192       llamacpp    4 minutes from now"
+  }
+}

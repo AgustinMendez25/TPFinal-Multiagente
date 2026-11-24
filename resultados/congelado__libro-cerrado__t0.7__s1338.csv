@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,,negada,se_nego,,1,327,4,331.0,1.187,1.186
+rec-002,facil,True,patatas a lo pobre con huevo frito,Huevos con papas,respondida,error_respuesta,,1,334,7,341.0,0.323,0.323
+rec-003,facil,True,sí,,negada,se_nego,,1,338,4,342.0,0.193,0.193
+rec-004,facil,True,300,200,respondida,error_respuesta,,1,341,4,345.0,0.192,0.191
+rec-005,facil,True,salchichas con crema de queso,Sopa de pollo,respondida,error_respuesta,,1,344,6,350.0,0.296,0.295
+rec-006,media,True,sopa de fideos con huevo,,negada,se_nego,,1,338,4,342.0,0.185,0.185
+rec-007,media,True,gofres de patata,Galletas de harina y papa,respondida,error_respuesta,,1,338,10,348.0,0.455,0.454
+rec-008,media,True,150,300,respondida,error_respuesta,,1,352,4,356.0,0.218,0.217
+rec-009,media,True,14,5,respondida,error_respuesta,,1,350,2,352.0,0.125,0.125
+rec-010,dificil,True,ajo; banana; cebolla; tomate,Arroz con tomate; pimiento; ajo; aceite; sal; pimienta,respondida,error_respuesta,,1,353,22,375.0,1.044,1.044
+rec-011,dificil,True,espinaca; queso,,negada,se_nego,,1,353,4,357.0,0.209,0.209
+rec-012,dificil,True,5,,negada,se_nego,,1,364,4,368.0,0.23,0.23
+rec-013,facil,False,,,negada,acierto,,1,332,4,336.0,0.205,0.205
+rec-014,media,False,,,negada,acierto,,1,349,3,352.0,0.172,0.171
+rec-015,media,False,,,negada,acierto,,1,340,4,344.0,0.205,0.205
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,Ensalada de pollo con vino blanco,respondida,error_respuesta,,1,345,11,356.0,0.542,0.542
+rec-017,media,True,6,6,respondida,acierto,,1,341,2,343.0,0.119,0.119
+rec-018,dificil,True,revuelto de patatas con thermomix,Puré de papa con huevo,respondida,error_respuesta,,1,345,10,355.0,0.512,0.511
+rec-019,facil,True,espaguetis con pollo y brocoli,Sopa de pollo,respondida,error_respuesta,,1,352,6,358.0,0.33,0.33
+rec-020,media,True,tomate,,negada,se_nego,,1,354,4,358.0,0.215,0.215
+rec-021,dificil,True,2,2,respondida,acierto,,1,357,2,359.0,0.126,0.125

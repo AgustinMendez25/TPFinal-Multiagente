@@ -1,0 +1,7 @@
+variante,por_intento,pass@3,pass^3,mezcladas
+libro-cerrado,0.238,0.238,0.238,
+camino-fijo,0.714,0.714,0.714,
+base,0.667,0.762,0.571,rec-011 rec-012 rec-014 rec-020
+plan,0.825,0.952,0.619,rec-005 rec-008 rec-012 rec-013 rec-014 rec-015 rec-018
+verif,0.778,0.81,0.762,rec-012
+ambas,0.857,0.952,0.667,rec-010 rec-011 rec-012 rec-014 rec-018 rec-020

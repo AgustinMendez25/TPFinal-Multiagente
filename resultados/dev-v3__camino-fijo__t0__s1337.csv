@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,,negada,se_nego,,1,880,48,928.0,2.189,2.188
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,1,888,60,948.0,1.816,1.709
+dev-003,facil,True,no,no,respondida,acierto,,1,891,57,948.0,1.635,1.634
+dev-004,facil,True,480,480,respondida,acierto,,1,896,60,956.0,1.726,1.725
+dev-005,facil,True,pizza keto de pollo,pizza keto de pollo,respondida,acierto,,1,897,58,955.0,1.687,1.683
+dev-006,media,True,ensalada de pimientos con queso,,negada,se_nego,,1,897,70,967.0,2.019,2.017
+dev-007,media,True,empanada de verduras facil,tortilla de chocolate,respondida,error_respuesta,,1,894,58,952.0,1.707,1.692
+dev-008,media,True,1200,1200,respondida,acierto,,1,905,61,966.0,1.802,1.797
+dev-009,media,True,4,4,respondida,acierto,,1,902,65,967.0,1.929,1.924
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo; chorizo; morron; queso,respondida,acierto,,1,917,65,982.0,1.955,1.95
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo; crema de leche; tomate; vino,respondida,acierto,,1,915,64,979.0,1.91,1.904
+dev-012,dificil,True,2,2,respondida,acierto,,1,920,74,994.0,2.242,2.236
+dev-013,facil,False,,,negada,acierto,,1,890,58,948.0,1.76,1.759
+dev-014,media,False,,,negada,acierto,,1,898,64,962.0,1.969,1.96
+dev-015,media,False,,cerdo; maiz; morron; pescado,respondida,invento,,1,896,55,951.0,1.702,1.702
+dev-016,dificil,True,empanadas de pollo colombianas,salchichas con crema de queso,respondida,error_respuesta,,1,899,60,959.0,1.871,1.866
+dev-017,media,True,12,1,respondida,error_respuesta,,1,894,59,953.0,1.818,1.817
+dev-018,dificil,True,huevos fritos esponjosos,tortitas de avena al microondas,respondida,error_respuesta,,1,900,60,960.0,1.849,1.844
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,1,906,62,968.0,1.92,1.914
+dev-020,media,True,zanahoria,,negada,se_nego,,1,905,56,961.0,1.736,1.736
+dev-021,dificil,True,2,500,respondida,error_respuesta,,1,912,58,970.0,1.812,1.805

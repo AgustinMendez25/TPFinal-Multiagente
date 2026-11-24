@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,6383,79,6462.0,5.122,4.988
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,2,4024,78,4102.0,2.952,2.756
+dev-003,facil,True,no,No,respondida,acierto,,3,5480,84,5564.0,2.851,2.679
+dev-004,facil,True,480,480,respondida,acierto,,3,6106,92,6198.0,3.645,3.525
+dev-005,facil,True,pizza keto de pollo,bolitas de carne picada,respondida,error_respuesta,,4,9302,191,9493.0,6.597,6.477
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,6,13761,230,13991.0,7.758,7.641
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,6,13708,226,13934.0,8.493,8.364
+dev-008,media,True,1200,1125,respondida,error_respuesta,,5,10922,235,11157.0,8.358,8.228
+dev-009,media,True,4,4,respondida,acierto,,6,16813,263,17076.0,11.47,11.261
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,6,14741,223,14964.0,9.75,9.626
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo;crema de leche;tomate;vino,respondida,acierto,,4,9398,165,9563.0,6.466,6.345
+dev-012,dificil,True,2,2,respondida,acierto,,6,14215,209,14424.0,9.002,8.81
+dev-013,facil,False,,,negada,acierto,,4,9223,164,9387.0,6.586,6.457
+dev-014,media,False,,,negada,acierto,,3,5571,130,5701.0,4.776,4.575
+dev-015,media,False,,,negada,acierto,,1,1744,84,1828.0,2.866,2.866
+dev-016,dificil,True,empanadas de pollo colombianas,empanadas de pollo colombianas,respondida,acierto,,8,26101,259,26360.0,12.989,12.855
+dev-017,media,True,12,12,respondida,acierto,,3,6165,114,6279.0,5.391,5.273
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,12,46302,398,46700.0,18.891,18.67
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,7,21962,254,22216.0,12.82,12.705
+dev-020,media,True,zanahoria,huevo,respondida,error_respuesta,,4,8964,130,9094.0,6.362,6.182
+dev-021,dificil,True,2,1,respondida,error_respuesta,,10,32829,368,33197.0,16.285,16.161

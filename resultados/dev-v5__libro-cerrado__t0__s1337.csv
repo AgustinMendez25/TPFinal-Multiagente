@@ -1,0 +1,31 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,0,respondida,error_respuesta,,1,327,2,329.0,0.426,0.425
+dev-002,facil,True,crema pastelera al microondas,,negada,se_nego,,1,335,4,339.0,0.156,0.156
+dev-003,facil,True,no,,negada,se_nego,,1,338,4,342.0,0.142,0.142
+dev-004,facil,True,480,2400,respondida,error_respuesta,,1,343,5,348.0,0.174,0.174
+dev-005,facil,True,pizza keto de pollo,Huevos fritos,respondida,error_respuesta,,1,344,6,350.0,0.204,0.204
+dev-006,media,True,ensalada de pimientos con queso,Sopa de lentejas,respondida,error_respuesta,,1,344,7,351.0,0.216,0.215
+dev-007,media,True,empanada de verduras facil,,negada,se_nego,,1,341,3,344.0,0.115,0.114
+dev-008,media,True,1200,300,respondida,error_respuesta,,1,352,4,356.0,0.152,0.152
+dev-009,media,True,4,,negada,se_nego,,1,349,4,353.0,0.152,0.151
+dev-010,dificil,True,cerdo; chorizo; morron; queso,,negada,se_nego,,1,364,4,368.0,0.161,0.161
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,"Para hacer la receta más rápida que no lleve gluten, usando tomate y leche, y para 4 comensales, necesitas:
+
+- tomate  
+- leche  
+- cebolla  
+- zanahoria  
+- papa  
+- arroz  
+
+Te faltan: **cebolla; zanahoria; papa; arroz**.",respondida,error_respuesta,,1,362,80,442.0,2.143,2.143
+dev-012,dificil,True,2,,negada,se_nego,,1,367,4,371.0,0.164,0.164
+dev-013,facil,False,,,negada,acierto,,1,337,4,341.0,0.143,0.142
+dev-014,media,False,,,negada,acierto,,1,345,3,348.0,0.127,0.126
+dev-015,media,False,,,negada,acierto,,1,343,4,347.0,0.154,0.153
+dev-016,dificil,True,empanadas de pollo colombianas,Sopa de pollo,respondida,error_respuesta,,1,346,6,352.0,0.208,0.209
+dev-017,media,True,12,6,respondida,error_respuesta,,1,341,2,343.0,0.099,0.098
+dev-018,dificil,True,huevos fritos esponjosos,Huevos al horno con leche,respondida,error_respuesta,,1,347,10,357.0,0.315,0.314
+dev-019,facil,True,enchiladas mexicanas de pollo,Sopa de pollo,respondida,error_respuesta,,1,353,6,359.0,0.21,0.209
+dev-020,media,True,zanahoria,,negada,se_nego,,1,352,4,356.0,0.154,0.154
+dev-021,dificil,True,2,2,respondida,acierto,,1,359,2,361.0,0.117,0.117

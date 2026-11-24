@@ -1,0 +1,9 @@
+{
+  "host": "e7de19e7fc16",
+  "inicio": "2026-11-23_225946",
+  "gpu": "Tesla T4",
+  "gpu_100": true,
+  "ollama_ps": "NAME        ID              SIZE      PROCESSOR    CONTEXT    RUNNER      UNTIL              \nqwen3:8b    500a1f067a9f    6.3 GB    100% GPU     8192       llamacpp    4 minutes from now",
+  "quien": "Agustin",
+  "tomada": 1795475375.0556993
+}

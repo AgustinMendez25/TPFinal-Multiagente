@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,3,5792,256,6048.0,12.791,12.663
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,4,8638,301,8939.0,15.705,15.575
+rec-003,facil,True,sí,Sí,respondida,acierto,,4,7392,242,7634.0,12.055,11.939
+rec-004,facil,True,300,300,respondida,acierto,,5,11437,326,11763.0,15.541,15.396
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,5,11879,340,12219.0,15.633,15.521
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,12,32588,595,33183.0,27.151,26.945
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,9,25441,487,25928.0,23.501,23.351
+rec-008,media,True,150,450,respondida,error_respuesta,,6,13912,471,14383.0,21.543,21.383
+rec-009,media,True,14,14,respondida,acierto,,5,11982,404,12386.0,19.814,19.618
+rec-010,dificil,True,ajo; banana; cebolla; tomate,ajo;banana;cebolla;tomate,respondida,acierto,,7,17388,519,17907.0,23.575,23.457
+rec-011,dificil,True,espinaca; queso,espinaca;queso,respondida,acierto,,6,14352,483,14835.0,21.859,21.737
+rec-012,dificil,True,5,5,respondida,acierto,,8,21275,551,21826.0,25.743,25.609
+rec-013,facil,False,,,negada,acierto,,2,3346,248,3594.0,11.21,11.208
+rec-014,media,False,,,negada,acierto,,4,7741,362,8103.0,15.779,15.665
+rec-015,media,False,,,negada,acierto,,5,11608,453,12061.0,20.165,20.055
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,arroz con pollo y champinones en arrocera,respondida,acierto,,9,29529,490,30019.0,24.67,24.54
+rec-017,media,True,6,6,respondida,acierto,,4,7711,319,8030.0,14.818,14.699
+rec-018,dificil,True,revuelto de patatas con thermomix,revuelto de patatas con thermomix,respondida,acierto,,13,52809,613,53422.0,33.388,33.266
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,5,11598,392,11990.0,19.051,18.865
+rec-020,media,True,tomate,tomate,respondida,acierto,,5,12320,433,12753.0,21.216,21.088
+rec-021,dificil,True,2,1,respondida,error_respuesta,,10,36162,601,36763.0,30.06,29.846

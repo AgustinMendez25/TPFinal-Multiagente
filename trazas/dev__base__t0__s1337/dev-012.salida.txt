@@ -1,0 +1,1 @@
+(negada: La herramienta 'buscar_recetas' no devuelve resultados válidos. No se encontraron recetas que cumplan con los criterios especificados.)

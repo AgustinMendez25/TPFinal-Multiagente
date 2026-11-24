@@ -1,0 +1,1 @@
+(negada: Falta información sobre los supermercados disponibles o la ubicación geográfica.)

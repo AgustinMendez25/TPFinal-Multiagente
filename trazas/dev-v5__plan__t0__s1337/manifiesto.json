@@ -1,0 +1,59 @@
+{
+  "corrida": "dev-v5__plan__t0__s1337",
+  "conjunto": "dev",
+  "commit": "1709bd165b3d578a306af74d94624b804c1e1e34",
+  "config": {
+    "modelo": {
+      "nombre": "qwen3:8b",
+      "num_ctx": 8192,
+      "temperatura": 0,
+      "semilla": 1337,
+      "think": false,
+      "num_predict": 800,
+      "timeout_s": 300
+    },
+    "frenos": {
+      "max_pasos": 16,
+      "max_tokens": 80000,
+      "max_seg": 240,
+      "reintentos": 3,
+      "espera_reintento_s": 2.0
+    },
+    "contexto": {
+      "tope_resultado_caracteres": 4000,
+      "herramienta_timeout_s": 30
+    },
+    "agente": {
+      "planificacion": true,
+      "verificacion": false,
+      "max_rechazos": 1
+    },
+    "variante": "plan"
+  },
+  "tareas": [
+    "dev-001",
+    "dev-002",
+    "dev-003",
+    "dev-004",
+    "dev-005",
+    "dev-006",
+    "dev-007",
+    "dev-008",
+    "dev-009",
+    "dev-010",
+    "dev-011",
+    "dev-012",
+    "dev-013",
+    "dev-014",
+    "dev-015",
+    "dev-016",
+    "dev-017",
+    "dev-018",
+    "dev-019",
+    "dev-020",
+    "dev-021"
+  ],
+  "creada": "2026-11-23T22:38:15.811907+00:00",
+  "ollama": "0.40.10",
+  "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
+}

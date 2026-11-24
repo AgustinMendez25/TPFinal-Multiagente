@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,3,6369,92,6461.0,4.791,4.681
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,3,6407,112,6519.0,5.243,5.051
+rec-003,facil,True,sí,Sí,respondida,acierto,,3,5477,88,5565.0,3.504,3.401
+rec-004,facil,True,300,300,respondida,acierto,,3,6642,90,6732.0,4.766,4.645
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,12,58770,398,59168.0,22.533,22.329
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,9,22409,323,22732.0,14.418,14.293
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,9,29297,316,29613.0,15.904,15.791
+rec-008,media,True,150,150,respondida,acierto,,4,8517,166,8683.0,8.547,8.436
+rec-009,media,True,14,14,respondida,acierto,,5,12767,162,12929.0,9.227,9.12
+rec-010,dificil,True,ajo; banana; cebolla; tomate,aji;ajo;limon;maiz,respondida,error_respuesta,,6,15199,215,15414.0,11.732,11.546
+rec-011,dificil,True,espinaca; queso,espinaca;queso,respondida,acierto,,5,11464,193,11657.0,9.354,9.15
+rec-012,dificil,True,5,5,respondida,acierto,,4,8825,179,9004.0,8.64,8.529
+rec-013,facil,False,,220,respondida,invento,,2,3884,81,3965.0,4.025,3.846
+rec-014,media,False,,No hay receta disponible,respondida,invento,,2,3599,83,3682.0,3.731,3.614
+rec-015,media,False,,14,respondida,invento,,2,3835,89,3924.0,4.259,4.157
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,espaguetis con pollo y brocoli,respondida,error_respuesta,,13,58617,424,59041.0,24.952,24.737
+rec-017,media,True,6,6,respondida,acierto,,3,5989,123,6112.0,6.771,6.668
+rec-018,dificil,True,revuelto de patatas con thermomix,revuelto de patatas con thermomix,respondida,acierto,,7,20975,244,21219.0,12.896,12.784
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,6,16844,226,17070.0,12.711,12.585
+rec-020,media,True,tomate,tomate,respondida,acierto,,13,63444,445,63889.0,27.148,26.95
+rec-021,dificil,True,2,1,respondida,error_respuesta,,9,32734,308,33042.0,19.083,18.887

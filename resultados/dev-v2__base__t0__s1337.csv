@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,5494,83,5577.0,4.73,4.607
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,5,10584,188,10772.0,8.968,8.845
+dev-003,facil,True,no,No,respondida,acierto,,3,4763,84,4847.0,3.359,3.19
+dev-004,facil,True,480,480,respondida,acierto,,3,5389,95,5484.0,3.76,3.583
+dev-005,facil,True,pizza keto de pollo,tortilla de harina y huevo,respondida,error_respuesta,,3,5617,131,5748.0,4.474,4.365
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,7,14429,256,14685.0,11.314,11.204
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,4,7706,155,7861.0,6.727,6.615
+dev-008,media,True,1200,1125,respondida,error_respuesta,,3,5228,164,5392.0,5.608,5.43
+dev-009,media,True,4,4,respondida,acierto,,4,8736,144,8880.0,5.803,5.69
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,5,10286,187,10473.0,9.509,9.309
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo;crema de leche;tomate;vino,respondida,acierto,,7,15119,264,15383.0,15.885,15.697
+dev-012,dificil,True,2,1,respondida,error_respuesta,,6,12279,212,12491.0,8.733,8.601
+dev-013,facil,False,,25,respondida,invento,,2,3413,84,3497.0,5.171,5.006
+dev-014,media,False,,"No hay recetas que incluyan arroz, frutilla y cerdo.",respondida,invento,,3,4764,112,4876.0,3.976,3.794
+dev-015,media,False,,No se puede determinar el supermercado,respondida,invento,,3,5112,133,5245.0,4.878,4.775
+dev-016,dificil,True,empanadas de pollo colombianas,espaguetis con pollo y brocoli,respondida,error_respuesta,,11,36656,364,37020.0,15.807,15.693
+dev-017,media,True,12,12,respondida,acierto,,15,51388,511,51899.0,22.406,22.298
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,4,8232,149,8381.0,6.945,6.835
+dev-019,facil,True,enchiladas mexicanas de pollo,guisantes salteados con pollo y tomate,respondida,error_respuesta,,7,18378,254,18632.0,11.43,11.318
+dev-020,media,True,zanahoria,huevo,respondida,error_respuesta,,4,7744,166,7910.0,7.358,7.253
+dev-021,dificil,True,2,1,respondida,error_respuesta,,13,50501,444,50945.0,21.871,21.683

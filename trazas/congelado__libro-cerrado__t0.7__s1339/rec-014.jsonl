@@ -1,0 +1,3 @@
+{"evento": "corrida_inicio", "ts": "2026-11-23T23:23:51.357+00:00", "corrida": "congelado__libro-cerrado__t0.7__s1339", "tarea": "rec-014", "modelo": "qwen3:8b", "config": {"num_ctx": 8192, "temperatura": 0.7, "semilla": 1339, "think": false, "num_predict": 200, "linea_de_base": "libro_cerrado"}}
+{"evento": "llamada_modelo", "ts": "2026-11-23T23:23:51.506+00:00", "corrida": "congelado__libro-cerrado__t0.7__s1339", "tarea": "rec-014", "paso": 1, "modelo": "qwen3:8b", "num_ctx": 8192, "tokens_entrada": 349, "tokens_salida": 3, "duracion_ms": 149}
+{"evento": "corrida_fin", "ts": "2026-11-23T23:23:51.507+00:00", "corrida": "congelado__libro-cerrado__t0.7__s1339", "tarea": "rec-014", "estado": "negada", "respuesta": null, "pasos": 1}

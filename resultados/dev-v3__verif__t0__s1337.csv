@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,6263,79,6342.0,5.112,4.969
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,2,3944,78,4022.0,2.966,2.817
+dev-003,facil,True,no,No,respondida,acierto,,3,5360,84,5444.0,2.96,2.814
+dev-004,facil,True,480,480,respondida,acierto,,3,5986,92,6078.0,3.978,3.752
+dev-005,facil,True,pizza keto de pollo,bolitas de carne picada,respondida,error_respuesta,,5,12187,249,12436.0,9.3,9.168
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,7,16289,295,16584.0,12.086,11.853
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,6,13468,226,13694.0,10.016,9.796
+dev-008,media,True,1200,750,respondida,error_respuesta,,4,8216,153,8369.0,6.961,6.813
+dev-009,media,True,4,5,respondida,error_respuesta,,4,9883,179,10062.0,8.811,8.591
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,5,11720,195,11915.0,9.738,9.593
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo;crema de leche;tomate;vino,respondida,acierto,,5,11843,201,12044.0,10.291,10.16
+dev-012,dificil,True,2,2,respondida,acierto,,6,13995,209,14204.0,11.469,11.233
+dev-013,facil,False,,20,respondida,invento,,3,6433,130,6563.0,6.419,6.276
+dev-014,media,False,,,negada,acierto,,2,3507,74,3581.0,3.242,3.024
+dev-015,media,False,,,negada,acierto,,2,3539,81,3620.0,3.342,3.341
+dev-016,dificil,True,empanadas de pollo colombianas,empanadas de pollo colombianas,respondida,acierto,,8,26819,264,27083.0,14.443,14.313
+dev-017,media,True,12,12,respondida,acierto,,3,6068,128,6196.0,6.538,6.394
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,12,46505,401,46906.0,21.614,21.392
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,4,9479,157,9636.0,8.826,8.679
+dev-020,media,True,zanahoria,pollo,respondida,error_respuesta,,4,8808,146,8954.0,7.378,7.152
+dev-021,dificil,True,2,1,respondida,error_respuesta,,9,30022,329,30351.0,17.603,17.46

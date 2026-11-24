@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,,negada,se_nego,,1,327,4,331.0,0.213,0.212
+rec-002,facil,True,patatas a lo pobre con huevo frito,Huevos con papas,respondida,error_respuesta,,1,334,7,341.0,0.289,0.288
+rec-003,facil,True,sí,,negada,se_nego,,1,338,4,342.0,0.168,0.168
+rec-004,facil,True,300,2400,respondida,error_respuesta,,1,341,5,346.0,0.202,0.202
+rec-005,facil,True,salchichas con crema de queso,Sopa de pollo,respondida,error_respuesta,,1,344,6,350.0,0.252,0.252
+rec-006,media,True,sopa de fideos con huevo,Salsa de huevo y pasta,respondida,error_respuesta,,1,338,8,346.0,0.316,0.315
+rec-007,media,True,gofres de patata,Pan de papa y harina,respondida,error_respuesta,,1,338,8,346.0,0.311,0.311
+rec-008,media,True,150,300,respondida,error_respuesta,,1,352,4,356.0,0.178,0.178
+rec-009,media,True,14,3,respondida,error_respuesta,,1,350,2,352.0,0.109,0.109
+rec-010,dificil,True,ajo; banana; cebolla; tomate,Arroz con tomate; tomate; arroz; aceite; sal; pimentón; cebolla; papas; zanahoria,respondida,error_respuesta,,1,353,33,386.0,1.286,1.285
+rec-011,dificil,True,espinaca; queso,,negada,se_nego,,1,353,4,357.0,0.186,0.186
+rec-012,dificil,True,5,,negada,se_nego,,1,364,4,368.0,0.194,0.193
+rec-013,facil,False,,,negada,acierto,,1,332,4,336.0,0.168,0.167
+rec-014,media,False,,,negada,acierto,,1,349,3,352.0,0.15,0.149
+rec-015,media,False,,,negada,acierto,,1,340,4,344.0,0.172,0.171
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,,negada,se_nego,,1,345,4,349.0,0.182,0.181
+rec-017,media,True,6,6,respondida,acierto,,1,341,2,343.0,0.102,0.102
+rec-018,dificil,True,revuelto de patatas con thermomix,Huevos con papa frita,respondida,error_respuesta,,1,345,9,354.0,0.378,0.378
+rec-019,facil,True,espaguetis con pollo y brocoli,Sopa de pollo,respondida,error_respuesta,,1,352,6,358.0,0.264,0.264
+rec-020,media,True,tomate,,negada,se_nego,,1,354,4,358.0,0.189,0.189
+rec-021,dificil,True,2,2,respondida,acierto,,1,357,2,359.0,0.112,0.112

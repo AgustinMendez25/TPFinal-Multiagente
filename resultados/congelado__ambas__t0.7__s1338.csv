@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,3,5732,223,5955.0,12.232,12.026
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,3,5855,279,6134.0,14.644,14.452
+rec-003,facil,True,sí,Sí,respondida,acierto,,4,7386,237,7623.0,13.528,13.323
+rec-004,facil,True,300,300,respondida,acierto,,4,8608,266,8874.0,16.075,15.891
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,5,11987,371,12358.0,19.305,19.173
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,10,25760,558,26318.0,26.844,26.727
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,7,16396,435,16831.0,23.361,23.249
+rec-008,media,True,150,150,respondida,acierto,,5,11101,420,11521.0,22.338,22.206
+rec-009,media,True,14,14,respondida,acierto,,5,12018,411,12429.0,25.638,25.521
+rec-010,dificil,True,ajo; banana; cebolla; tomate,ajo;carne vacuna;manteca;queso,respondida,error_respuesta,,8,21670,619,22289.0,32.484,32.337
+rec-011,dificil,True,espinaca; queso,limon;nuez;queso,respondida,error_respuesta,,8,20792,557,21349.0,29.27,29.052
+rec-012,dificil,True,5,,negada,se_nego,,8,21280,545,21825.0,28.567,28.357
+rec-013,facil,False,,,negada,acierto,,2,3333,234,3567.0,12.254,12.254
+rec-014,media,False,,,negada,acierto,,4,7692,347,8039.0,17.413,17.299
+rec-015,media,False,,,negada,acierto,,6,14394,405,14799.0,21.927,21.749
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,arroz con pollo y champinones en arrocera,respondida,acierto,,9,29545,493,30038.0,41.238,41.129
+rec-017,media,True,6,6,respondida,acierto,,6,13779,395,14174.0,25.1,24.973
+rec-018,dificil,True,revuelto de patatas con thermomix,revuelto de patatas con thermomix,respondida,acierto,,13,52677,605,53282.0,34.005,33.803
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,5,11550,375,11925.0,19.634,19.511
+rec-020,media,True,tomate,tomate,respondida,acierto,,15,76648,838,77486.0,56.071,55.84
+rec-021,dificil,True,2,13,respondida,error_respuesta,,10,36117,570,36687.0,31.731,31.593

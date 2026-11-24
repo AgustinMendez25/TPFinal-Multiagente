@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+rec-001,facil,True,33,33,respondida,acierto,,1,880,52,932.0,3.305,3.187
+rec-002,facil,True,patatas a lo pobre con huevo frito,patatas a lo pobre con huevo frito,respondida,acierto,,1,887,59,946.0,2.02,2.014
+rec-003,facil,True,sí,sí,respondida,acierto,,1,891,57,948.0,1.954,1.953
+rec-004,facil,True,300,300,respondida,acierto,,1,894,60,954.0,2.107,2.106
+rec-005,facil,True,salchichas con crema de queso,salchichas con crema de queso,respondida,acierto,,1,897,58,955.0,2.031,2.027
+rec-006,media,True,sopa de fideos con huevo,sopa de fideos con huevo,respondida,acierto,,1,891,63,954.0,2.206,2.2
+rec-007,media,True,gofres de patata,gofres de patata,respondida,acierto,,1,891,62,953.0,2.194,2.19
+rec-008,media,True,150,150,respondida,acierto,,1,905,62,967.0,2.246,2.242
+rec-009,media,True,14,14,respondida,acierto,,1,903,65,968.0,2.357,2.351
+rec-010,dificil,True,ajo; banana; cebolla; tomate,ajo; banana; cebolla; tomate,respondida,acierto,,1,906,61,967.0,2.243,2.231
+rec-011,dificil,True,espinaca; queso,,respondida,error_respuesta,,1,906,57,963.0,2.058,2.048
+rec-012,dificil,True,5,5,respondida,acierto,,1,917,67,984.0,2.505,2.5
+rec-013,facil,False,,,negada,acierto,,1,885,52,937.0,1.906,1.905
+rec-014,media,False,,,negada,acierto,,1,902,66,968.0,2.444,2.438
+rec-015,media,False,,,negada,acierto,,1,893,59,952.0,2.207,2.206
+rec-016,dificil,True,arroz con pollo y champinones en arrocera,ensalada de pollo y nueces,respondida,error_respuesta,,1,898,55,953.0,2.068,2.055
+rec-017,media,True,6,0,respondida,error_respuesta,,1,894,63,957.0,2.336,2.335
+rec-018,dificil,True,revuelto de patatas con thermomix,patatas a lo pobre con huevo frito,respondida,error_respuesta,,1,898,60,958.0,2.262,2.256
+rec-019,facil,True,espaguetis con pollo y brocoli,espaguetis con pollo y brocoli,respondida,acierto,,1,905,62,967.0,2.315,2.31
+rec-020,media,True,tomate,,negada,se_nego,,1,907,63,970.0,2.347,2.342
+rec-021,dificil,True,2,2400,respondida,error_respuesta,,1,910,58,968.0,2.157,2.153

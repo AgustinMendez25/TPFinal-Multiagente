@@ -1,0 +1,1 @@
+(negada: el recetario no tiene información sobre precios ni comercios)

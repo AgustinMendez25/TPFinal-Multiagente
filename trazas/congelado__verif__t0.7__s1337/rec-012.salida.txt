@@ -1,0 +1,1 @@
+(negada: La receta 'sandwich de miga con zanahoria' no es apta para vegetarianos porque contiene jamón.)

@@ -1,0 +1,1 @@
+(negada: La pregunta requiere comprobar recetas aptas para la dieta vegetariana, pero no se encontraron recetas que cumplan con esta dieta. Además, no se calculó la cantidad de ingredientes faltantes para 8 porciones.)

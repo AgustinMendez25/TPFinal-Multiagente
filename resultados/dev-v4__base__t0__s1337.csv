@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,6356,79,6435.0,4.968,4.836
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,3,6373,114,6487.0,4.436,4.258
+dev-003,facil,True,no,No,respondida,acierto,,3,5453,84,5537.0,2.702,2.602
+dev-004,facil,True,480,480,respondida,acierto,,3,6079,92,6171.0,3.53,3.427
+dev-005,facil,True,pizza keto de pollo,tortilla de harina y huevo,respondida,error_respuesta,,13,49586,432,50018.0,16.439,16.32
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,7,16490,263,16753.0,10.311,10.117
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,6,13655,233,13888.0,8.549,8.434
+dev-008,media,True,1200,750,respondida,error_respuesta,,4,8340,153,8493.0,5.623,5.516
+dev-009,media,True,4,4,respondida,acierto,,5,13501,180,13681.0,8.57,8.464
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,5,11908,182,12090.0,7.272,7.162
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,,error,sin_respuesta,,10,48253,327,48580.0,17.253,17.125
+dev-012,dificil,True,2,2,respondida,acierto,,6,14148,201,14349.0,9.763,9.564
+dev-013,facil,False,,2.5,respondida,invento,,3,6575,116,6691.0,4.734,4.636
+dev-014,media,False,,,negada,acierto,,2,3569,74,3643.0,2.614,2.418
+dev-015,media,False,,No se puede determinar el supermercado,respondida,invento,,1,1735,52,1787.0,1.637,1.636
+dev-016,dificil,True,empanadas de pollo colombianas,salchichas con crema de queso,respondida,error_respuesta,,8,28081,260,28341.0,12.507,12.395
+dev-017,media,True,12,12,respondida,acierto,,3,6192,116,6308.0,5.677,5.576
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,12,48462,401,48863.0,18.428,18.315
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,4,9665,148,9813.0,7.309,7.128
+dev-020,media,True,zanahoria,huevo,respondida,error_respuesta,,4,8982,140,9122.0,5.858,5.751
+dev-021,dificil,True,2,1,respondida,error_respuesta,,9,33344,288,33632.0,13.471,13.358

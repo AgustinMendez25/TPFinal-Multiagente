@@ -1,0 +1,25 @@
+grupo,variante,aciertos,corridas
+dentro del esquema,libro-cerrado,0,39
+dentro del esquema,camino-fijo,36,39
+dentro del esquema,base,33,39
+dentro del esquema,plan,36,39
+dentro del esquema,verif,31,39
+dentro del esquema,ambas,36,39
+fuera del esquema,libro-cerrado,6,15
+fuera del esquema,camino-fijo,0,15
+fuera del esquema,base,8,15
+fuera del esquema,plan,11,15
+fuera del esquema,verif,9,15
+fuera del esquema,ambas,10,15
+imposibles,libro-cerrado,9,9
+imposibles,camino-fijo,9,9
+imposibles,base,1,9
+imposibles,plan,5,9
+imposibles,verif,9,9
+imposibles,ambas,8,9
+usan vencimiento,libro-cerrado,0,9
+usan vencimiento,camino-fijo,6,9
+usan vencimiento,base,8,9
+usan vencimiento,plan,8,9
+usan vencimiento,verif,9,9
+usan vencimiento,ambas,8,9

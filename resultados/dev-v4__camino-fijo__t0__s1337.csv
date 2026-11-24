@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,,negada,se_nego,,1,880,48,928.0,2.114,2.113
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,1,888,60,948.0,1.828,1.652
+dev-003,facil,True,no,no,respondida,acierto,,1,891,57,948.0,1.568,1.568
+dev-004,facil,True,480,480,respondida,acierto,,1,896,60,956.0,1.666,1.666
+dev-005,facil,True,pizza keto de pollo,pizza keto de pollo,respondida,acierto,,1,897,58,955.0,1.609,1.604
+dev-006,media,True,ensalada de pimientos con queso,,negada,se_nego,,1,897,70,967.0,1.923,1.921
+dev-007,media,True,empanada de verduras facil,tortilla de chocolate,respondida,error_respuesta,,1,894,58,952.0,1.598,1.591
+dev-008,media,True,1200,1200,respondida,acierto,,1,905,61,966.0,1.697,1.692
+dev-009,media,True,4,4,respondida,acierto,,1,902,65,967.0,1.81,1.804
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo; chorizo; morron; queso,respondida,acierto,,1,917,65,982.0,1.821,1.814
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo; crema de leche; tomate; vino,respondida,acierto,,1,915,64,979.0,1.795,1.787
+dev-012,dificil,True,2,2,respondida,acierto,,1,920,74,994.0,2.09,2.081
+dev-013,facil,False,,,negada,acierto,,1,890,58,948.0,1.618,1.617
+dev-014,media,False,,,negada,acierto,,1,898,64,962.0,1.791,1.787
+dev-015,media,False,,cerdo; maiz; morron; pescado,respondida,invento,,1,896,55,951.0,1.548,1.547
+dev-016,dificil,True,empanadas de pollo colombianas,salchichas con crema de queso,respondida,error_respuesta,,1,899,60,959.0,1.696,1.692
+dev-017,media,True,12,1,respondida,error_respuesta,,1,894,59,953.0,1.656,1.655
+dev-018,dificil,True,huevos fritos esponjosos,tortitas de avena al microondas,respondida,error_respuesta,,1,900,60,960.0,1.708,1.699
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,1,906,62,968.0,1.777,1.77
+dev-020,media,True,zanahoria,,negada,se_nego,,1,905,56,961.0,1.607,1.606
+dev-021,dificil,True,2,500,respondida,error_respuesta,,1,912,58,970.0,1.67,1.666

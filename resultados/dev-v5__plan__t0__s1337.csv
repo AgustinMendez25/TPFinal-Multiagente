@@ -1,0 +1,22 @@
+tarea,dificultad,respondible,esperado,obtenido,estado,resultado,detalle,llamadas_modelo,tokens_entrada,tokens_salida,costo,tiempo_s,tiempo_modelo_s
+dev-001,facil,True,88,88,respondida,acierto,,3,5777,244,6021.0,9.699,9.594
+dev-002,facil,True,crema pastelera al microondas,crema pastelera al microondas,respondida,acierto,,3,5858,281,6139.0,10.312,10.115
+dev-003,facil,True,no,No,respondida,acierto,,4,7416,245,7661.0,9.143,9.041
+dev-004,facil,True,480,480,respondida,acierto,,4,8143,288,8431.0,11.17,11.071
+dev-005,facil,True,pizza keto de pollo,pizza keto de pollo,respondida,acierto,,5,11810,333,12143.0,12.973,12.864
+dev-006,media,True,ensalada de pimientos con queso,ensalada de pimientos con queso,respondida,acierto,,8,19499,474,19973.0,18.608,18.499
+dev-007,media,True,empanada de verduras facil,empanada de verduras facil,respondida,acierto,,6,14083,414,14497.0,16.572,16.459
+dev-008,media,True,1200,1200,respondida,acierto,,5,11319,432,11751.0,17.345,17.236
+dev-009,media,True,4,4,respondida,acierto,,5,12184,407,12591.0,17.07,16.884
+dev-010,dificil,True,cerdo; chorizo; morron; queso,cerdo;chorizo;morron;queso,respondida,acierto,,8,20680,579,21259.0,23.143,23.027
+dev-011,dificil,True,caldo; crema de leche; tomate; vino,caldo;crema de leche;tomate;vino,respondida,acierto,,8,21412,597,22009.0,23.63,23.445
+dev-012,dificil,True,2,2,respondida,acierto,,7,17801,472,18273.0,19.965,19.853
+dev-013,facil,False,,25,respondida,invento,,3,5662,252,5914.0,10.957,10.839
+dev-014,media,False,,"No hay recetas que contengan arroz, frutillas y cerdo.",respondida,invento,,3,5447,300,5747.0,12.087,11.976
+dev-015,media,False,,El recetario no tiene información sobre supermercados.,respondida,invento,,2,3396,263,3659.0,13.288,13.287
+dev-016,dificil,True,empanadas de pollo colombianas,empanadas de pollo colombianas,respondida,acierto,,9,29166,486,29652.0,37.748,37.637
+dev-017,media,True,12,12,respondida,acierto,,4,7803,347,8150.0,13.935,13.752
+dev-018,dificil,True,huevos fritos esponjosos,huevos fritos esponjosos,respondida,acierto,,7,19301,454,19755.0,18.79,18.606
+dev-019,facil,True,enchiladas mexicanas de pollo,enchiladas mexicanas de pollo,respondida,acierto,,5,11938,380,12318.0,16.157,16.038
+dev-020,media,True,zanahoria,tomate,respondida,error_respuesta,,5,11763,419,12182.0,17.426,17.31
+dev-021,dificil,True,2,2,respondida,acierto,,9,29280,530,29810.0,23.579,23.467
