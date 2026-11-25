@@ -115,11 +115,6 @@ pedido supera `num_ctx` y la tarea cierra con `error`.
   `eliminatorias`. Con `eliminatorias=true`, 2022 son 16 partidos (~3.000 caracteres); con
   `seleccion="France"`, 1998 son 7. Sin filtros devuelve lo mismo que antes, así que el contrato de
   campos y los verificadores no cambian.
-- *Descartado:* subir `tope_resultado_caracteres` o `num_ctx`. Agranda la ventana para un caso y no
-  arregla que el modelo repita llamadas; además, el tope tiene que seguir chico para las recetas.
-- *Descartado:* un filtro `solo_penales`. Resolvería mun-018 de forma directa, pero sería una
-  herramienta hecha para la pregunta. `seleccion` y la fase sirven para cualquier pregunta sobre
-  partidos.
 
 **Lo que no arreglamos** porque son errores de razonamiento del modelo y no del harness: mun-009
 (cuenta años en vez de torneos), mun-016, mun-025 y mun-030 (cuentas mal hechas sobre datos correctos),
@@ -186,9 +181,6 @@ por persona», «120 tazas de harina». Buscamos las cantidades normalizadas fue
 - *Efecto en las tareas:* ninguno. Volvimos a correr `factibilidad/borrador_respuestas.py` y las 21
   congeladas, las 21 de desarrollo y el inventario salieron idénticos (ninguna tarea usaba esas recetas
   ni las tiene en sus conteos). Los tests siguen en verde.
-- *Pendiente de revisar:* comparando cada ingrediente con su mediana por comensal aparecen 66 recetas con
-  más de 15 veces la mediana. La mayoría tiene `comensales = 1` con cantidades de torta o conserva
-  (500 g de manteca, 1 kg de azúcar): parece un `comensales` mal cargado, no una cantidad rota. No se tocó.
 
 ## 2026-11-23 · Desarrollo, vuelta 1 → vuelta 2 (solo tareas `dev-*`)
 
@@ -223,10 +215,6 @@ por persona», «120 tazas de harina». Buscamos las cantidades normalizadas fue
 - `dev-021` («cuántas alcanzan»): en la base, el modelo excluyó el limón en lugar de incluirlo.
 
 Estas dos quedan como fallas del modelo, para comparar las variantes.
-
-**Organización.** La vuelta 2 se guarda en `dev-v2__<variante>__t0__s1337`, con otro commit. La vuelta 1 queda en Drive como evidencia.
-
-**Infraestructura.** Las tandas de libro-cerrado y ambas de la vuelta 1 se escribieron primero en la carpeta `TPFinal-heladera` propia de cada cuenta, no en la compartida, porque faltaba el acceso directo. Las copiamos a mano a la compartida. Antes del 04, todas las cuentas tienen que ver la carpeta compartida.
 
 **Un cambio más antes de la vuelta 2: repetir una llamada que falló.** Cuando el modelo repetía exactamente una llamada que había devuelto error, el freno de repeticiones del Bloque 1 le contestaba «el resultado no cambia, está más arriba» y le sugería terminar. Para una llamada fallida ese consejo es malo: no le recuerda qué falló ni que lo que tiene que cambiar son los argumentos. Ahora el bucle guarda el error de cada llamada hecha y, si se repite, lo vuelve a mostrar y pide cambiar los argumentos, probar otra herramienta o terminar. Las llamadas con argumentos inválidos se siguen pudiendo reintentar como antes. No cambia nada cuando la llamada anterior salió bien. El Bloque 1 ya está medido con el commit anterior, así que no lo afecta.
 
@@ -407,32 +395,14 @@ Todo corre con el código del tag `medicion-v1`, que el notebook 04 fija antes d
 harness a ellas; otra vuelta para `dev-020` sería ajustar a una tarea. Lo que vale es lo que salga en las
 tareas congeladas. En el informe va como limitación que el `dev` quedó sobreajustado (20/21 en ambas).
 
-**Ajustes antes del tag, que no cambian cómo responde el agente:**
-
-- *Una tanda corrida por dos sesiones a la vez.* En `dev-v2__base` aparecieron copias de Drive
-  (`dev-005 (1).jsonl`, `dev-008 (1).jsonl`, `dev-009 (1).jsonl`): dos sesiones vieron la tanda libre y la
-  corrieron juntas, porque Drive tarda en mostrarle a una máquina lo que escribió otra. Ahora `tomar` escribe
-  una marca única y, a los 30 segundos, la vuelve a leer: si otra sesión la pisó, esta se retira y sigue con
-  la próxima tanda. La marca también separa a dos sesiones que pusieron el mismo nombre. No lo hace imposible
-  (si Drive tarda más de 30 segundos), así que el notebook 04 pide además arrancar con uno o dos minutos de
-  diferencia.
-- *Evidencia de GPU en cada tanda.* El chequeo de «100% GPU» solo se imprimía. Ahora `preparar` lo guarda,
-  junto con el nombre de la GPU y la salida de `ollama ps`, en el manifiesto de la tanda y en un
-  `sesion_<máquina>_<inicio>.json` por cada sesión que corre la tanda (si una tanda la retoma otra cuenta,
-  queda la GPU de las dos).
-- *Un log de Ollama por sesión.* Era uno por fecha, compartido por todas las cuentas, y se pisaban. Ahora es
-  `registros/ollama_<inicio>_<máquina>.log`.
-
 ## 2026-11-24 · Medición congelada y cierre
 
 **La medición.** Corrieron las 25 tandas del plan, sin recortar nada: también `ambas` y la repetición de
 base a temperatura 0. Todas con el commit del tag `medicion-v1` (`da315dc`), y cada sesión que tocó una
-tanda dejó registrado que corrió en una Tesla T4 con el modelo 100% en GPU. No quedaron tandas duplicadas
-(la confirmación de la toma funcionó). Una tanda (`congelado__base__t0.7__s1338`) quedó tomada sin
-avanzar durante unos 40 minutos y se terminó después. Las tablas están en `resultados/analisis/` y la
-lectura, en el informe.
+tanda dejó registrado que corrió en una Tesla T4 con el modelo 100% en GPU. No quedaron tandas duplicadas. 
+Las tablas están en `resultados/analisis/` y la lectura, en el informe.
 
-**Lo que salió distinto de lo que afirmamos** (propuesta §9), para que el informe no lo esconda:
+**Lo que salió distinto de lo que afirmamos** (propuesta §9):
 
 - La verificación bajó las respuestas inventadas de 8 a 0 (de 9 imposibles), como esperábamos. En
   aciertos totales subió de 14,0 a 16,3, pero el test de signo no lo distingue del azar (p = 0,065), y
