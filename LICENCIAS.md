@@ -18,6 +18,16 @@
 a partir de esos datos. Son una obra derivada y se distribuyen bajo **CC BY-SA 4.0**, con la atribución
 de arriba. Las tareas que armes con datos de este corpus llevan la misma licencia (*share-alike*).
 
+## Datos: RecetasDeLaAbuela
+
+- Autores: SomosNLP (hackathon 2024). Dataset `somosnlp/RecetasDeLaAbuela` en Hugging Face, archivo
+  `main.csv` en el commit `c9879423aeb4b151fb8941f79098e9606d25c782` (`datos/descargar_recetas.py`).
+- Licencia: OpenRAIL, según la ficha del dataset.
+- Modificaciones: usamos solo las recetas de recetasgratis.net. `factibilidad/preparar_dataset.py` normaliza
+  las cantidades a una unidad por ingrediente y excluye recetas; el resultado es `datos/recetas_final.csv`, y
+  cada decisión queda registrada en `datos/normalizacion/`. `tareas/recetas*.json` son preguntas y respuestas
+  calculadas sobre ese corpus.
+
 ## Código
 
 El resto del código está bajo licencia MIT: ver [LICENSE](LICENSE).

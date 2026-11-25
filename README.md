@@ -1,123 +1,132 @@
-# Kit del proyecto final
+# Rescatá la heladera: un agente para cocinar con lo que hay
 
-**IA Generativa Avanzada y Sistemas Multi-Agente** — Licenciatura en Tecnología Digital, Universidad
-Torcuato Di Tella.
+Proyecto final de **IA Generativa Avanzada y Sistemas Multi-Agente** (UTDT). Construimos a mano el loop
+de un agente con `qwen3:8b` sobre Ollama, sin frameworks ni APIs pagas, y lo usamos en dos dominios:
 
-Este es el kit inicial del proyecto final. Trae las herramientas, las tareas, el evaluador y el
-esqueleto de un agente que todavía no responde nada. **Lo que falta es el loop**: la función `bucle`
-de [agente.py](agente.py) es tu trabajo. El resto es plomería: mueve datos, valida trazas y habla con
-el servidor; ninguna pieza toma una decisión de diseño por vos.
+- **Bloque 1 · el Mundial** (*Fjelstul World Cup Database*): las 30 tareas públicas del kit.
+- **Bloque 2 · Rescatá la heladera** (*RecetasDeLaAbuela*): dada una heladera con cantidades y
+  vencimientos, qué receta concreta se puede hacer, qué falta comprar y en qué cantidad, o «no se puede»
+  cuando los datos no alcanzan. Medimos dos decisiones de agente, la **planificación** y la
+  **verificación en código antes de `terminar`**, contra el agente base y dos líneas de base.
 
-El [enunciado](ENUNCIADO.md) dice qué se construye y cómo se evalúa. Este README dice cómo poner en marcha el kit.
+El [informe](informe_final.md) tiene la afirmación, el diseño y los resultados. El
+[registro de decisiones](decision_log.md) cuenta qué probamos y por qué cambiamos de opinión. La
+[propuesta](propuesta.md) aprobada es la v3; las anteriores están en `docs/`.
+
+## Resultado principal
+
+21 tareas congeladas (`rec-*`), temperatura 0,7 con 3 semillas, en una T4 de Colab (`resultados/analisis/`):
+
+| Variante | Aciertos por semilla | Media | Respuestas inventadas (de 9) | Tokens por tarea |
+|---|---|---|---|---|
+| libro cerrado | 5 / 5 / 5 | 5,0 | 0 | 351 |
+| camino fijo | 15 / 15 / 15 | 15,0 | 0 | 958 |
+| agente base | 13 / 15 / 14 | 14,0 | 8 | 18.947 |
+| + planificación | 16 / 18 / 18 | 17,3 | 4 | 18.709 |
+| + verificación | 16 / 16 / 17 | 16,3 | 0 | 20.708 |
+| + las dos | 18 / 17 / 19 | 18,0 | 1 | 18.775 |
 
 ## Qué hay acá
 
 | Ruta | Qué es |
 |---|---|
-| [agente.py](agente.py) | **Tu loop.** Lee la configuración, abre la traza y llama a `bucle`, que está sin implementar |
-| [config.toml](config.toml) | El modelo, `num_ctx`, los topes y el recorte de resultados. Se copia entera en cada traza |
-| `herramientas/mundial.py` | Las seis herramientas del Mundial sobre SQLite, sus esquemas JSON (`FICHAS`) y `terminar` |
-| `llm.py` | Una llamada a Ollama por la API nativa. Manda `num_ctx` siempre, puede restringir la salida a un esquema JSON (`formato`) y no reintenta: eso es tuyo |
-| `datos/descargar.py` | Baja los CSV de la *Fjelstul World Cup Database* (commit fijado) y arma la base SQLite |
-| `tareas/mundial_publicas.json` | 30 tareas del Mundial, con su respuesta |
-| `tareas/verificadores.py` | Recalcula cada respuesta con SQL, sin pasar por el modelo ni por las herramientas |
-| `correr_todas.py` | Corre `agente.py` una vez por tarea, cada una en su proceso y con un tope de tiempo |
-| `evaluar.py` | Puntúa una corrida a partir de sus trazas: aciertos, tokens, costo y tiempo |
-| `libro_cerrado.py` | Las mismas tareas con el modelo sin herramientas: la línea de base |
-| `trazas/esquema.py`, `trazas/registro.py` | El validador del esquema de trazas y el escritor que usan todos |
-| `colab/arranque.ipynb` | Deja Ollama, el modelo y los datos listos en una T4 de Colab |
+| [agente.py](agente.py) | La entrada del agente: una pregunta, un dominio, una config y la carpeta de trazas |
+| [harness/bucle.py](harness/bucle.py) | **El loop**, el mismo para los dos dominios: herramientas, errores, reintentos, frenos y trazas |
+| [harness/dominios.py](harness/dominios.py) | Lo que cambia entre dominios: herramientas, prompt de sistema y los enganches del Bloque 2 |
+| [harness/planificacion.py](harness/planificacion.py) | Decisión 1: el plan antes del loop |
+| [harness/verificacion.py](harness/verificacion.py), [harness/detector.py](harness/detector.py) | Decisión 2: el chequeo en código antes de `terminar`, y las reglas que leen la dieta y las porciones de la pregunta |
+| [herramientas/](herramientas/) | Las del Mundial (del kit, con `partidos` ampliada) y las 4 de recetas |
+| [lineas_de_base/camino_fijo.py](lineas_de_base/camino_fijo.py), [libro_cerrado.py](libro_cerrado.py) | Las dos líneas de base |
+| [config.toml](config.toml), [configs/](configs/) | La config del Mundial y las 4 variantes de recetas |
+| [factibilidad/](factibilidad/) | La normalización del corpus (`preparar_dataset.py`) y el generador de tareas y respuestas (`borrador_respuestas.py`) |
+| [datos/](datos/) | Cómo se bajan los datos (versión fijada), el corpus normalizado y el registro de cada decisión de normalización |
+| [tareas/](tareas/) | Las 30 del Mundial, las 21 congeladas de recetas, las 21 de desarrollo y la heladera |
+| [trazas/](trazas/) | El esquema y el escritor del kit, y **una carpeta por corrida reportada** (58) |
+| [resultados/](resultados/) | Un CSV por corrida y, en `analisis/`, las tablas y el gráfico del informe |
+| [colab/](colab/) | Los notebooks de cada etapa (se generan desde `colab/fuentes/`) y la plomería de Drive |
+| [registros_desarrollo/](registros_desarrollo/) | Las sesiones con el asistente de código |
+| [tests/](tests/) | Tests sin modelo: el loop con un LLM falso, las herramientas contra el generador, las trazas |
 
-## Primer día, paso a paso
+## Versiones y hardware
 
-1. **Creá tu repositorio.** En la página de este repositorio en GitHub, botón **Use this template** →
-   *Create a new repository*, con visibilidad **Private**. No hagas un fork: un fork de un repositorio
-   público es público.
-2. **Clonalo a tu máquina:** `git clone https://github.com/<usuario>/<repo>.git`. El loop lo escribís
-   ahí, en tu editor.
-3. **Abrí `colab/arranque.ipynb`**, de una de dos maneras:
-   - *En VS Code*, con la extensión de Colab: abrí la carpeta clonada y el cuaderno, y elegí
-     *Select Kernel → Colab → New Colab Server* y una **T4**.
-   - *En el sitio de Colab* (colab.research.google.com): *File → Upload notebook* y elegí
-     `colab/arranque.ipynb` de tu carpeta clonada; después *Runtime → Change runtime type* y una **T4**.
+- **Modelo:** `qwen3:8b`, digest `500a1f067a9f…4b2b8b41`, sin cambiar los pesos.
+- **Ollama 0.40.10** (la del kit), por la API nativa, con `num_ctx = 8192` en cada llamada.
+- **Decodificación:** `think` apagado. Temperatura 0 y semilla 1337 en el Bloque 1 y en el desarrollo;
+  en la medición congelada, temperatura 0,7 con las semillas 1337, 1338 y 1339, más una referencia a
+  temperatura 0 (propuesta §8).
+- **Hardware:** Colab gratis con **Tesla T4**, el modelo 100% en GPU. Cada tanda guarda en su carpeta
+  de `trazas/` el commit, la config, la versión de Ollama, el digest y la GPU de cada sesión que la corrió.
+- **Código medido:** el tag `medicion-v1`.
 
-   Elegí la T4 **antes** de correr nada: cambiarla después reemplaza la máquina.
-4. **Creá un token de GitHub** para que Colab pueda bajar y subir tu repositorio. La sección 1 del
-   cuaderno dice cómo (*Contents: Read and write*, solo tu repositorio, vencimiento corto). No lo pegues
-   en ningún archivo.
-5. **Corré las celdas en orden** (unos 10 minutos la primera vez). En la sección 1 poné tu usuario y el
-   nombre del repositorio; el token se pide al correr la celda y no queda en el cuaderno.
-6. **Ciclo de trabajo.** Escribís `bucle` en `agente.py`, hacés commit y push desde tu máquina, y en
-   Colab volvés a correr la celda de la sección 1 (hace `git pull`) y después `correr_todas.py` y
-   `evaluar.py`.
-7. **Guardá las trazas.** La sección 6 del cuaderno las sube a GitHub desde Colab (`git add`,
-   `git commit`, `git pull --rebase`, `git push`). En tu máquina, `git pull` las trae.
+## Instalación local
 
-## Puesta en marcha
-
-### Local
-
-Necesitás [uv](https://docs.astral.sh/uv/) y [Ollama](https://ollama.com/download).
+Necesitás [uv](https://docs.astral.sh/uv/) y, para correr el agente, [Ollama](https://ollama.com/download).
 
 ```bash
 uv sync
-uv run datos/descargar.py          # baja los CSV y arma datos/worldcup.sqlite
-uv run pytest                      # tiene que dar todo en verde
-ollama pull qwen3:8b               # el modelo de referencia, con el tag explícito
+uv run pytest                          # sin modelo: tiene que dar todo en verde
+uv run datos/descargar.py              # Mundial: CSV en un commit fijado y datos/worldcup.sqlite
+uv run datos/descargar_recetas.py      # recetas: main.csv en un commit fijado (solo para rehacer el corpus)
+ollama pull qwen3:8b
 ```
 
-La versión de Ollama del kit es la **0.40.10**. Con otra puede cambiar cómo se devuelven las llamadas
-a herramientas y cuánto tarda cada una; si usás otra, decilo en tu informe.
-
-### En Colab (la T4, el entorno de referencia)
-
-Los tiempos que reportes se miden ahí. Los pasos están en «Primer día» (arriba) y en las secciones del
-cuaderno [colab/arranque.ipynb](colab/arranque.ipynb).
-
-El disco de Colab se borra cuando se desconecta la máquina (unos 90 minutos inactiva, 12 horas como
-máximo). Tus trazas y resultados tienen que salir de ahí antes: la sección 6 del cuaderno los sube a tu
-repositorio. `correr_todas.py --reanudar` retoma una corrida sin repetir las tareas ya hechas.
-
-## Cómo se usa
+El corpus normalizado (`datos/recetas_final.csv`) y las tareas ya están en el repo. Para rehacerlos desde
+el CSV crudo:
 
 ```bash
-# una pregunta suelta, con traza
-uv run agente.py -p "¿Cuántos goles hizo Messi en el Mundial 2014?" --log trazas/prueba
-
-# las 30 tareas públicas, un proceso por tarea
-uv run correr_todas.py --corrida trazas/mi_corrida
-uv run evaluar.py --corrida trazas/mi_corrida          # escribe también resultados/mi_corrida.csv
-
-# la línea de base: el modelo sin herramientas
-uv run libro_cerrado.py --corrida trazas/libro_cerrado
-uv run evaluar.py --corrida trazas/libro_cerrado
+uv run factibilidad/preparar_dataset.py     # normaliza unidades y escribe datos/normalizacion/
+uv run factibilidad/borrador_respuestas.py  # recalcula las tareas y sus respuestas sobre el corpus
 ```
 
-`correr_todas.py` le agrega a cada pregunta el formato de respuesta de su `tipo` («Respondé solo con
-el número», etc.) y espera que `agente.py` responda con `terminar(respuesta, motivo)`. Con
-`respuesta = None` el agente dice que los datos no alcanzan.
+## Cómo correr cada bloque
 
-Antes de implementar `bucle`, corré `correr_todas.py` y `evaluar.py`: el esqueleto termina con estado
-`error` en cada tarea y da 0 aciertos. Es el punto de partida.
+Los tiempos que reportamos se midieron en Colab con los notebooks. Para correrlos: abrí el notebook en
+Colab, elegí una **T4** antes de correr nada y tené la carpeta compartida `TPFinal-heladera` en tu Drive
+y un token de GitHub de solo lectura. Cada notebook explica sus pasos y se puede retomar si se corta.
 
-## Lo que tenés que saber
+| Notebook | GPU | Qué hace |
+|---|---|---|
+| [01_bloque1_mundial](colab/01_bloque1_mundial.ipynb) | sí | Bloque 1: libro cerrado y agente sobre las 30 tareas, el arreglo antes y después, una tarea negada |
+| [02_herramientas_recetas](colab/02_herramientas_recetas.ipynb) | no | El corpus, la heladera y cada herramienta comprobada contra el generador |
+| [03_desarrollo](colab/03_desarrollo.ipynb) | sí | Las variantes y las líneas de base sobre las 21 tareas `dev-*` |
+| [04_mediciones](colab/04_mediciones.ipynb) | sí | La medición congelada: 25 tandas repartidas entre cuentas, fijada en `medicion-v1` |
+| [05_analisis](colab/05_analisis.ipynb) | no | Ruido, comparaciones declaradas con test de signo, control «mismo gasto», grupos y frontera |
+| [06_demo](colab/06_demo.ipynb) | sí | La demo: una tarea del conjunto y una pregunta nueva, con la traza a la vista |
 
-- **`num_ctx` va explícito en cada llamada.** Ollama usa 4.096 tokens por defecto en una T4 y, si el
-  prompt no entra, recorta en silencio y el modelo contesta igual. `llm.chat` manda `num_ctx` y pide
-  que falle en lugar de recortar; si falla, levanta `llm.ContextOverflow`. El endpoint `/v1` compatible
-  con OpenAI no permite fijar `num_ctx`: usá la API nativa.
-- **Las tareas públicas traen la respuesta.** Sirven para medir tu loop, no para copiarlas. En la
-  presentación se te pide una tarea que no ensayaste.
-- **Los modelos chicos a veces escriben la llamada a `terminar` como texto**, por ejemplo `terminar("12", "...")`.
-  Ollama no la reconoce como una llamada, y tu loop se queda sin respuesta aunque el modelo la tenía.
-  Qué hacer en ese caso lo decidís vos: aparece en las trazas como una respuesta del modelo sin llamadas.
-- **Una traza inválida o ausente no suma aciertos.** `evaluar.py` valida cada traza con
-  `trazas/esquema.py` antes de leerla.
-- **Los nombres de jugadores pueden ser ambiguos.** `goles("Ronaldo")` devuelve candidatos con su `id`;
-  repetir el nombre no desambigua, el `id` sí.
-- **Ningún modelo corrige las respuestas.** `evaluar.py` las compara con la esperada mediante un
-  programa, nunca con un modelo como juez.
+Lo mismo desde la terminal, con Ollama corriendo:
+
+```bash
+# Bloque 1: una pregunta, las 30 tareas y el puntaje
+uv run agente.py -p "¿Qué edad tenía el goleador del Mundial 1978 el día de la final?" --log trazas/prueba
+uv run correr_todas.py --corrida trazas/mi_corrida
+uv run evaluar.py --corrida trazas/mi_corrida
+uv run libro_cerrado.py --corrida trazas/mi_libro_cerrado
+
+# Bloque 2: el agente de recetas con una variante, y una tanda sobre las congeladas
+uv run agente.py --dominio recetas --config configs/recetas_ambas.toml --log trazas/prueba \
+    -p "¿Qué receta vegetariana con huevo puedo hacer para 2 personas sin comprar nada?"
+uv run correr_todas.py --tareas tareas/recetas.json --dominio recetas --config configs/recetas_ambas.toml \
+    --corrida trazas/mi_tanda
+uv run evaluar.py --tareas tareas/recetas.json --corrida trazas/mi_tanda
+```
+
+**Reproducir los números del informe sin GPU.** Las trazas de las corridas reportadas están en
+`trazas/`; `evaluar.py` las vuelve a puntuar sin llamar al modelo:
+
+```bash
+uv run evaluar.py --tareas tareas/recetas.json --corrida trazas/congelado__ambas__t0.7__s1337 --csv /tmp/x.csv
+```
+
+## Lo que conviene saber
+
+- **El conjunto de desarrollo está separado del congelado.** El harness se ajustó solo con `dev-*` (cinco
+  vueltas, en el registro de decisiones). Ninguna tarea `rec-*` se corrió antes del tag `medicion-v1`.
+- **Las respuestas esperadas se calculan sobre el corpus**, con un script que no usa ni las herramientas ni
+  el modelo. Lo único que comparte con el agente es la capa de datos (léxico, parser y equivalencias).
+- **Ningún modelo corrige.** `evaluar.py` compara con un programa y valida cada traza con
+  `trazas/esquema.py` antes de puntuarla.
 
 ## Datos y licencias
 
-Los datos del Mundial son la *Fjelstul World Cup Database* (CC BY-SA 4.0). Las tareas derivadas de
-ellos llevan la misma licencia. El código es MIT. Detalle en [LICENCIAS.md](LICENCIAS.md).
+Los datos del Mundial son CC BY-SA 4.0 y las recetas, OpenRAIL. El código es MIT. Detalle en
+[LICENCIAS.md](LICENCIAS.md).

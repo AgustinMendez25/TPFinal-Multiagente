@@ -1,6 +1,6 @@
 # Diseño: proyecto completo en notebooks de Colab
 
-Fecha: 2026-11-21 · Entrega: domingo 29/11/2026 · Base: `docs/propuesta_v3.md` (aprobada en su v2) y `ENUNCIADO.md`.
+Fecha: 2026-11-21 · Entrega: domingo 29/11/2026 · Base: `propuesta.md` (aprobada en su v2) y `ENUNCIADO.md`.
 
 ## 1. Objetivo y alcance
 

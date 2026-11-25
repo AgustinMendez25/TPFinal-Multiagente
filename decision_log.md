@@ -422,3 +422,59 @@ tareas congeladas. En el informe va como limitación que el `dev` quedó sobreaj
   queda la GPU de las dos).
 - *Un log de Ollama por sesión.* Era uno por fecha, compartido por todas las cuentas, y se pisaban. Ahora es
   `registros/ollama_<inicio>_<máquina>.log`.
+
+## 2026-11-24 · Medición congelada y cierre
+
+**La medición.** Corrieron las 25 tandas del plan, sin recortar nada: también `ambas` y la repetición de
+base a temperatura 0. Todas con el commit del tag `medicion-v1` (`da315dc`), y cada sesión que tocó una
+tanda dejó registrado que corrió en una Tesla T4 con el modelo 100% en GPU. No quedaron tandas duplicadas
+(la confirmación de la toma funcionó). Una tanda (`congelado__base__t0.7__s1338`) quedó tomada sin
+avanzar durante unos 40 minutos y se terminó después. Las tablas están en `resultados/analisis/` y la
+lectura, en el informe.
+
+**Lo que salió distinto de lo que afirmamos** (propuesta §9), para que el informe no lo esconda:
+
+- La verificación bajó las respuestas inventadas de 8 a 0 (de 9 imposibles), como esperábamos. En
+  aciertos totales subió de 14,0 a 16,3, pero el test de signo no lo distingue del azar (p = 0,065), y
+  dentro del esquema bajó de 33 a 31 de 39.
+- La planificación mejoró al agente (p = 0,031), pero **no donde la apuntamos**: en las 5 tareas fuera del
+  esquema pasó de 8 a 11 de 15, que no se distingue (p = 0,375). La mejora se reparte entre las de adentro
+  y las imposibles (inventó 4 en lugar de 8).
+- El agente base no le gana al camino fijo (14,0 contra 15,0). Esperábamos que el camino fijo ganara
+  adentro (ganó 36 a 33 de 39), pero también que el agente compensara afuera, y base solo lo hace con las
+  decisiones agregadas.
+- Temperatura 0 no es determinista: base corrida dos veces igual cambió 5 de 21 respuestas (15 y 13
+  aciertos). La «referencia a temperatura 0» se reporta con esa advertencia.
+
+**Lo que agregamos al análisis después de escribir la propuesta** (todo declarado antes de medir, en la
+entrada «Plan de la medición congelada»): el test de signo por pares, el intervalo de Wilson, pass@3 y
+pass^3, la frontera acierto/costo, el control «mismo gasto» (voto de mayoría de 3 corridas de base) y la
+repetición a temperatura 0. Vienen de la Clase 12, que fue después de la propuesta.
+
+**Siete comparaciones al 0,05.** No corregimos por comparaciones múltiples porque no lo declaramos antes.
+Con Bonferroni (0,05 / 7) solo sobreviviría libro cerrado → base. Va como limitación en el informe.
+
+**Presupuesto: estimado contra real** (llamadas al modelo, de los CSV de `resultados/`):
+
+| Experimento | Estimado | Real |
+|---|---|---|
+| Bloque 1 (libro cerrado, antes y después) | ~390 | 311 |
+| Desarrollo (`dev-*`) | ~400 | 2.569 |
+| Medición congelada | ~1.450 | 2.343 |
+| **Total** | **~2.240** | **5.223** |
+
+Gastamos 2,3 veces lo estimado, unos 13,7 millones de tokens contra 5,5 estimados. El desvío grande es el
+desarrollo: hicimos 5 vueltas con las 6 variantes en lugar de 2 o 3 con 5, y las tareas que comparan
+candidatas llevan más pasos que los ~6 por tarea que estimamos. Se pudo pagar porque las tandas se
+repartieron entre varias cuentas de Colab en paralelo, y el calendario terminó adelantado: las mediciones
+cerraron el 24/11 en lugar del 28/11.
+
+**Cierre del repositorio.**
+
+- Las trazas y los CSV de las 58 corridas reportadas (Mundial, las 5 vueltas de desarrollo y la medición
+  congelada) están en `trazas/` y `resultados/`. Se dejaron afuera `tomada.json` y las copias duplicadas de
+  Drive de `dev-v2__base`.
+- La propuesta aprobada (v3) pasó a `propuesta.md` en la raíz, como pide el enunciado; la v1 y la v2
+  quedan en `docs/`.
+- Notebook `06_demo` para la presentación: una tarea del conjunto y una pregunta nueva con `ambas`, y la
+  misma tarea con `base` al lado.
